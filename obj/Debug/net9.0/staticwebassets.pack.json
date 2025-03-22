@@ -1,0 +1,33 @@
+{
+  "Files": [
+    {
+      "Id": "C:\\Users\\DELL\\Desktop\\Intern Intelligence project\\E-Commers\\E-Commers\\wwwroot\\CustomerPhotos\\596a3bad-8968-451f-ab54-845715eef04d.png",
+      "PackagePath": "staticwebassets\\CustomerPhotos\\596a3bad-8968-451f-ab54-845715eef04d.png"
+    },
+    {
+      "Id": "C:\\Users\\DELL\\Desktop\\Intern Intelligence project\\E-Commers\\E-Commers\\wwwroot\\CustomerPhotos\\60676c70-0a4e-4ec0-969b-6c6e20f41284.png",
+      "PackagePath": "staticwebassets\\CustomerPhotos\\60676c70-0a4e-4ec0-969b-6c6e20f41284.png"
+    },
+    {
+      "Id": "obj\\Debug\\net9.0\\staticwebassets\\msbuild.E-Commerce.Microsoft.AspNetCore.StaticWebAssetEndpoints.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssetEndpoints.props"
+    },
+    {
+      "Id": "obj\\Debug\\net9.0\\staticwebassets\\msbuild.E-Commerce.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj\\Debug\\net9.0\\staticwebassets\\msbuild.build.E-Commerce.props",
+      "PackagePath": "build\\E-Commerce.props"
+    },
+    {
+      "Id": "obj\\Debug\\net9.0\\staticwebassets\\msbuild.buildMultiTargeting.E-Commerce.props",
+      "PackagePath": "buildMultiTargeting\\E-Commerce.props"
+    },
+    {
+      "Id": "obj\\Debug\\net9.0\\staticwebassets\\msbuild.buildTransitive.E-Commerce.props",
+      "PackagePath": "buildTransitive\\E-Commerce.props"
+    }
+  ],
+  "ElementsToRemove": []
+}

@@ -1,0 +1,228 @@
+{
+  "Version": 1,
+  "Hash": "1sArz991Bk4VQZZmBg4Gw+EfL4ysL6tApt4froc/1yY=",
+  "Source": "E-Commerce",
+  "BasePath": "_content/E-Commerce",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [
+    {
+      "Name": "E-Commerce\\wwwroot",
+      "Source": "E-Commerce",
+      "ContentRoot": "C:\\Users\\DELL\\Desktop\\Intern Intelligence project\\E-Commers\\E-Commers\\wwwroot\\",
+      "BasePath": "_content/E-Commerce",
+      "Pattern": "**"
+    }
+  ],
+  "Assets": [
+    {
+      "Identity": "C:\\Users\\DELL\\Desktop\\Intern Intelligence project\\E-Commers\\E-Commers\\wwwroot\\CustomerPhotos\\596a3bad-8968-451f-ab54-845715eef04d.png",
+      "SourceId": "E-Commerce",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\DELL\\Desktop\\Intern Intelligence project\\E-Commers\\E-Commers\\wwwroot\\",
+      "BasePath": "_content/E-Commerce",
+      "RelativePath": "CustomerPhotos/596a3bad-8968-451f-ab54-845715eef04d#[.{fingerprint}]?.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "efpqiuxmeh",
+      "Integrity": "xuJjnxUZDLfh3ZjbsD40u15exY838rn57hlXBvwbF6Y=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\CustomerPhotos\\596a3bad-8968-451f-ab54-845715eef04d.png"
+    },
+    {
+      "Identity": "C:\\Users\\DELL\\Desktop\\Intern Intelligence project\\E-Commers\\E-Commers\\wwwroot\\CustomerPhotos\\60676c70-0a4e-4ec0-969b-6c6e20f41284.png",
+      "SourceId": "E-Commerce",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\DELL\\Desktop\\Intern Intelligence project\\E-Commers\\E-Commers\\wwwroot\\",
+      "BasePath": "_content/E-Commerce",
+      "RelativePath": "CustomerPhotos/60676c70-0a4e-4ec0-969b-6c6e20f41284#[.{fingerprint}]?.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "kqvdoehan2",
+      "Integrity": "7IHDQhQyGJJ4K2/8QohMlXo/IcH/UGsDStHgjspeqWY=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\CustomerPhotos\\60676c70-0a4e-4ec0-969b-6c6e20f41284.png"
+    }
+  ],
+  "Endpoints": [
+    {
+      "Route": "CustomerPhotos/596a3bad-8968-451f-ab54-845715eef04d.efpqiuxmeh.png",
+      "AssetFile": "C:\\Users\\DELL\\Desktop\\Intern Intelligence project\\E-Commers\\E-Commers\\wwwroot\\CustomerPhotos\\596a3bad-8968-451f-ab54-845715eef04d.png",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "122010"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/png"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"xuJjnxUZDLfh3ZjbsD40u15exY838rn57hlXBvwbF6Y=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sat, 15 Mar 2025 20:01:53 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "efpqiuxmeh"
+        },
+        {
+          "Name": "label",
+          "Value": "CustomerPhotos/596a3bad-8968-451f-ab54-845715eef04d.png"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-xuJjnxUZDLfh3ZjbsD40u15exY838rn57hlXBvwbF6Y="
+        }
+      ]
+    },
+    {
+      "Route": "CustomerPhotos/596a3bad-8968-451f-ab54-845715eef04d.png",
+      "AssetFile": "C:\\Users\\DELL\\Desktop\\Intern Intelligence project\\E-Commers\\E-Commers\\wwwroot\\CustomerPhotos\\596a3bad-8968-451f-ab54-845715eef04d.png",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "122010"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/png"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"xuJjnxUZDLfh3ZjbsD40u15exY838rn57hlXBvwbF6Y=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sat, 15 Mar 2025 20:01:53 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=3600, must-revalidate"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-xuJjnxUZDLfh3ZjbsD40u15exY838rn57hlXBvwbF6Y="
+        }
+      ]
+    },
+    {
+      "Route": "CustomerPhotos/60676c70-0a4e-4ec0-969b-6c6e20f41284.kqvdoehan2.png",
+      "AssetFile": "C:\\Users\\DELL\\Desktop\\Intern Intelligence project\\E-Commers\\E-Commers\\wwwroot\\CustomerPhotos\\60676c70-0a4e-4ec0-969b-6c6e20f41284.png",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "256817"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/png"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"7IHDQhQyGJJ4K2/8QohMlXo/IcH/UGsDStHgjspeqWY=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Fri, 14 Mar 2025 02:10:33 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "kqvdoehan2"
+        },
+        {
+          "Name": "label",
+          "Value": "CustomerPhotos/60676c70-0a4e-4ec0-969b-6c6e20f41284.png"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-7IHDQhQyGJJ4K2/8QohMlXo/IcH/UGsDStHgjspeqWY="
+        }
+      ]
+    },
+    {
+      "Route": "CustomerPhotos/60676c70-0a4e-4ec0-969b-6c6e20f41284.png",
+      "AssetFile": "C:\\Users\\DELL\\Desktop\\Intern Intelligence project\\E-Commers\\E-Commers\\wwwroot\\CustomerPhotos\\60676c70-0a4e-4ec0-969b-6c6e20f41284.png",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "256817"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/png"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"7IHDQhQyGJJ4K2/8QohMlXo/IcH/UGsDStHgjspeqWY=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Fri, 14 Mar 2025 02:10:33 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=3600, must-revalidate"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-7IHDQhQyGJJ4K2/8QohMlXo/IcH/UGsDStHgjspeqWY="
+        }
+      ]
+    }
+  ]
+}
