@@ -198,3 +198,4 @@ C:\Users\DELL\Desktop\Intern Intelligence project\E-Commers\E-Commers\bin\Debug\
 C:\Users\DELL\Desktop\Intern Intelligence project\E-Commers\E-Commers\bin\Debug\net9.0\tr-TR\Hangfire.Core.resources.dll
 C:\Users\DELL\Desktop\Intern Intelligence project\E-Commers\E-Commers\bin\Debug\net9.0\zh-TW\Hangfire.Core.resources.dll
 C:\Users\DELL\Desktop\Intern Intelligence project\E-Commers\E-Commers\bin\Debug\net9.0\zh\Hangfire.Core.resources.dll
+C:\Users\DELL\Desktop\Intern Intelligence project\E-Commers\E-Commers\obj\Debug\net9.0\E-Commerce.sourcelink.json

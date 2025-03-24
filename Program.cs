@@ -9,7 +9,6 @@ using E_Commers.Repository;
 using E_Commers.UOW;
 using Hangfire;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Connections;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
@@ -115,6 +114,7 @@ namespace E_Commers
             app.UseHttpsRedirection();
             app.UseCors("MyPolicy");
             app.UseMiddleware<SecurityStampMiddleware>();
+ 
 
 
 			using (var scope = app.Services.CreateScope())
@@ -125,13 +125,14 @@ namespace E_Commers
 				await SeedData.SeedDataAsync(services);
 				var categoryCleanupService = scope.ServiceProvider.GetRequiredService<CategoryCleanupService>();
 				categoryCleanupService.DeleteOldCategories();
-				RecurringJob.AddOrUpdate(
-				        "delete-old-categories",
-                	    () => categoryCleanupService.DeleteOldCategories(),
-                	    Cron.Daily
+                RecurringJob.AddOrUpdate(
+                        "Clean-Category",
+                        () =>
+                        categoryCleanupService.DeleteOldCategories(),
+                        Cron.Daily
                 );
-
 			}
+            app.UseHangfireDashboard("/hangfire");
 
 			app.UseAuthentication();
             app.UseAuthorization();
