@@ -44,8 +44,8 @@ public class SecurityStampMiddleware
 					if (customer is null)
 					{
 						context.Response.StatusCode = 401;
-						await context.Response.WriteAsync("{\"message\": \"Invalid Token - User not found\"}");
 						await context.Response.WriteAsync("{\"statusCode\": 401}");
+						await context.Response.WriteAsync("{\"message\": \"Invalid Token - User not found\"}");
 						return;
 					}
 

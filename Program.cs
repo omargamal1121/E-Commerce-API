@@ -104,7 +104,6 @@ namespace E_Commers
             );
 
             var app = builder.Build();
-            app.UseHangfireDashboard();
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
@@ -114,17 +113,16 @@ namespace E_Commers
             app.UseHttpsRedirection();
             app.UseCors("MyPolicy");
             app.UseMiddleware<SecurityStampMiddleware>();
- 
 
+			app.UseHangfireDashboard("/hangfire");
 
 			using (var scope = app.Services.CreateScope())
 			{
 				var services = scope.ServiceProvider;
 				var dbContext = services.GetRequiredService<AppDbContext>();
-				dbContext.Database.Migrate();
-				await SeedData.SeedDataAsync(services);
+				dbContext.Database.Migrate();// use it to make update database as if u add seed or modeify in structure 
+				await DataSeeder.SeedDataAsync(services);
 				var categoryCleanupService = scope.ServiceProvider.GetRequiredService<CategoryCleanupService>();
-				categoryCleanupService.DeleteOldCategories();
                 RecurringJob.AddOrUpdate(
                         "Clean-Category",
                         () =>
@@ -132,7 +130,7 @@ namespace E_Commers
                         Cron.Daily
                 );
 			}
-            app.UseHangfireDashboard("/hangfire");
+
 
 			app.UseAuthentication();
             app.UseAuthorization();
