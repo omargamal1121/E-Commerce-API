@@ -102,7 +102,12 @@ namespace E_Commers.Controllers
 			return Ok(new ResponseDto
 			{
 				StatusCode = 200,
-				Message = new { Token = token, RefreshToken = refreshToken }
+				Message = new 
+				{
+					userid=customer.Id,
+					Token = token, 
+					RefreshToken = refreshToken 
+				}
 			});
 		}
 
@@ -207,7 +212,7 @@ namespace E_Commers.Controllers
 			{
 				 return Unauthorized(new ResponseDto { Message = "Invalid refresh token. Please sign in again.", StatusCode = 401 });
 			}
-			 string token= await _tokenHelper.GenerateTokenAsync(refreshTokenDto.UserId.ToString("D"));
+			 string token= await _tokenHelper.RefreshToken(refreshTokenDto.UserId.ToString("D"),refreshTokenDto.RefreshToken);
 
 			return Ok(new ResponseDto { Message = new { Token = token }, StatusCode = 200 });
 

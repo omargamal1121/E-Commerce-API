@@ -1,14 +1,13 @@
-﻿using E_Commers.Models;
+﻿using E_Commers.Helper;
+using E_Commers.Models;
 
 namespace E_Commers.Interfaces
 {
 	public interface ICategoryRepository:IRepository<Category>
 	{
-		public Task<IEnumerable<Category>> GetAllCategoriesAsync();
-		public Task<IEnumerable<Category>> GetDeletedCategoriesAsync();
-		public Task<Category?> GetCategoryByIdAsync(int id);
-		public Task<Category?> GetByNameAsync(string Name);
-		public Task<Category?> GetCategoryWithProductsAsync(int productid);
-		public Task<bool> CategoryExistsAsync(int id);
+		public Task<ResultDto<List<Product>>> GetProductsByCategoryIdAsync(int categoryId);
+		public Task<ResultDto<Category?>> GetByNameAsync(string Name);
+		public Task<ResultDto<Category?>> GetCategoryByProductIdAsync(int productid);
+		public Task<ResultDto<bool>> CategoryExistsAsync(int id);
 	}
 }

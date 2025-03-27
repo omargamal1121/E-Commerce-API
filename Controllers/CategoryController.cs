@@ -11,7 +11,6 @@ using Microsoft.AspNetCore.Mvc;
 
 using System.Security.Claims;
 using System.Transactions;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace E_Commers.Controllers
 {
@@ -27,24 +26,43 @@ namespace E_Commers.Controllers
 		{
 			_unitOfWork = unitOfWork;
 			_logger = logger;
+
+		}
+		[HttpGet("{id}")]
 	
+		public async Task<ActionResult<ResponseDto>> GetCategory([FromRoute]int id)
+		{
+			_logger.LogInformation($"Executing {nameof(GetCategory)} in CategoryController");
+
+
+			ResultDto<Category> resultcategory = await _unitOfWork.Category.GetByIdAsync(id);
+			if (!resultcategory.Success)
+			{
+				_logger.LogWarning(resultcategory.Message);
+				return Ok(new ResponseDto { Message = $"category.Message", StatusCode = 200 });
+			}
+			CategoryDto categoryDto = new CategoryDto(resultcategory.Data.Id, resultcategory.Data.Name, resultcategory.Data.Description, resultcategory.Data.CreatedAt, resultcategory.Data.DeletedAt, resultcategory.Data.DeletedAt);
+
+
+
+			return Ok(new ResponseDto { Message = categoryDto, StatusCode = 200 });
 		}
 
-		[HttpGet]
+		[HttpGet("GetAll")]
+		[ResponseCache(Duration =120,VaryByQueryKeys = new string [] { "includeDates" })]
 		public async Task<ActionResult<ResponseDto>> GetAll([FromQuery] bool includeDates = false)
 		{
-			Console.BackgroundColor = ConsoleColor.Yellow;
 			_logger.LogInformation($"Executing {nameof(GetAll)} in CategoryController");
-			Console.BackgroundColor = ConsoleColor.White;
 
-			var categories = await _unitOfWork.Category.GetAllCategoriesAsync();
-			if (!categories.Any())
+
+			var Resultcategories = await _unitOfWork.Category.GetAllAsync();
+			if (!Resultcategories.Data.Any())
 			{
 				_logger.LogWarning("No categories found");
 				return Ok(new ResponseDto { Message = "No categories found", StatusCode = 200 });
 			}
 
-			List<CategoryDto> categoryDtos = categories.Select(c =>
+			List<CategoryDto> categoryDtos = Resultcategories.Data.Select(c =>
 			new CategoryDto
 			{
 				CreatedAt = includeDates ? c.CreatedAt : null,
@@ -97,7 +115,7 @@ namespace E_Commers.Controllers
 			try
 			{
 				Category category = new Category {Description=model.Description,Name=model.Name};
-				Result<bool> result = await _unitOfWork.Category.CreateAsync(category);
+				ResultDto<bool> result = await _unitOfWork.Category.CreateAsync(category);
 
 				if (!result.Success)
 				{
@@ -121,7 +139,7 @@ namespace E_Commers.Controllers
 					Timestamp = DateTime.UtcNow
 				};
 
-				Result<bool> logResult = await _unitOfWork.Repository<AdminOperationsLog>().CreateAsync(adminOperations);
+				ResultDto<bool> logResult = await _unitOfWork.Repository<AdminOperationsLog>().CreateAsync(adminOperations);
 				if (!logResult.Success)
 				{
 					await transaction.RollbackAsync();
@@ -142,6 +160,7 @@ namespace E_Commers.Controllers
 		}
 
 		[HttpDelete]
+		[ResponseCache(Duration =120,VaryByQueryKeys =new string[] {"id"})]
 		public async Task<ActionResult<ResponseDto>> DeleteCategoryAsync(int id)
 		{
 			_logger.LogInformation($"Executing {nameof(DeleteCategoryAsync)}");
@@ -150,8 +169,8 @@ namespace E_Commers.Controllers
 
 			try
 			{
-				Category? category = await _unitOfWork.Category.GetByIdAsync(id);
-				if (category is null||category.DeletedAt.HasValue)
+				ResultDto<Category> resultcategory = await _unitOfWork.Category.GetByIdAsync(id);
+				if (resultcategory.Data is null|| resultcategory.Data.DeletedAt.HasValue)
 				{
 					_logger.LogWarning($"No Category with this id: {id}");
 					return BadRequest(new ResponseDto { StatusCode = 400, Message = $"No Category with this id: {id}" });
@@ -163,9 +182,9 @@ namespace E_Commers.Controllers
 					_logger.LogError("Admin ID not found, canceling delete operation.");
 					return Unauthorized(new ResponseDto { StatusCode = 401, Message = "Invalid Admin ID." });
 				}
-				category.DeletedAt = DateTime.UtcNow;
+				resultcategory.Data.DeletedAt = DateTime.UtcNow;
 
-				Result<bool> result = await _unitOfWork.Category.UpdateAsync(category);
+				ResultDto<bool> result = await _unitOfWork.Category.UpdateAsync(resultcategory.Data);
 				if (!result.Success)
 				{
 					_logger.LogError(result.Message);
@@ -178,17 +197,17 @@ namespace E_Commers.Controllers
 					return StatusCode(500, new ResponseDto { StatusCode = 500, Message = "Can't delete category." });
 				}
 
-				_logger.LogInformation($"Category Deleted successfully, ID: {category.Id}");
+				_logger.LogInformation($"Category Deleted successfully, ID: {resultcategory.Data.Id}");
 
 				AdminOperationsLog adminOperations = new()
 				{
 					OperationType = Opreations.DeleteOpreation,
 					AdminId = adminId,
-					Description = $"Deleted category: {category.Id}",
+					Description = $"Deleted category: {resultcategory.Data.Id}",
 					Timestamp = DateTime.UtcNow
 				};
 
-				Result<bool> logResult = await _unitOfWork.Repository<AdminOperationsLog>().CreateAsync(adminOperations);
+				ResultDto<bool> logResult = await _unitOfWork.Repository<AdminOperationsLog>().CreateAsync(adminOperations);
 				if (!logResult.Success)
 				{
 					await transaction.RollbackAsync();
@@ -198,7 +217,7 @@ namespace E_Commers.Controllers
 				await _unitOfWork.CommitAsync();
 				await transaction.CommitAsync();
 
-				return Ok(new ResponseDto { Message = $"Deleted successfully, ID: {category.Id}", StatusCode = 200 });
+				return Ok(new ResponseDto { Message = $"Deleted successfully, ID: {resultcategory.Data.Id}", StatusCode = 200 });
 			}
 			catch (Exception ex)
 			{
@@ -212,15 +231,15 @@ namespace E_Commers.Controllers
 		{
 			_logger.LogInformation($"Executing {nameof(GetDeletedCategoriesAsync)}");
 
-			var list = await _unitOfWork.Category.GetDeletedCategoriesAsync();
+			var resultlist = await _unitOfWork.Category.GetAllDeletedAsync();
 
-			if (!list.Any())
+			if (!resultlist.Data.Any())
 			{
 				_logger.LogInformation("No Deleted Categories found");
 				return Ok(new ResponseDto { StatusCode = 200, Message = "No Deleted Categories found" });
 			}
 
-			var categoryDtos = list.Select(c => new CreateCategotyDto
+			var categoryDtos = resultlist.Data.Select(c => new CategoryDto
 			{
 				Name = c.Name,
 				CreatedAt = c.CreatedAt,
@@ -245,14 +264,14 @@ namespace E_Commers.Controllers
 				return Unauthorized(new ResponseDto { StatusCode = 401, Message = "Invalid token or user not authenticated" });
 			}
 
-			Category? category = await _unitOfWork.Category.GetByIdAsync(id);
-			if (category is null)
+			ResultDto<Category> resultcategory = await _unitOfWork.Category.GetByIdAsync(id);
+			if (resultcategory.Success)
 			{
 				_logger.LogWarning($"Category not found with ID: {id}");
 				return BadRequest(new ResponseDto { StatusCode = 400, Message = $"Category not found with ID: {id}" });
 			}
 
-			if (!category.DeletedAt.HasValue)
+			if (!resultcategory.Data.DeletedAt.HasValue)
 			{
 				_logger.LogWarning($"Category with ID {id} is not deleted.");
 				return BadRequest(new ResponseDto { StatusCode = 400, Message = $"Category with ID {id} is not deleted." });
@@ -260,20 +279,20 @@ namespace E_Commers.Controllers
 
 			using var tran = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
 
-			category.DeletedAt = null;
-			Result<bool> updateResult = await _unitOfWork.Category.UpdateAsync(category);
+			resultcategory.Data.DeletedAt = null;
+			ResultDto<bool> updateResult = await _unitOfWork.Category.UpdateAsync(resultcategory.Data);
 			if (!updateResult.Success)
 			{
 				_logger.LogError(updateResult.Message);
 				return StatusCode(500, new ResponseDto { StatusCode = 500, Message = updateResult.Message });
 			}
 
-			Result<bool> logResult = await _unitOfWork.Repository<AdminOperationsLog>().CreateAsync(new AdminOperationsLog
+			ResultDto<bool> logResult = await _unitOfWork.Repository<AdminOperationsLog>().CreateAsync(new AdminOperationsLog
 			{
 				AdminId = userid,
-				ItemId = category.Id,
+				ItemId = resultcategory.Data.Id,
 				OperationType = Opreations.UndoDeleteOpreation,
-				Description = $"Undo Delete of Category: {category.Id}"
+				Description = $"Undo Delete of Category: {resultcategory.Data.Id}"
 			});
 
 			if (!logResult.Success)
@@ -290,12 +309,12 @@ namespace E_Commers.Controllers
 			}
 
 			tran.Complete();
-			return Ok(new ResponseDto { StatusCode = 200, Message = $"Category restored: {category.Id}" });
+			return Ok(new ResponseDto { StatusCode = 200, Message = $"Category restored: {resultcategory.Data.Id}" });
 		}
 
-		[HttpPatch("{categoryId}")]
+		[HttpPatch("{id}")]
 		public async Task<ActionResult<ResponseDto>> UpdateCategory(
-		[FromRoute]	int categoryId,
+		[FromRoute]	int id,
 			[FromBody] CategoryUpdateDto updateDto)
 		{
 			_logger.LogInformation($"Executing {nameof(UpdateCategory)}");
@@ -317,26 +336,26 @@ namespace E_Commers.Controllers
 				return Unauthorized(new ResponseDto { StatusCode = 401, Message = "Invalid Admin ID." });
 			}
 
-			Category? category = await _unitOfWork.Category.GetByIdAsync(categoryId);
-			if (category is null)
+			ResultDto<Category>? resultcategory = await _unitOfWork.Category.GetByIdAsync(id);
+			if (!resultcategory.Success)
 			{
-				_logger.LogWarning($"No Category With this ID: {categoryId}");
-				return BadRequest(new ResponseDto { StatusCode = 400, Message = $"No Category With this ID: {categoryId}" });
+				_logger.LogWarning($"No Category With this ID: {id}");
+				return BadRequest(new ResponseDto { StatusCode = 400, Message = $"No Category With this ID: {id}" });
 			} 
 			if (!string.IsNullOrWhiteSpace(updateDto.NewName))
 			{
-				if (category.Name.Equals(updateDto.NewName, StringComparison.OrdinalIgnoreCase))
+				if (resultcategory.Data.Name.Equals(updateDto.NewName, StringComparison.OrdinalIgnoreCase))
 				{
-					_logger.LogWarning($"Same Name ID: {categoryId}");
+					_logger.LogWarning($"Same Name ID: {id}");
 					return BadRequest(new ResponseDto { StatusCode = 400, Message = $"Can't Use Same Name" });
 				}
 				if(updateDto.NewName.Length>20||updateDto.NewName.Length<5)
 				{
 
-					_logger.LogWarning($"Invalid Name ID: {categoryId}");
+					_logger.LogWarning($"Invalid Name ID: {id}");
 					return BadRequest(new ResponseDto { StatusCode = 400, Message = $"Name Must be from 5 charc to 20" });
 				}
-				category.Name = updateDto.NewName;
+				resultcategory.Data.Name = updateDto.NewName;
 			}
 
 			if (!string.IsNullOrWhiteSpace(updateDto.Description))
@@ -344,44 +363,57 @@ namespace E_Commers.Controllers
 				if (updateDto.Description.Length > 50 || updateDto.Description.Length < 10)
 				{
 
-					_logger.LogWarning($"Invalid Description ID: {categoryId}");
+					_logger.LogWarning($"Invalid Description ID: {id}");
 					return BadRequest(new ResponseDto { StatusCode = 400, Message = $"Description Must be from 10 charc to 50" });
 				}
-				category.Description = updateDto.Description;
+				resultcategory.Data.Description = updateDto.Description;
 			}
 			using var transaction = await _unitOfWork.BeginTransactionAsync();
 
-			Result<bool> result = await _unitOfWork.Category.UpdateAsync(category);
+			ResultDto<bool> result = await _unitOfWork.Category.UpdateAsync(resultcategory.Data);
 			if (!result.Success)
 			{
 				_logger.LogError(result.Message);
+				await transaction.RollbackAsync();
 				return BadRequest(new ResponseDto { StatusCode = 400, Message = result.Message });
 			}
 
-			int isSave = await _unitOfWork.CommitAsync();
-			if (isSave == 0)
-			{
-				_logger.LogError("Can't Save Changes");
-				return BadRequest(new ResponseDto { StatusCode = 500, Message = "Can't Save Changes" });
-			}
 			AdminOperationsLog adminOperations = new()
 			{
-				OperationType = Opreations.DeleteOpreation,
+				OperationType = Opreations.UpdateOpreation,
 				AdminId = adminId,
-				Description = $"Deleted category: {category.Id}",
+				Description = $"Updated category: {resultcategory.Data.Id}",
 				Timestamp = DateTime.UtcNow
 			};
 
-			Result<bool> logResult = await _unitOfWork.Repository<AdminOperationsLog>().CreateAsync(adminOperations);
+			ResultDto<bool> logResult = await _unitOfWork.Repository<AdminOperationsLog>().CreateAsync(adminOperations);
 			if (!logResult.Success)
 			{
 				await transaction.RollbackAsync();
 				return StatusCode(500, new ResponseDto { StatusCode = 500, Message = logResult.Message });
 			}
-			await _unitOfWork.CommitAsync();
 			await transaction.CommitAsync();
 			_logger.LogInformation("Category Updated");
 			return Ok(new ResponseDto { StatusCode = 200, Message = "Category Updated Successfully" });
+		}
+		[HttpGet("Produects/{id}")]
+		public async Task<ActionResult<ResponseDto>> GetProduectsByCategoryId(int id)
+		{
+			_logger.LogInformation($"Execute:{nameof(GetProduectsByCategoryId)} with Id:{id}");
+			ResultDto< List<Product>>resultproducts= await _unitOfWork.Category.GetProductsByCategoryIdAsync(id);
+			if(!resultproducts.Success)
+			{
+
+				return BadRequest(new ResponseDto { StatusCode = 400 , Message=resultproducts.Message});
+			}
+
+			if (!resultproducts.Data.Any())
+				return Ok(new ResponseDto { StatusCode = 200, Message = resultproducts.Message });
+
+			return Ok(new ResponseDto { StatusCode = 200, Message = resultproducts.Data });
+
+
+
 		}
 	}
 }

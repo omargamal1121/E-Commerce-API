@@ -7,8 +7,8 @@ namespace E_Commers.Interfaces
 	{
 		public  Task<IEnumerable<Product>> GetProductsByCategoryAsync(int categoryId);
 		public  Task<List<Product>> GetProductsByInventoryAsync(int InventoryId);
-		public Task<Result<bool>> UpdatePriceAsync(int productId, decimal Price);
-		public Task<Result<bool>> UpdateQuantityAsync(int productId, int quantity);
+		public Task<ResultDto<bool>> UpdatePriceAsync(int productId, decimal Price);
+		public Task<ResultDto<bool>> UpdateQuantityAsync(int productId, int quantity);
 
 	}
 }

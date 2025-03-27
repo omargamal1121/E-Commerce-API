@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace E_Commers.Models
 {
@@ -6,10 +7,14 @@ namespace E_Commers.Models
 	{
 		public int Id { get; set; }
 
-		public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+		[JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+		public DateTime? CreatedAt { get; set; } = DateTime.UtcNow;
+		[JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
 
 		[CustomValidation(typeof(BaseEntity), nameof(ValidateModifiedAt))]
+
 		public DateTime? ModifiedAt { get; set; }
+		[JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
 		[CustomValidation(typeof(BaseEntity), nameof(ValidateDeletedAt))]
 		public DateTime? DeletedAt { get; set; }
 

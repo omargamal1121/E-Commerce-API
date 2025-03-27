@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace E_Commers.DtoModels.CategoryDtos
 {
-	public class CreateCategotyDto:BaseEntity
+	public class CreateCategotyDto
 	{
 		[Required(ErrorMessage = "Name is required.")]
 		[StringLength(20, MinimumLength = 5, ErrorMessage = "Name must be between 5 and 20 characters.")]

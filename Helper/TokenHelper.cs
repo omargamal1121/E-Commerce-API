@@ -5,7 +5,6 @@ using StackExchange.Redis;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace E_Commers.Helper
 {
@@ -63,28 +62,13 @@ namespace E_Commers.Helper
 
 		
 			string token = Guid.NewGuid().ToString();
-			await _database.StringSetAsync($"RefreshToken:{userId}", token, expiry: TimeSpan.FromDays(7));
+			await _database.StringSetAsync($"RefreshToken:{userId}", token, expiry: TimeSpan.FromDays(1));
 
 			return token;
 		}
 
 
-		public async Task<string> GetRefreshTokenAsync(string userId)
-		{
-			_logger.LogInformation("📜 Fetching Refresh Token for User ID: {UserId}", userId);
-
-			if (await _userManager.FindByIdAsync(userId) is null)
-			{
-				_logger.LogWarning("❌ Invalid User ID: {UserId}", userId);
-				return string.Empty;
-			}
-
-		
-			string? token = await _database.StringGetAsync($"RefreshToken:{userId}");
-
-			return token ?? string.Empty;
-		}
-
+	
 		public async Task<bool> RemoveRefreshTokenAsync(string userId)
 		{
 			_logger.LogInformation("🗑 Removing Refresh Token for User ID: {UserId}", userId);

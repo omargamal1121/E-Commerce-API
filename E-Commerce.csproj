@@ -30,6 +30,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="DtoModels\ProductDtos\" />
     <Folder Include="wwwroot\CustomerPhotos\" />
     <Folder Include="wwwroot\ProductPhotos\" />
   </ItemGroup>

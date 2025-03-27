@@ -26,6 +26,7 @@ namespace E_Commers
         {
             var builder = WebApplication.CreateBuilder(args);
             builder.Logging.AddConsole();
+            builder.Services.AddResponseCaching();
             builder.Services.AddIdentity<Customer, IdentityRole>().AddEntityFrameworkStores<AppDbContext>().AddDefaultTokenProviders();
             builder.Services.AddTransient<TokenHelper>();
             builder.Services.AddTransient<ImagesHelper>();
@@ -135,6 +136,7 @@ namespace E_Commers
 			app.UseAuthentication();
             app.UseAuthorization();
             app.UseRateLimiter();
+            app.UseResponseCaching();
             app.MapControllers();
             app.Run();
         }

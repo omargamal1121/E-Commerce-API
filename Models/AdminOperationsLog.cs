@@ -2,9 +2,8 @@
 
 namespace E_Commers.Models
 {
-	public class AdminOperationsLog
+	public class AdminOperationsLog :BaseEntity
 	{
-		public int Id { get; set; }
 		public string AdminId { get; set; } = string.Empty;
 		public Customer Admin { get; set; }
 

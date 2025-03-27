@@ -1,20 +1,23 @@
 ﻿using E_Commers.Context;
 using E_Commers.Interfaces;
+using E_Commers.Models;
 using E_Commers.Repository;
 using E_Commers.UOW;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Logging;
+using StackExchange.Redis;
 
 public class UnitOfWork : IUnitOfWork
 {
 	private readonly AppDbContext _context;
 	private readonly Dictionary<Type, object> _repositories = new();
 	private readonly ILoggerFactory _loggerFactory;
-
+	private readonly IConnectionMultiplexer _redis;
 	public ICategoryRepository Category { get; }
 
-	public UnitOfWork(AppDbContext context, ICategoryRepository category, ILoggerFactory loggerFactory)
+	public UnitOfWork(IConnectionMultiplexer redis, AppDbContext context, ICategoryRepository category, ILoggerFactory loggerFactory)
 	{
+		_redis = redis;
 		_context = context;
 		Category = category;
 		_loggerFactory = loggerFactory;
@@ -31,7 +34,7 @@ public class UnitOfWork : IUnitOfWork
 		_context.Dispose();
 	}
 
-	public IRepository<T> Repository<T>() where T : class
+	public IRepository<T> Repository<T>() where T : BaseEntity
 	{
 		if (!_repositories.ContainsKey(typeof(T)))
 		{
@@ -39,7 +42,7 @@ public class UnitOfWork : IUnitOfWork
 			var logger = _loggerFactory.CreateLogger<MainRepository<T>>();
 
 		
-			var repository = new MainRepository<T>(_context, logger);
+			var repository = new MainRepository<T>(_redis,_context, logger);
 			_repositories.Add(typeof(T), repository);
 		}
 

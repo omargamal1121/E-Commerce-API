@@ -17,7 +17,6 @@ public class SecurityStampMiddleware
 	public async Task Invoke(HttpContext context)
 	{
 		string? authHeader = context.Request.Headers["Authorization"];
-
 		if (!string.IsNullOrEmpty(authHeader) && authHeader.StartsWith("Bearer "))
 		{
 			string token = authHeader.Replace("Bearer ", "");
@@ -44,8 +43,8 @@ public class SecurityStampMiddleware
 					if (customer is null)
 					{
 						context.Response.StatusCode = 401;
-						await context.Response.WriteAsync("{\"statusCode\": 401}");
-						await context.Response.WriteAsync("{\"message\": \"Invalid Token - User not found\"}");
+						await context.Response.WriteAsync("{\n \"statusCode\": 401\n");
+						await context.Response.WriteAsync(" \"message\": \"Invalid Token - User not found\"\n}");
 						return;
 					}
 
@@ -55,8 +54,8 @@ public class SecurityStampMiddleware
 					if (string.IsNullOrEmpty(tokenSecurityStamp) || !tokenSecurityStamp.Equals(customerSecurityStamp))
 					{
 						context.Response.StatusCode = 401;
-						await context.Response.WriteAsync("{\"message\": \"Invalid Token - Security Stamp mismatch\"}");
-						await context.Response.WriteAsync("{\"statusCode\": 401}");
+						await context.Response.WriteAsync("{\n \"statusCode\": 401\n");
+						await context.Response.WriteAsync("    \"message\": \"Invalid Token - Security Stamp mismatch\"\n}");
 						return;
 					}
 				}
