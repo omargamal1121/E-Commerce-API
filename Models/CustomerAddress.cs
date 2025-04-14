@@ -8,7 +8,7 @@ namespace E_Commers.Models
 
 		[Required]
 		public string CustomerId { get; set; } = string.Empty;
-		public Customer Customer { get; set; } 
+		public required Customer Customer { get; set; } 
 
 		[Required(ErrorMessage = "Country Required")]
 		[StringLength(15, MinimumLength = 5, ErrorMessage = "Country must be between 5 and 15 characters")]

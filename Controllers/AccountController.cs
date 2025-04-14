@@ -7,6 +7,7 @@ using E_Commers.UOW;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims; 
 namespace E_Commers.Controllers
 {
@@ -45,8 +46,8 @@ namespace E_Commers.Controllers
 				return BadRequest(new ResponseDto
 				{
 					StatusCode = 400,
-					Message = errors
-					
+					Message = "Invalid data: " + string.Join(", ", errors)
+
 				});
 			}
 
@@ -72,41 +73,45 @@ namespace E_Commers.Controllers
 				return Unauthorized(new ResponseDto { StatusCode = 401, Message = "Incorrect Email or Password." });
 			}
 
-			string token = await _tokenHelper.GenerateTokenAsync(customer.Id);
-			if (string.IsNullOrEmpty(token))
+			var token = await _tokenHelper.GenerateTokenAsync(customer.Id);
+			if (!token.Success||token.Data.IsNullOrEmpty())
 			{
 				_logger.LogError("Failed to generate token.");
 				return BadRequest(new ResponseDto
 				{
 					StatusCode = 400,
-					Message = "Failed to generate token."
+					Message = token.Message
 				});
 			}
 
 			_logger.LogInformation("Token generated.");
-			string refreshToken = await _tokenHelper.GenerateRefreshToken(customer.Id);
-			if (string.IsNullOrEmpty(refreshToken))
+			var refreshToken = await _tokenHelper.GenerateRefreshToken(customer.Id);
+			if (!refreshToken.Success||refreshToken.Data.IsNullOrEmpty())
 			{
 				_logger.LogError("Failed to generate refresh token.");
 				return BadRequest(new ResponseDto
 				{
 					StatusCode = 400,
-					Message = "Failed to generate refresh token."
+					Message = refreshToken.Message
 				});
 			}
 
-			_logger.LogInformation("Refresh token generated.");
-			_logger.LogInformation("Response sent.");
 			customer.LastVisit = DateTime.Now;
-			 await _userManager.UpdateAsync(customer);
+			 var result= await _userManager.UpdateAsync(customer);
+			if(!result.Succeeded)
+			{
+				return StatusCode(500, new ResponseDto { StatusCode = 500, Message=string.Join(",", result.Errors.Select(x => x.Description))  });
+
+			}
 			return Ok(new ResponseDto
 			{
-				StatusCode = 200,
-				Message = new 
+				StatusCode = 200, 
+				Message = "Token Generated",
+				Data = new 
 				{
 					userid=customer.Id,
-					Token = token, 
-					RefreshToken = refreshToken 
+					Token = token.Data, 
+					RefreshToken = refreshToken.Data 
 				}
 			});
 		}
@@ -207,14 +212,14 @@ namespace E_Commers.Controllers
 				_logger.LogWarning("Invalid userid");
 				return Unauthorized( new ResponseDto { Message = "Invalid userid", StatusCode = 401 });
 			}
-			bool result=await	_tokenHelper.ValidateRefreshTokenAsync(refreshTokenDto.UserId.ToString("D"), refreshTokenDto.RefreshToken);
-			if(!result)
+			var result=await	_tokenHelper.ValidateRefreshTokenAsync(refreshTokenDto.UserId.ToString("D"), refreshTokenDto.RefreshToken);
+			if(!result.Success||!result.Data)
 			{
-				 return Unauthorized(new ResponseDto { Message = "Invalid refresh token. Please sign in again.", StatusCode = 401 });
+				 return Unauthorized(new ResponseDto { Message = result.Message, StatusCode = 401 });
 			}
-			 string token= await _tokenHelper.RefreshToken(refreshTokenDto.UserId.ToString("D"),refreshTokenDto.RefreshToken);
+			 var token= await _tokenHelper.RefreshToken(refreshTokenDto.UserId.ToString("D"),refreshTokenDto.RefreshToken);
 
-			return Ok(new ResponseDto { Message = new { Token = token }, StatusCode = 200 });
+			return Ok(new ResponseDto { Message = "Token Generated" ,Data= new { Token = token }, StatusCode = 200 });
 
 		}
 		[HttpPost(nameof(ChangePassword))]
@@ -237,12 +242,7 @@ namespace E_Commers.Controllers
 				});
 			}
 
-			string userid = User.FindFirst(ClaimTypes.NameIdentifier)?.Value??string.Empty;
-			if(string.IsNullOrEmpty(userid))
-			{
-				_logger.LogWarning("User ID not found in token");
-				return Unauthorized(new ResponseDto { Message = "Unauthorized", StatusCode = 401 });
-			}
+			string userid = User.FindFirst(ClaimTypes.NameIdentifier).Value;
 
 			Customer? customer = await _userManager.FindByIdAsync(userid);
 			if (customer is null)
@@ -339,17 +339,11 @@ namespace E_Commers.Controllers
 			_logger.LogInformation($"In {nameof(Logout)} Method");
 
 			string? userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-			if (string.IsNullOrEmpty(userId))
-			{
-				_logger.LogWarning("❌ User ID not found in token");
-				return Unauthorized(new ResponseDto { StatusCode = 401, Message = "Unauthorized" });
-			}
 
-			bool result = await _tokenHelper.RemoveRefreshTokenAsync(userId);
-			if (!result)
+			var result = await _tokenHelper.RemoveRefreshTokenAsync(userId);
+			if (!result.Success||!result.Data)
 			{
-				_logger.LogError("❌ Failed to log out user {UserId}", userId);
-				return BadRequest(new ResponseDto { StatusCode = 400, Message = "Logout failed due to an error" });
+				return BadRequest(new ResponseDto { StatusCode = 400, Message =result.Message});
 			}
 
 			_logger.LogInformation("✅ Logout successful for user {UserId}", userId);
@@ -362,18 +356,13 @@ namespace E_Commers.Controllers
 		{
 			_logger.LogInformation($"In {nameof(Delete)} Method");
 
-			string? userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-			if (string.IsNullOrEmpty(userId))
-			{
-				_logger.LogWarning("❌ User ID not found in token");
-				return Unauthorized(new ResponseDto { StatusCode = 401, Message = "Unauthorized" });
-			}
+			string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 	
-			bool result = await _tokenHelper.RemoveRefreshTokenAsync(userId);
-			if (!result)
+			var result = await _tokenHelper.RemoveRefreshTokenAsync(userId);
+			if (!result.Success || !result.Data)
 			{
-				_logger.LogError("❌ Failed to Delete user {UserId}", userId);
-				return BadRequest(new ResponseDto { StatusCode = 400, Message = "Deleted failed due to an error" });
+				
+				return BadRequest(new ResponseDto { StatusCode = 400, Message = result.Message });
 			}
 			Customer? customer = await _userManager.FindByIdAsync(userId);
 			if(customer is null)

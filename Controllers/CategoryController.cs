@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using E_Commers.DtoModels.AccountDtos;
 using E_Commers.DtoModels.CategoryDtos;
+using E_Commers.DtoModels.DiscoutDtos;
+using E_Commers.DtoModels.ProductDtos;
 using E_Commers.Enums;
 using E_Commers.Helper;
 using E_Commers.Models;
@@ -8,7 +10,7 @@ using E_Commers.UOW;
 using Microsoft.AspNetCore.Authorization;
 
 using Microsoft.AspNetCore.Mvc;
-
+using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using System.Transactions;
 
@@ -38,14 +40,14 @@ namespace E_Commers.Controllers
 			ResultDto<Category> resultcategory = await _unitOfWork.Category.GetByIdAsync(id);
 			if (!resultcategory.Success)
 			{
-				_logger.LogWarning(resultcategory.Message);
-				return Ok(new ResponseDto { Message = $"category.Message", StatusCode = 200 });
+				
+				return Ok(new ResponseDto {  StatusCode = 200, Message = resultcategory.Message });
 			}
 			CategoryDto categoryDto = new CategoryDto(resultcategory.Data.Id, resultcategory.Data.Name, resultcategory.Data.Description, resultcategory.Data.CreatedAt, resultcategory.Data.DeletedAt, resultcategory.Data.DeletedAt);
 
 
 
-			return Ok(new ResponseDto { Message = categoryDto, StatusCode = 200 });
+			return Ok(new ResponseDto { Message = resultcategory.Message,Data= categoryDto, StatusCode = 200 });
 		}
 
 		[HttpGet("GetAll")]
@@ -55,11 +57,10 @@ namespace E_Commers.Controllers
 			_logger.LogInformation($"Executing {nameof(GetAll)} in CategoryController");
 
 
-			var Resultcategories = await _unitOfWork.Category.GetAllAsync();
+			var Resultcategories = await _unitOfWork.Category.GetAllAsync(filter:c=>c.DeletedAt==null);
 			if (!Resultcategories.Data.Any())
 			{
-				_logger.LogWarning("No categories found");
-				return Ok(new ResponseDto { Message = "No categories found", StatusCode = 200 });
+				return Ok(new ResponseDto { StatusCode = 200, Message = "No categories found", });
 			}
 
 			List<CategoryDto> categoryDtos = Resultcategories.Data.Select(c =>
@@ -75,7 +76,7 @@ namespace E_Commers.Controllers
 			
 		
 
-			return Ok(new ResponseDto { Message = categoryDtos, StatusCode = 200 });
+			return Ok(new ResponseDto { Message = Resultcategories.Message ,Data= categoryDtos, StatusCode = 200 });
 		}
 
 		[HttpPost]
@@ -95,19 +96,15 @@ namespace E_Commers.Controllers
 				});
 			}
 
-			string? userid = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-			if (string.IsNullOrEmpty(userid))
-			{
-				_logger.LogError("Admin ID not found, canceling create operation.");
-				return Unauthorized(new ResponseDto { StatusCode = 401, Message = "Invalid Admin ID." });
-			}
-
-			if (await _unitOfWork.Category.GetByNameAsync(model.Name) != null) 
+			string userid = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+			
+			var checkname = await _unitOfWork.Category.GetByNameAsync(model.Name);
+			if (checkname.Success) 
 			{
 				return BadRequest(new ResponseDto
 				{
 					StatusCode = 400,
-					Message = "A category with this name already exists."
+					Message = $"Their's Category with this Name:{model.Name}"
 				});
 			}
 
@@ -169,18 +166,19 @@ namespace E_Commers.Controllers
 
 			try
 			{
-				ResultDto<Category> resultcategory = await _unitOfWork.Category.GetByIdAsync(id);
+				ResultDto<Category> resultcategory = await _unitOfWork.Category.GetByIdAsync(id,c=>c.Include(p=>p.products));
 				if (resultcategory.Data is null|| resultcategory.Data.DeletedAt.HasValue)
 				{
 					_logger.LogWarning($"No Category with this id: {id}");
 					return BadRequest(new ResponseDto { StatusCode = 400, Message = $"No Category with this id: {id}" });
 				}
 
-				string? adminId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-				if (string.IsNullOrEmpty(adminId))
+				string adminId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+				
+				if (resultcategory.Data.products.Count != 0)
 				{
-					_logger.LogError("Admin ID not found, canceling delete operation.");
-					return Unauthorized(new ResponseDto { StatusCode = 401, Message = "Invalid Admin ID." });
+					_logger.LogError("Can't delete Category Contain Products.");
+					return StatusCode(400, new ResponseDto { StatusCode = 400, Message = "Can't delete warehouse Contain Products." });
 				}
 				resultcategory.Data.DeletedAt = DateTime.UtcNow;
 
@@ -231,7 +229,7 @@ namespace E_Commers.Controllers
 		{
 			_logger.LogInformation($"Executing {nameof(GetDeletedCategoriesAsync)}");
 
-			var resultlist = await _unitOfWork.Category.GetAllDeletedAsync();
+			var resultlist = await _unitOfWork.Category.GetAllAsync(filter:c=>c.DeletedAt.HasValue);
 
 			if (!resultlist.Data.Any())
 			{
@@ -250,31 +248,21 @@ namespace E_Commers.Controllers
 			}).ToList();
 
 			_logger.LogInformation($"Deleted Categories found: {categoryDtos.Count()}");
-			return Ok(new ResponseDto { StatusCode = 200, Message = categoryDtos });
+			return Ok(new ResponseDto { StatusCode = 200, Message =resultlist.Message  , Data= categoryDtos });
 		}
 		[HttpPatch("return-Deleted-category")]
 		public async Task<ActionResult<ResponseDto>> ReturnRemovedCategoryAsync(int id)
 		{
 			_logger.LogInformation($"Executing {nameof(ReturnRemovedCategoryAsync)}");
 
-			string? userid = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-			if (userid is null)
-			{
-				_logger.LogError("Invalid token or user not authenticated");
-				return Unauthorized(new ResponseDto { StatusCode = 401, Message = "Invalid token or user not authenticated" });
-			}
+			string userid = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+			
 
 			ResultDto<Category> resultcategory = await _unitOfWork.Category.GetByIdAsync(id);
-			if (resultcategory.Success)
+			if (!resultcategory.Success)
 			{
 				_logger.LogWarning($"Category not found with ID: {id}");
 				return BadRequest(new ResponseDto { StatusCode = 400, Message = $"Category not found with ID: {id}" });
-			}
-
-			if (!resultcategory.Data.DeletedAt.HasValue)
-			{
-				_logger.LogWarning($"Category with ID {id} is not deleted.");
-				return BadRequest(new ResponseDto { StatusCode = 400, Message = $"Category with ID {id} is not deleted." });
 			}
 
 			using var tran = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
@@ -329,12 +317,8 @@ namespace E_Commers.Controllers
 				return BadRequest(new ResponseDto { StatusCode = 400, Message = errors });
 
 			}
-			string? adminId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-			if (string.IsNullOrEmpty(adminId))
-			{
-				_logger.LogError("Admin ID not found, canceling delete operation.");
-				return Unauthorized(new ResponseDto { StatusCode = 401, Message = "Invalid Admin ID." });
-			}
+			string adminId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+		
 
 			ResultDto<Category>? resultcategory = await _unitOfWork.Category.GetByIdAsync(id);
 			if (!resultcategory.Success)
@@ -396,21 +380,36 @@ namespace E_Commers.Controllers
 			_logger.LogInformation("Category Updated");
 			return Ok(new ResponseDto { StatusCode = 200, Message = "Category Updated Successfully" });
 		}
-		[HttpGet("Produects/{id}")]
+		[HttpGet("{id}/Produects")]
+		[ResponseCache(Duration = 60, VaryByQueryKeys = new  string []{ "id"})]
 		public async Task<ActionResult<ResponseDto>> GetProduectsByCategoryId(int id)
 		{
 			_logger.LogInformation($"Execute:{nameof(GetProduectsByCategoryId)} with Id:{id}");
-			ResultDto< List<Product>>resultproducts= await _unitOfWork.Category.GetProductsByCategoryIdAsync(id);
+			ResultDto< Category>resultproducts= await _unitOfWork.Category.GetByIdAsync(id,c=>c.Include(ca=>ca.products).ThenInclude(p=>p.Category).Include(ca => ca.products).ThenInclude(p => p.Discount));
 			if(!resultproducts.Success)
 			{
 
 				return BadRequest(new ResponseDto { StatusCode = 400 , Message=resultproducts.Message});
 			}
 
-			if (!resultproducts.Data.Any())
-				return Ok(new ResponseDto { StatusCode = 200, Message = resultproducts.Message });
+			if (!resultproducts.Data.products.Any())
+				return Ok(new ResponseDto { StatusCode = 200, Message ="No Products Found"});
 
-			return Ok(new ResponseDto { StatusCode = 200, Message = resultproducts.Data });
+			var productdto = resultproducts.Data.products.Select(p => new ProductDto
+			{
+				Id = p.Id,
+				AvailabeQuantity = p.Quantity,
+				CreatedAt = p.CreatedAt,
+				Name = p.Name,
+				FinalPrice = p.Discount == null || !p.Discount.IsActive ? p.Price : p.Price - p.Discount.DiscountPercent * p.Price,
+				Description = p.Description,
+				Discount = p.Discount == null?null: new DiscountDto(p.Discount.Id,p.Discount.Name,p.Discount.DiscountPercent,p.Discount.Description,p.Discount.IsActive),
+				Category=new CategoryDto { Id=resultproducts.Data.Id,Description=resultproducts.Data.Description,Name=resultproducts.Data.Name,CreatedAt=resultproducts.Data.CreatedAt}
+				 
+
+			});
+
+			return Ok(new ResponseDto { StatusCode = 200, Message = resultproducts.Message  ,Data= productdto });
 
 
 

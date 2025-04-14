@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace E_Commers.Models
 {
@@ -16,6 +17,7 @@ namespace E_Commers.Models
 		[Range(0,1,ErrorMessage ="Must be between 0 and 1")]
 		public decimal DiscountPercent { get; set; }
 		public bool IsActive { get; set; } = false;
+		[JsonIgnore]
 		public List<Product> products { get; set; } = new List<Product>();
 
 

@@ -1,17 +1,16 @@
 ﻿using E_Commers.Models;
-using System.ComponentModel.DataAnnotations;
-using System.Text.Json.Serialization;
+
 
 namespace E_Commers.DtoModels.CategoryDtos
 {
-	public class CategoryDto:BaseEntity
+	public record CategoryDto:BaseDto
 	{
 		public CategoryDto()
 		{
 			
 		}
 
-		public CategoryDto(int id, string name,string? description,DateTime? create, DateTime? modeify, DateTime? delete)
+		public CategoryDto(int id, string name,string? description,DateTime? create, DateTime? modeify=null, DateTime? delete=null)
 		{
 			Id = id;
 			Name = name;

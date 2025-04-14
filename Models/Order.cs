@@ -7,12 +7,12 @@ namespace E_Commers.Models
 	{
 		[ForeignKey("Customer")]
 		public string CustomerId { get; set; } = string.Empty;
-		public Customer Customer { get; set; }
+		public required Customer Customer { get; set; }
 
 		[Range(0.01, double.MaxValue, ErrorMessage = "Total must be greater than zero.")]
 		[Required(ErrorMessage = "Total Required")]
 		public decimal Total { get; set; }
-		public Payment Payment { get; set; }
+		public required Payment Payment { get; set; }
 
 		public List<Item> Items { get; set; } = new List<Item>();
 	}

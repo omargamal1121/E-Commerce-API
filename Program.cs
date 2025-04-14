@@ -8,15 +8,18 @@ using E_Commers.Models;
 using E_Commers.Repository;
 using E_Commers.UOW;
 using Hangfire;
+using Hangfire.MySql;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using MySqlConnector;
 using Serilog;
 using StackExchange.Redis;
 using System.Text;
+using System.Text.Json.Serialization;
 
 namespace E_Commers
 {
@@ -25,20 +28,26 @@ namespace E_Commers
         public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+            builder.Services.AddControllers().AddJsonOptions(jo=>jo.JsonSerializerOptions.ReferenceHandler=ReferenceHandler.IgnoreCycles);
             builder.Logging.AddConsole();
             builder.Services.AddResponseCaching();
             builder.Services.AddIdentity<Customer, IdentityRole>().AddEntityFrameworkStores<AppDbContext>().AddDefaultTokenProviders();
             builder.Services.AddTransient<TokenHelper>();
             builder.Services.AddTransient<ImagesHelper>();
             builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+            builder.Services.AddScoped<IWareHouseRepository, WareHouseRepository>();
             builder.Services.AddScoped<IProductRepository, ProductRepository>();
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 			builder.Services.AddScoped(typeof(IRepository<>), typeof(MainRepository<>));
 			builder.Services.AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Connect("Localhost:6379"));
-			builder.Services.AddDbContext<AppDbContext>(options=>options.UseSqlServer(builder.Configuration.GetConnectionString("MyConnection")));
+			builder.Services.AddDbContext<AppDbContext>(options=>options.UseMySql(builder.Configuration.GetConnectionString("MyConnectionMySql"),new MySqlServerVersion(new Version(8, 0, 21))));
 			builder.Services.AddControllers().ConfigureApiBehaviorOptions(options=>options.SuppressModelStateInvalidFilter=true);
 			builder.Services.AddScoped<CategoryCleanupService>();
-			builder.Services.AddHangfire(config => config.UseSqlServerStorage(builder.Configuration.GetConnectionString("MyConnection")));
+			builder.Services.AddHangfire(config => config.UseStorage(new MySqlStorage(builder.Configuration.GetConnectionString("MyConnectionMySql"),new MySqlStorageOptions 
+            {
+				TablesPrefix = "Hangfire_", 
+				QueuePollInterval = TimeSpan.FromSeconds(10) 
+			})));
             builder.Services.AddCors(options =>
             {
                 options.AddPolicy("MyPolicy", Options =>
@@ -113,7 +122,7 @@ namespace E_Commers
 
             app.UseHttpsRedirection();
             app.UseCors("MyPolicy");
-            app.UseMiddleware<SecurityStampMiddleware>();
+
 
 			app.UseHangfireDashboard("/hangfire");
 
@@ -134,7 +143,8 @@ namespace E_Commers
 
 
 			app.UseAuthentication();
-            app.UseAuthorization();
+			app.UseAuthorization();
+			app.UseMiddleware<SecurityStampMiddleware>();
             app.UseRateLimiter();
             app.UseResponseCaching();
             app.MapControllers();

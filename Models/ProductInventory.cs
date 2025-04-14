@@ -2,16 +2,16 @@
 
 namespace E_Commers.Models
 {
-	public class ProductInventory:BaseEntity
+	public class ProductInventory : BaseEntity
 	{
+		public int ProductId { get; set; }
+		public  Product Product { get; set; }
 
-		[Required(ErrorMessage = "Name is required.")]
-		[StringLength(20, MinimumLength = 5, ErrorMessage = "Name must be between 5 and 20 characters.")]
-		public string Name { get; set; }
-
-		[Required(ErrorMessage = "Quantity is required.")]
-		[Range(0,int.MaxValue, ErrorMessage = "Quantity Can't be Negative")]
-
-		public List<Product> products { get; set; } = new List<Product>();
+		public int WarehouseId { get; set; }
+		public  Warehouse Warehouse { get; set; }
+		[Range(0, int.MaxValue)]
+		[Required(ErrorMessage = "Quantity Required")]
+		public int Quantity { get; set; }
 	}
+
 }

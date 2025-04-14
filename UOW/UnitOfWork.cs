@@ -14,9 +14,13 @@ public class UnitOfWork : IUnitOfWork
 	private readonly ILoggerFactory _loggerFactory;
 	private readonly IConnectionMultiplexer _redis;
 	public ICategoryRepository Category { get; }
+	public IWareHouseRepository  WareHouse { get; }
 
-	public UnitOfWork(IConnectionMultiplexer redis, AppDbContext context, ICategoryRepository category, ILoggerFactory loggerFactory)
+	public IProductRepository Product { get; }
+	public UnitOfWork(IProductRepository product,IWareHouseRepository wareHouse,IConnectionMultiplexer redis, AppDbContext context, ICategoryRepository category, ILoggerFactory loggerFactory)
 	{
+		Product = product;
+		WareHouse = wareHouse;
 		_redis = redis;
 		_context = context;
 		Category = category;

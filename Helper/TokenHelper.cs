@@ -1,6 +1,7 @@
 ﻿using E_Commers.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json.Linq;
 using StackExchange.Redis;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -26,7 +27,7 @@ namespace E_Commers.Helper
 		}
 
 
-		public async Task<string> RefreshToken(string userId, string refreshToken)
+		public async Task<ResultDto<string>> RefreshToken(string userId, string refreshToken)
 		{
 			_logger.LogInformation("🔄 RefreshToken() started for User ID: {UserId}", userId);
 
@@ -34,7 +35,7 @@ namespace E_Commers.Helper
 			if (user is null)
 			{
 				_logger.LogWarning("❌ Invalid User ID: {UserId}", userId);
-				return string.Empty;
+				return ResultDto<string>.Fail("Invalid User ID: {UserId}");
 			}
 
 		
@@ -43,33 +44,33 @@ namespace E_Commers.Helper
 			if (string.IsNullOrEmpty(storedRefreshToken) || !storedRefreshToken.Equals(refreshToken))
 			{
 				_logger.LogWarning("⚠️ Invalid Refresh Token for User ID: {UserId}", userId);
-				return string.Empty;
+				return ResultDto<string>.Fail($"⚠️ Invalid Refresh Token for User ID: {userId}");
 			}
 
 			return await GenerateTokenAsync(userId);
 		}
 
 
-		public async Task<string> GenerateRefreshToken(string userId)
+		public async Task<ResultDto<string>> GenerateRefreshToken(string userId)
 		{
 			_logger.LogInformation("🔑 Generating Refresh Token for User ID: {UserId}", userId);
 
 			if (await _userManager.FindByIdAsync(userId) is null)
 			{
 				_logger.LogWarning("❌ Invalid User ID: {UserId}", userId);
-				return string.Empty;
+				return ResultDto<string>.Fail("Invalid User ID: {UserId}");
 			}
 
 		
 			string token = Guid.NewGuid().ToString();
 			await _database.StringSetAsync($"RefreshToken:{userId}", token, expiry: TimeSpan.FromDays(1));
-
-			return token;
+			_logger.LogInformation("RefreshToken Generated");
+			return ResultDto<string>.Ok(token, "RefreshToken Generated");
 		}
 
 
 	
-		public async Task<bool> RemoveRefreshTokenAsync(string userId)
+		public async Task<ResultDto<bool>> RemoveRefreshTokenAsync(string userId)
 		{
 			_logger.LogInformation("🗑 Removing Refresh Token for User ID: {UserId}", userId);
 
@@ -77,7 +78,7 @@ namespace E_Commers.Helper
 			if (customer is null)
 			{
 				_logger.LogWarning("❌ Invalid User ID: {UserId}", userId);
-				return false;
+				return ResultDto<bool>.Fail($"❌ Invalid User ID: {userId}");
 			}
 
 
@@ -85,20 +86,20 @@ namespace E_Commers.Helper
 			if (!result.Succeeded)
 			{
 				_logger.LogWarning("⚠️ Failed to update SecurityStamp for User {UserId}", userId);
-				return false;
+				return ResultDto<bool>.Fail($"❌ Failed to update SecurityStamp for User: {userId}");
 			}
 
 			bool deleted = await _database.KeyDeleteAsync($"RefreshToken:{userId}");
 			if (!deleted)
 			{
 				_logger.LogWarning("⚠️ Failed to remove RefreshToken for User {UserId}", userId);
-				return false;
+				return ResultDto<bool>.Fail($"❌ Failed to remove RefreshToken for User {userId}");
 			}
 
-			return true;
+			return ResultDto<bool>.Ok(true,$"RefreshToken Removed");
 		}
 
-		public async Task<string> GenerateTokenAsync(string userId)
+		public async Task<ResultDto<string>>GenerateTokenAsync(string userId)
 		{
 			_logger.LogInformation("🔐 Generating Access Token for User ID: {UserId}", userId);
 
@@ -106,7 +107,7 @@ namespace E_Commers.Helper
 			if (user is null)
 			{
 				_logger.LogWarning("❌ Invalid User ID: {UserId}", userId);
-				return string.Empty;
+				return ResultDto<string>.Fail("Invalid User ID: {UserId}");
 			}
 
 			string secretKey = _config["Jwt:Key"] ?? throw new ArgumentNullException("Jwt:Key is missing in appsettings.json");
@@ -146,20 +147,20 @@ namespace E_Commers.Helper
 
 			string tokenString = new JwtSecurityTokenHandler().WriteToken(token);
 			_logger.LogInformation("✅ Access Token generated successfully for User ID: {UserId}", userId);
-			return tokenString;
+			return  ResultDto<string>.Ok(tokenString,$"✅ Access Token generated successfully for User ID: {userId}") ;
 		}
-		public async Task<bool> ValidateRefreshTokenAsync(string userId,string Refreshtoken)
+		public async Task<ResultDto<bool>> ValidateRefreshTokenAsync(string userId,string Refreshtoken)
 		{
 			_logger.LogInformation($"In {nameof(ValidateRefreshTokenAsync)} Method");
 			string? storedtoken= await	_database.StringGetAsync($"RefreshToken:{userId}");
 			if (string.IsNullOrEmpty(storedtoken)||!storedtoken.Equals(Refreshtoken,StringComparison.OrdinalIgnoreCase))
 			{
 				_logger.LogWarning("Refreshtoken Invalid Or Doesn't Exsist");
-				return false;
+				return ResultDto<bool>.Fail("Refreshtoken Invalid Or Doesn't Exsist");
 			}
 			_logger.LogInformation("Valid Refreshtoken");
 
-			return true;
+			return ResultDto<bool>.Ok(true, "Valid Refreshtoken");
 		}
 	}
 }

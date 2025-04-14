@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection.Emit;
 
 namespace E_Commers.Context
 {
@@ -24,6 +25,7 @@ namespace E_Commers.Context
 		public DbSet<Category> Categories { get; set; }
 		public DbSet<PaymentMethod> PaymentMethods { get; set; }
 		public DbSet<PaymentProvider> PaymentProviders { get; set; }
+		public DbSet<Warehouse> warehouses { get; set; }
 
 		protected override void OnModelCreating(ModelBuilder builder)
 		{
@@ -66,10 +68,16 @@ namespace E_Commers.Context
 				.HasOne(p => p.Category)
 				.WithMany(c => c.products)
 				.HasForeignKey(p => p.CategoryId);
+
 			builder.Entity<ProductInventory>()
-				.HasMany(I => I.products)
-				.WithOne(p => p.Inventory)
-				.HasForeignKey(p => p.InventoryId);
+				.HasOne(pi => pi.Product)
+				.WithMany(p => p.InventoryEntries)
+				.HasForeignKey(pi => pi.ProductId);
+
+			builder.Entity<ProductInventory>()
+				.HasOne(pi => pi.Warehouse)
+				.WithMany(w => w.ProductInventories)
+				.HasForeignKey(pi => pi.WarehouseId);
 
 			builder.Entity<Customer>()
 				.HasMany(c => c.Addresses)
@@ -90,6 +98,13 @@ namespace E_Commers.Context
 				.WithOne(p => p.Discount)
 				.HasForeignKey(p => p.DiscountId);
 			builder.Entity<Category>()
+				.HasIndex(c => c.Name)
+				.IsUnique();
+			builder.Entity<Warehouse>()
+				.HasIndex(c => c.Name)
+				.IsUnique();builder.Entity<Product>()
+				.HasIndex(c => c.Name)
+				.IsUnique();builder.Entity<Discount>()
 				.HasIndex(c => c.Name)
 				.IsUnique();
 		

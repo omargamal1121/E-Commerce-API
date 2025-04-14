@@ -7,30 +7,37 @@
     <RootNamespace>E_Commers</RootNamespace>
     <LangVersion>preview</LangVersion>
   </PropertyGroup>
+	<ItemGroup>
+		<!-- Core -->
+		<PackageReference Include="AutoMapper" Version="14.0.0" />
+
+		<!-- Hangfire -->
+		<PackageReference Include="Hangfire.AspNetCore" Version="1.8.18" />
+		<PackageReference Include="Hangfire.MySqlStorage" Version="2.0.3" />
+
+		<!-- Auth -->
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.3" />
+		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.3" />
+
+		<!-- EF Core -->
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.3">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="8.0.3" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.3">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+
+		<!-- Other -->
+		<PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="8.0.3" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.0-preview.2.25163.2" />
+		<PackageReference Include="Serilog.Extensions.Logging" Version="9.0.1" />
+		<PackageReference Include="Swashbuckle.AspNetCore" Version="7.3.1" />
+	</ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="AutoMapper" Version="14.0.0" />
-    <PackageReference Include="Hangfire.AspNetCore" Version="1.8.18" />
-    <PackageReference Include="Hangfire.SqlServer" Version="1.8.18" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.3" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.3" />
-    <PackageReference Include="microsoft.EntityFrameWorkCore.Design" Version="9.0.3">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="microsoft.entityframeworkcore.sqlserver" Version="9.0.3" />
-    <PackageReference Include="microsoft.EntityFrameWorkCore.tools" Version="9.0.3">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="9.0.3" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.3" />
-    <PackageReference Include="Serilog.Extensions.Logging" Version="9.0.0" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="7.3.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="DtoModels\ProductDtos\" />
     <Folder Include="wwwroot\CustomerPhotos\" />
     <Folder Include="wwwroot\ProductPhotos\" />
   </ItemGroup>

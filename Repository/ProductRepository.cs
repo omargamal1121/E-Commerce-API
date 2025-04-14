@@ -92,7 +92,7 @@ namespace E_Commers.Repository
 		{
 			_logger.LogInformation($"Executing {nameof(GetProductsByInventoryAsync)} inventoryId:{inventoryId}");
 
-			return await _entity.Where(p => p.InventoryId == inventoryId)
+			return await _entity.Where(p => p.Id == inventoryId)
 								.AsNoTracking()
 								.ToListAsync();
 		}

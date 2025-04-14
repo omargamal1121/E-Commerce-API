@@ -14,7 +14,7 @@ namespace E_Commers.Models
 
 		[ForeignKey("PaymentMethod")]
 		public int PaymentMethodId { get; set; }
-		public  PaymentMethod PaymentMethod { get; set; }
+		public required  PaymentMethod PaymentMethod { get; set; }
 
 		public bool IsActive { get; set; } = true;
 	}

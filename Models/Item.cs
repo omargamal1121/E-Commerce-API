@@ -8,11 +8,11 @@ namespace E_Commers.Models
 
 		[ForeignKey("Order")]
 		public int OrderId { get; set; }
-		public Order Order { get; set; }
+		public required Order Order { get; set; }
 
 		[ForeignKey("Product")]
 		public int ProductId { get; set; }
-		public Product Product { get; set; }
+		public required Product Product { get; set; }
 
 		public  int Quantity { get; set; }
 		public DateTime AddedAt { get; set; } = DateTime.UtcNow;

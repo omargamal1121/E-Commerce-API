@@ -16,7 +16,7 @@ public static class DataSeeder
 		string adminPassword = "Admin@123";
 		if (!await roleManager.RoleExistsAsync("Admin"))
 		{
-			await roleManager.CreateAsync(new IdentityRole("User"));
+			await roleManager.CreateAsync(new IdentityRole("Admin"));
 		}
 		if (!await roleManager.RoleExistsAsync("User"))
 		{
