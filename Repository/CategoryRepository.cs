@@ -1,5 +1,5 @@
 ﻿using E_Commers.Context;
-using E_Commers.Helper;
+using E_Commers.Services;
 using E_Commers.Interfaces;
 using E_Commers.Models;
 using Microsoft.EntityFrameworkCore;
@@ -20,20 +20,20 @@ namespace E_Commers.Repository
 			_logger = logger;
 		}
 
-		public async Task<ResultDto<bool>> CategoryExistsAsync(int id)
+		public async Task<Result<bool>> CategoryExistsAsync(int id)
 		{
 			_logger.LogInformation($"Executing {nameof(CategoryExistsAsync)} Id: {id}");
 			if(await GetByIdAsync(id) is null)
 			{
 				_logger.LogWarning($"No Category With this id:{id}");
-				return ResultDto<bool>.Fail($"No Category With this id:{id}");
+				return Result<bool>.Fail($"No Category With this id:{id}");
 			}
 			_logger.LogInformation("Cateogry found");
-			return ResultDto<bool>.Ok(true); 
+			return Result<bool>.Ok(true); 
 		}
 
 
-		public async Task<ResultDto<Category?>> GetByNameAsync(string Name)
+		public async Task<Result<Category?>> GetByNameAsync(string Name)
 		{
 			_logger.LogInformation($"Executing {nameof(GetByNameAsync)} for Name: {Name}");
 
@@ -43,7 +43,7 @@ namespace E_Commers.Repository
 			if (!string.IsNullOrEmpty(cachedData))
 			{
 				_logger.LogInformation("Category Found in cache");
-				 return ResultDto<Category?>.Ok(JsonConvert.DeserializeObject<Category>(cachedData));
+				 return Result<Category?>.Ok(JsonConvert.DeserializeObject<Category>(cachedData));
 				
 			}
 
@@ -52,18 +52,18 @@ namespace E_Commers.Repository
 			if (category is null)
 			{
 				_logger.LogWarning($"No Category with this Name:{Name}");
-				return ResultDto<Category?>.Fail($"No Category with this Name:{Name}");
+				return Result<Category?>.Fail($"No Category with this Name:{Name}");
 			}
 			await redisdb.StringSetAsync(cacheKey, JsonConvert.SerializeObject(category), TimeSpan.FromMinutes(5));
 			await redisdb.SetAddAsync(typeof(Category).Name, cacheKey);
 
 			_logger.LogWarning("category found in database");
-			return ResultDto<Category?>.Ok(category,"From database");
+			return Result<Category?>.Ok(category,"From database");
 		}
 
 
 
-		public async Task<ResultDto<Category?>> GetCategoryByProductIdAsync(int productId)
+		public async Task<Result<Category?>> GetCategoryByProductIdAsync(int productId)
 		{
 			_logger.LogInformation($"Executing {nameof(GetCategoryByProductIdAsync)} for ProductId: {productId}");
 			string? serlizecategory = await redisdb.StringGetAsync($"Categories:ProductId:{productId}");
@@ -73,16 +73,16 @@ namespace E_Commers.Repository
 				if (category is null)
 				{
 					_logger.LogInformation($"No category Has this ProductId:{productId}");
-					return ResultDto<Category?>.Fail($"No category Has this ProductId:{productId}");
+					return Result<Category?>.Fail($"No category Has this ProductId:{productId}");
 				}
 				await redisdb.StringSetAsync($"Category:ProductId:{productId}", JsonConvert.SerializeObject(category));
 				await redisdb.SetAddAsync($"{typeof(Category).Name}", $"Categories:ProductId:{productId}");
-				return ResultDto<Category?>.Ok(category, "Category found in database");
+				return Result<Category?>.Ok(category, "Category found in database");
 			}
 			_logger.LogInformation("Category found in cache");
-			return ResultDto<Category?>.Ok(JsonConvert.DeserializeObject< Category >(serlizecategory));
+			return Result<Category?>.Ok(JsonConvert.DeserializeObject< Category >(serlizecategory));
 		}
-		public async Task<ResultDto<List<Product>>> GetProductsByCategoryIdAsync(int categoryId)
+		public async Task<Result<List<Product>>> GetProductsByCategoryIdAsync(int categoryId)
 		{
 			_logger.LogInformation($"Executing {nameof(GetProductsByCategoryIdAsync)} for CategoryId: {categoryId}");
 
@@ -91,28 +91,28 @@ namespace E_Commers.Repository
 			if (!string.IsNullOrEmpty(serializedProducts))
 			{
 				_logger.LogInformation("Found In cache");
-				return ResultDto<List<Product>>.Ok( JsonConvert.DeserializeObject<List<Product>>(serializedProducts) ?? new List<Product>(),"Products found");
+				return Result<List<Product>>.Ok( JsonConvert.DeserializeObject<List<Product>>(serializedProducts) ?? new List<Product>(),"Products found");
 			}
 
 
-			ResultDto<Category> category = await GetByIdAsync(categoryId);
+			Result<Category> category = await GetByIdAsync(categoryId);
 			if (!category.Success)
 			{
 				_logger.LogWarning(category.Message);
-				return ResultDto<List<Product>>.Fail(category.Message);
+				return Result<List<Product>>.Fail(category.Message);
 			}
 
 			List<Product> products = category.Data?.products ?? new List<Product>();
 			if (!products.Any()){
 				_logger.LogWarning("No Products found");
-				return ResultDto<List<Product>>.Ok(products,"No Products found");
+				return Result<List<Product>>.Ok(products,"No Products found");
 			}
 
 			await redisdb.StringSetAsync($"Products:CategoryId:{categoryId}", JsonConvert.SerializeObject(products));
 
 			await redisdb.SetAddAsync($"{typeof(Category).Name}", $"Products:CategoryId:{categoryId}");
 
-			return ResultDto<List<Product>>.Ok(products);
+			return Result<List<Product>>.Ok(products);
 		}
 
 

@@ -21,5 +21,7 @@ namespace E_Commers.Models
 		public ICollection<CustomerAddress> Addresses { get; set; } = new List<CustomerAddress>();
 		public ICollection<AdminOperationsLog> adminOperationsLogs{ get; set; } = new List<AdminOperationsLog>();
 		public ICollection<UserOperationsLog>  userOperationsLogs { get; set; } = new List<UserOperationsLog>();
+
+		public string? ImageUrl { get; set; } 
 	}
 }

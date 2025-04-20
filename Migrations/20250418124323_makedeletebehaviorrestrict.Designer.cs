@@ -4,6 +4,7 @@ using E_Commers.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace E_Commers.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250418124323_makedeletebehaviorrestrict")]
+    partial class makedeletebehaviorrestrict
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -113,9 +116,6 @@ namespace E_Commers.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)");
 
-                    b.Property<string>("ImagesUrl")
-                        .HasColumnType("longtext");
-
                     b.Property<DateTime?>("ModifiedAt")
                         .HasColumnType("datetime(6)");
 
@@ -195,8 +195,7 @@ namespace E_Commers.Migrations
                         .HasColumnType("varchar(50)");
 
                     b.Property<decimal>("DiscountPercent")
-                        .HasPrecision(18, 2)
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(65,30)");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("tinyint(1)");
@@ -273,8 +272,7 @@ namespace E_Commers.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.Property<decimal>("Total")
-                        .HasPrecision(18, 2)
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(65,30)");
 
                     b.HasKey("Id");
 
@@ -292,8 +290,7 @@ namespace E_Commers.Migrations
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<decimal>("Amount")
-                        .HasPrecision(18, 2)
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(65,30)");
 
                     b.Property<string>("CustomerId")
                         .IsRequired()
@@ -412,9 +409,6 @@ namespace E_Commers.Migrations
                     b.Property<int?>("DiscountId")
                         .HasColumnType("int");
 
-                    b.Property<string>("ImagesUrl")
-                        .HasColumnType("longtext");
-
                     b.Property<DateTime?>("ModifiedAt")
                         .HasColumnType("datetime(6)");
 
@@ -424,8 +418,7 @@ namespace E_Commers.Migrations
                         .HasColumnType("varchar(20)");
 
                     b.Property<decimal>("Price")
-                        .HasPrecision(18, 2)
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(65,30)");
 
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
@@ -762,9 +755,6 @@ namespace E_Commers.Migrations
 
                     b.Property<DateTime>("DateCreated")
                         .HasColumnType("datetime(6)");
-
-                    b.Property<string>("ImageUrl")
-                        .HasColumnType("longtext");
 
                     b.Property<DateTime?>("LastVisit")
                         .HasColumnType("datetime(6)");

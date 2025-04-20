@@ -3,6 +3,7 @@ using E_Commers.Interfaces;
 using E_Commers.Models;
 using E_Commers.Repository;
 using E_Commers.UOW;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Logging;
 using StackExchange.Redis;

@@ -2,8 +2,10 @@
 using E_Commers.BackgroundJops;
 using E_Commers.Context;
 using E_Commers.DtoModels;
-using E_Commers.Helper;
+using E_Commers.Services;
+using E_Commers.Interceptors;
 using E_Commers.Interfaces;
+using E_Commers.Intersctors;
 using E_Commers.Models;
 using E_Commers.Repository;
 using E_Commers.UOW;
@@ -11,11 +13,13 @@ using Hangfire;
 using Hangfire.MySql;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using MySqlConnector;
+using Scalar.AspNetCore;
 using Serilog;
 using StackExchange.Redis;
 using System.Text;
@@ -28,19 +32,30 @@ namespace E_Commers
         public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-            builder.Services.AddControllers().AddJsonOptions(jo=>jo.JsonSerializerOptions.ReferenceHandler=ReferenceHandler.IgnoreCycles);
-            builder.Logging.AddConsole();
-            builder.Services.AddResponseCaching();
-            builder.Services.AddIdentity<Customer, IdentityRole>().AddEntityFrameworkStores<AppDbContext>().AddDefaultTokenProviders();
-            builder.Services.AddTransient<TokenHelper>();
-            builder.Services.AddTransient<ImagesHelper>();
+            builder.Services.AddControllers().AddJsonOptions(jo=>
+            { jo.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+                jo.JsonSerializerOptions.WriteIndented=true;
+            });
+            builder.Logging.AddConsole();//pirnt log in console
+            builder.Services.AddResponseCaching();// for caching response of method of controller
+            builder.Services.AddIdentity<Customer, IdentityRole>().AddEntityFrameworkStores<AppDbContext>().AddDefaultTokenProviders();// for identity
+            builder.Services.AddScoped<ITokenService,TokenService>();
+            builder.Services.AddScoped<IRefreshTokenService,RefreshTokenService>();
+            builder.Services.AddTransient<IImagesServices,ImagesServices>();
             builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
             builder.Services.AddScoped<IWareHouseRepository, WareHouseRepository>();
             builder.Services.AddScoped<IProductRepository, ProductRepository>();
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+			builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 			builder.Services.AddScoped(typeof(IRepository<>), typeof(MainRepository<>));
+			builder.Services.AddScoped<SoftDeleteInterceptor>();
+			builder.Services.AddScoped<AddOpreationInDbInterceptor>();
 			builder.Services.AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Connect("Localhost:6379"));
-			builder.Services.AddDbContext<AppDbContext>(options=>options.UseMySql(builder.Configuration.GetConnectionString("MyConnectionMySql"),new MySqlServerVersion(new Version(8, 0, 21))));
+            builder.Services.AddDbContext<AppDbContext>((provider,options) =>
+           { 
+               
+               options.UseMySql(builder.Configuration.GetConnectionString("MyConnectionMySql"), new MySqlServerVersion(new Version(8, 0, 21))).AddInterceptors(provider.GetRequiredService<SoftDeleteInterceptor>(), provider.GetRequiredService<AddOpreationInDbInterceptor>());
+           });
 			builder.Services.AddControllers().ConfigureApiBehaviorOptions(options=>options.SuppressModelStateInvalidFilter=true);
 			builder.Services.AddScoped<CategoryCleanupService>();
 			builder.Services.AddHangfire(config => config.UseStorage(new MySqlStorage(builder.Configuration.GetConnectionString("MyConnectionMySql"),new MySqlStorageOptions 
@@ -102,7 +117,7 @@ namespace E_Commers
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuer = true,
-                    ValidIssuer = builder.Configuration["Jwt:Issure"],
+                    ValidIssuer = builder.Configuration["Jwt:Issuer"],
 					ValidateAudience = true,
                     ValidAudience = builder.Configuration["Jwt:Audience"],
                     ValidateIssuerSigningKey = true,
@@ -114,23 +129,28 @@ namespace E_Commers
             );
 
             var app = builder.Build();
-            if (app.Environment.IsDevelopment())
+			app.UseCors("MyPolicy");
+			if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
                 app.UseSwaggerUI();
+
             }
 
             app.UseHttpsRedirection();
-            app.UseCors("MyPolicy");
+        
 
 
 			app.UseHangfireDashboard("/hangfire");
 
 			using (var scope = app.Services.CreateScope())
 			{
+
+
 				var services = scope.ServiceProvider;
 				var dbContext = services.GetRequiredService<AppDbContext>();
-				dbContext.Database.Migrate();// use it to make update database as if u add seed or modeify in structure 
+               
+				dbContext.Database.Migrate();
 				await DataSeeder.SeedDataAsync(services);
 				var categoryCleanupService = scope.ServiceProvider.GetRequiredService<CategoryCleanupService>();
                 RecurringJob.AddOrUpdate(
@@ -140,6 +160,7 @@ namespace E_Commers
                         Cron.Daily
                 );
 			}
+          
 
 
 			app.UseAuthentication();

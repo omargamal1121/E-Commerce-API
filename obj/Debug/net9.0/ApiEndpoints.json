@@ -15,7 +15,7 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "E_Commers.DtoModels.AccountDtos.ResponseDto",
+        "Type": "E_Commers.DtoModels.ResponseDto",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -41,7 +41,7 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "E_Commers.DtoModels.AccountDtos.ResponseDto",
+        "Type": "E_Commers.DtoModels.ResponseDto",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -61,7 +61,7 @@
     "Parameters": [],
     "ReturnTypes": [
       {
-        "Type": "E_Commers.DtoModels.AccountDtos.ResponseDto",
+        "Type": "E_Commers.DtoModels.ResponseDto",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -87,7 +87,7 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "E_Commers.DtoModels.AccountDtos.ResponseDto",
+        "Type": "E_Commers.DtoModels.ResponseDto",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -107,7 +107,7 @@
     "Parameters": [],
     "ReturnTypes": [
       {
-        "Type": "E_Commers.DtoModels.AccountDtos.ResponseDto",
+        "Type": "E_Commers.DtoModels.ResponseDto",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -133,7 +133,7 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "E_Commers.DtoModels.AccountDtos.ResponseDto",
+        "Type": "E_Commers.DtoModels.ResponseDto",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -194,7 +194,7 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "E_Commers.DtoModels.AccountDtos.ResponseDto",
+        "Type": "E_Commers.DtoModels.ResponseDto",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -205,9 +205,91 @@
     ]
   },
   {
-    "ContainingType": "E_Commers.Controllers.CategoryController",
+    "ContainingType": "E_Commers.Controllers.AccountController",
+    "Method": "UploadPhoto",
+    "RelativePath": "api/Account/UploadPhoto",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "ContentType",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "ContentDisposition",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "Headers",
+        "Type": "Microsoft.AspNetCore.Http.IHeaderDictionary",
+        "IsRequired": false
+      },
+      {
+        "Name": "Length",
+        "Type": "System.Int64",
+        "IsRequired": false
+      },
+      {
+        "Name": "Name",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "FileName",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "E_Commers.DtoModels.ResponseDto",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "E_Commers.Controllers.categoriesController",
+    "Method": "GetAll",
+    "RelativePath": "api/categories",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "deleted",
+        "Type": "System.Boolean",
+        "IsRequired": false
+      },
+      {
+        "Name": "includeDates",
+        "Type": "System.Boolean",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "E_Commers.DtoModels.ResponseDto",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "E_Commers.Controllers.categoriesController",
     "Method": "CreateCategoryAsnc",
-    "RelativePath": "api/Category",
+    "RelativePath": "api/categories",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
@@ -218,38 +300,27 @@
         "IsRequired": true
       }
     ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "E_Commers.Controllers.CategoryController",
-    "Method": "DeleteCategoryAsync",
-    "RelativePath": "api/Category",
-    "HttpMethod": "DELETE",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "id",
-        "Type": "System.Int32",
-        "IsRequired": false
-      }
-    ],
     "ReturnTypes": [
       {
-        "Type": "E_Commers.DtoModels.AccountDtos.ResponseDto",
+        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
         "MediaTypes": [
           "text/plain",
           "application/json",
           "text/json"
         ],
-        "StatusCode": 200
+        "StatusCode": 400
+      },
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 201
       }
     ]
   },
   {
-    "ContainingType": "E_Commers.Controllers.CategoryController",
+    "ContainingType": "E_Commers.Controllers.categoriesController",
     "Method": "GetCategory",
-    "RelativePath": "api/Category/{id}",
+    "RelativePath": "api/categories/{id}",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -262,7 +333,7 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "E_Commers.DtoModels.AccountDtos.ResponseDto",
+        "Type": "E_Commers.DtoModels.ResponseDto",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -273,9 +344,35 @@
     ]
   },
   {
-    "ContainingType": "E_Commers.Controllers.CategoryController",
+    "ContainingType": "E_Commers.Controllers.categoriesController",
+    "Method": "DeleteCategoryAsync",
+    "RelativePath": "api/categories/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "E_Commers.DtoModels.ResponseDto",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "E_Commers.Controllers.categoriesController",
     "Method": "UpdateCategory",
-    "RelativePath": "api/Category/{id}",
+    "RelativePath": "api/categories/{id}",
     "HttpMethod": "PATCH",
     "IsController": true,
     "Order": 0,
@@ -293,7 +390,7 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "E_Commers.DtoModels.AccountDtos.ResponseDto",
+        "Type": "E_Commers.DtoModels.ResponseDto",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -304,9 +401,9 @@
     ]
   },
   {
-    "ContainingType": "E_Commers.Controllers.CategoryController",
+    "ContainingType": "E_Commers.Controllers.categoriesController",
     "Method": "GetProduectsByCategoryId",
-    "RelativePath": "api/Category/{id}/Produects",
+    "RelativePath": "api/categories/{id}/Produects",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -319,7 +416,7 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "E_Commers.DtoModels.AccountDtos.ResponseDto",
+        "Type": "E_Commers.DtoModels.ResponseDto",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -330,55 +427,9 @@
     ]
   },
   {
-    "ContainingType": "E_Commers.Controllers.CategoryController",
-    "Method": "GetDeletedCategoriesAsync",
-    "RelativePath": "api/Category/deleted-categories",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": [
-      {
-        "Type": "E_Commers.DtoModels.AccountDtos.ResponseDto",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "E_Commers.Controllers.CategoryController",
-    "Method": "GetAll",
-    "RelativePath": "api/Category/GetAll",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "includeDates",
-        "Type": "System.Boolean",
-        "IsRequired": false
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "E_Commers.DtoModels.AccountDtos.ResponseDto",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "E_Commers.Controllers.CategoryController",
+    "ContainingType": "E_Commers.Controllers.categoriesController",
     "Method": "ReturnRemovedCategoryAsync",
-    "RelativePath": "api/Category/return-Deleted-category",
+    "RelativePath": "api/categories/{id}/Restore",
     "HttpMethod": "PATCH",
     "IsController": true,
     "Order": 0,
@@ -386,12 +437,12 @@
       {
         "Name": "id",
         "Type": "System.Int32",
-        "IsRequired": false
+        "IsRequired": true
       }
     ],
     "ReturnTypes": [
       {
-        "Type": "E_Commers.DtoModels.AccountDtos.ResponseDto",
+        "Type": "E_Commers.DtoModels.ResponseDto",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -433,7 +484,7 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "E_Commers.DtoModels.AccountDtos.ResponseDto",
+        "Type": "E_Commers.DtoModels.ResponseDto",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -459,7 +510,7 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "E_Commers.DtoModels.AccountDtos.ResponseDto",
+        "Type": "E_Commers.DtoModels.ResponseDto",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -479,7 +530,7 @@
     "Parameters": [],
     "ReturnTypes": [
       {
-        "Type": "E_Commers.DtoModels.AccountDtos.ResponseDto",
+        "Type": "E_Commers.DtoModels.ResponseDto",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -521,7 +572,7 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "E_Commers.DtoModels.AccountDtos.ResponseDto",
+        "Type": "E_Commers.DtoModels.ResponseDto",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -552,7 +603,7 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "E_Commers.DtoModels.AccountDtos.ResponseDto",
+        "Type": "E_Commers.DtoModels.ResponseDto",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -578,7 +629,7 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "E_Commers.DtoModels.AccountDtos.ResponseDto",
+        "Type": "E_Commers.DtoModels.ResponseDto",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -598,7 +649,7 @@
     "Parameters": [],
     "ReturnTypes": [
       {
-        "Type": "E_Commers.DtoModels.AccountDtos.ResponseDto",
+        "Type": "E_Commers.DtoModels.ResponseDto",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -624,7 +675,7 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "E_Commers.DtoModels.AccountDtos.ResponseDto",
+        "Type": "E_Commers.DtoModels.ResponseDto",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -650,7 +701,7 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "E_Commers.DtoModels.AccountDtos.ResponseDto",
+        "Type": "E_Commers.DtoModels.ResponseDto",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -676,7 +727,7 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "E_Commers.DtoModels.AccountDtos.ResponseDto",
+        "Type": "E_Commers.DtoModels.ResponseDto",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -702,7 +753,7 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "E_Commers.DtoModels.AccountDtos.ResponseDto",
+        "Type": "E_Commers.DtoModels.ResponseDto",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -728,7 +779,7 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "E_Commers.DtoModels.AccountDtos.ResponseDto",
+        "Type": "E_Commers.DtoModels.ResponseDto",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -754,7 +805,7 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "E_Commers.DtoModels.AccountDtos.ResponseDto",
+        "Type": "E_Commers.DtoModels.ResponseDto",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -774,7 +825,7 @@
     "Parameters": [],
     "ReturnTypes": [
       {
-        "Type": "E_Commers.DtoModels.AccountDtos.ResponseDto",
+        "Type": "E_Commers.DtoModels.ResponseDto",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -800,7 +851,7 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "E_Commers.DtoModels.AccountDtos.ResponseDto",
+        "Type": "E_Commers.DtoModels.ResponseDto",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -826,7 +877,7 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "E_Commers.DtoModels.AccountDtos.ResponseDto",
+        "Type": "E_Commers.DtoModels.ResponseDto",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -852,7 +903,7 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "E_Commers.DtoModels.AccountDtos.ResponseDto",
+        "Type": "E_Commers.DtoModels.ResponseDto",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -878,7 +929,7 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "E_Commers.DtoModels.AccountDtos.ResponseDto",
+        "Type": "E_Commers.DtoModels.ResponseDto",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -904,7 +955,7 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "E_Commers.DtoModels.AccountDtos.ResponseDto",
+        "Type": "E_Commers.DtoModels.ResponseDto",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -930,7 +981,7 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "E_Commers.DtoModels.AccountDtos.ResponseDto",
+        "Type": "E_Commers.DtoModels.ResponseDto",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -956,7 +1007,7 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "E_Commers.DtoModels.AccountDtos.ResponseDto",
+        "Type": "E_Commers.DtoModels.ResponseDto",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -987,7 +1038,7 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "E_Commers.DtoModels.AccountDtos.ResponseDto",
+        "Type": "E_Commers.DtoModels.ResponseDto",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -1013,7 +1064,7 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "E_Commers.DtoModels.AccountDtos.ResponseDto",
+        "Type": "E_Commers.DtoModels.ResponseDto",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -1033,7 +1084,7 @@
     "Parameters": [],
     "ReturnTypes": [
       {
-        "Type": "E_Commers.DtoModels.AccountDtos.ResponseDto",
+        "Type": "E_Commers.DtoModels.ResponseDto",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -1059,7 +1110,7 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "E_Commers.DtoModels.AccountDtos.ResponseDto",
+        "Type": "E_Commers.DtoModels.ResponseDto",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -1090,7 +1141,7 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "E_Commers.DtoModels.AccountDtos.ResponseDto",
+        "Type": "E_Commers.DtoModels.ResponseDto",
         "MediaTypes": [
           "text/plain",
           "application/json",

@@ -1,20 +1,21 @@
-﻿namespace E_Commers.DtoModels.AccountDtos
+﻿namespace E_Commers.DtoModels
 {
-	public class ResponseDto
+	public record ResponseDto
 	{
 		public ResponseDto()
 		{
 			
 		}
-		public ResponseDto(int code,string message,object? data=null)
+		public ResponseDto(string message,object? data=null)
 		{
-			StatusCode = code;
 			Message = message;
 			Data = data ?? new object();
+			Links = new List<LinkDto>();
 			
 		}
-		public int StatusCode { get; set; }
 		public string Message { get; set; }=string.Empty;
 		public object Data { get; set; }=new object();
+
+		public List<LinkDto> Links { get; set; }
 	}
 }

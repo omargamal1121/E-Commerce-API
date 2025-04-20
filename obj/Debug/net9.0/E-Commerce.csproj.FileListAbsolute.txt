@@ -152,3 +152,4 @@ C:\Users\DELL\Desktop\Intern Intelligence project\E-Commers\E-Commers\bin\Debug\
 C:\Users\DELL\Desktop\Intern Intelligence project\E-Commers\E-Commers\bin\Debug\net9.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll
 C:\Users\DELL\Desktop\Intern Intelligence project\E-Commers\E-Commers\bin\Debug\net9.0\Microsoft.Extensions.Logging.Abstractions.dll
 C:\Users\DELL\Desktop\Intern Intelligence project\E-Commers\E-Commers\bin\Debug\net9.0\System.Diagnostics.DiagnosticSource.dll
+C:\Users\DELL\Desktop\Intern Intelligence project\E-Commers\E-Commers\bin\Debug\net9.0\Scalar.AspNetCore.dll

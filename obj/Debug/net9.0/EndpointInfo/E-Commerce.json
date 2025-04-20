@@ -353,10 +353,48 @@
         }
       }
     },
-    "/api/Category/{id}": {
+    "/api/categories/{id}": {
       "get": {
         "tags": [
-          "Category"
+          "categories"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseDto"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseDto"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseDto"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "categories"
         ],
         "parameters": [
           {
@@ -394,7 +432,7 @@
       },
       "patch": {
         "tags": [
-          "Category"
+          "categories"
         ],
         "parameters": [
           {
@@ -450,12 +488,20 @@
         }
       }
     },
-    "/api/Category/GetAll": {
+    "/api/categories": {
       "get": {
         "tags": [
-          "Category"
+          "categories"
         ],
         "parameters": [
+          {
+            "name": "deleted",
+            "in": "query",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          },
           {
             "name": "includeDates",
             "in": "query",
@@ -487,12 +533,10 @@
             }
           }
         }
-      }
-    },
-    "/api/Category": {
+      },
       "post": {
         "tags": [
-          "Category"
+          "categories"
         ],
         "requestBody": {
           "content": {
@@ -514,87 +558,42 @@
           }
         },
         "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      },
-      "delete": {
-        "tags": [
-          "Category"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
+          "400": {
+            "description": "Bad Request",
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/ResponseDto"
+                  "$ref": "#/components/schemas/ProblemDetails"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ResponseDto"
+                  "$ref": "#/components/schemas/ProblemDetails"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ResponseDto"
+                  "$ref": "#/components/schemas/ProblemDetails"
                 }
               }
             }
+          },
+          "201": {
+            "description": "Created"
           }
         }
       }
     },
-    "/api/Category/deleted-categories": {
-      "get": {
-        "tags": [
-          "Category"
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ResponseDto"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ResponseDto"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ResponseDto"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/Category/return-Deleted-category": {
+    "/api/categories/{id}/Restore": {
       "patch": {
         "tags": [
-          "Category"
+          "categories"
         ],
         "parameters": [
           {
             "name": "id",
-            "in": "query",
+            "in": "path",
+            "required": true,
             "schema": {
               "type": "integer",
               "format": "int32"
@@ -625,10 +624,10 @@
         }
       }
     },
-    "/api/Category/{id}/Produects": {
+    "/api/categories/{id}/Produects": {
       "get": {
         "tags": [
-          "Category"
+          "categories"
         ],
         "parameters": [
           {
@@ -1984,6 +1983,24 @@
         },
         "additionalProperties": false
       },
+      "LinkDto": {
+        "type": "object",
+        "properties": {
+          "href": {
+            "type": "string",
+            "nullable": true
+          },
+          "rel": {
+            "type": "string",
+            "nullable": true
+          },
+          "method": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "LoginDTo": {
         "required": [
           "email",
@@ -2002,6 +2019,33 @@
           }
         },
         "additionalProperties": false
+      },
+      "ProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "detail": {
+            "type": "string",
+            "nullable": true
+          },
+          "instance": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": { }
       },
       "RefreshTokenDto": {
         "required": [
@@ -2024,15 +2068,18 @@
       "ResponseDto": {
         "type": "object",
         "properties": {
-          "statusCode": {
-            "type": "integer",
-            "format": "int32"
-          },
           "message": {
             "type": "string",
             "nullable": true
           },
           "data": {
+            "nullable": true
+          },
+          "links": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LinkDto"
+            },
             "nullable": true
           }
         },

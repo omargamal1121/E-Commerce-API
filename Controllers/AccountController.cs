@@ -1,35 +1,36 @@
 ﻿using AutoMapper;
 using E_Commers.DtoModels;
 using E_Commers.DtoModels.AccountDtos;
-using E_Commers.Helper;
+using E_Commers.Services;
 using E_Commers.Models;
 using E_Commers.UOW;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
-using System.Security.Claims; 
+using System.Security.Claims;
+using System.IdentityModel.Tokens.Jwt;
 namespace E_Commers.Controllers
 {
 	[Route("api/[controller]")]
 	[ApiController]
 	public class AccountController : ControllerBase
 	{
-		private readonly TokenHelper _tokenHelper;
-
+		private readonly ITokenService _tokenHelper;
 		private readonly ILogger<AccountController> _logger;
 		private readonly UserManager<Customer> _userManager;
-		private readonly ImagesHelper _imagesHelper;
+		private readonly IImagesServices _imagesHelper;
 		private readonly IUnitOfWork _unitOfWork;
+		private readonly IRefreshTokenService _RefreshTokenService;	
 
-		public AccountController(IUnitOfWork unitOfWork, ImagesHelper imagesHelper, TokenHelper tokenHelper, UserManager<Customer> userManager, ILogger<AccountController> logger)
+		public AccountController(IRefreshTokenService RefreshTokenService,IUnitOfWork unitOfWork, IImagesServices imagesHelper, ITokenService tokenHelper, UserManager<Customer> userManager, ILogger<AccountController> logger)
 		{
 			_unitOfWork = unitOfWork;
 			_imagesHelper = imagesHelper;
 			_tokenHelper = tokenHelper;
-	
 			_logger = logger;
-			_userManager = userManager;
+			_userManager = userManager; 
+			_RefreshTokenService = RefreshTokenService;
 		}
 
 		[HttpPost(nameof(Login))]
@@ -45,7 +46,7 @@ namespace E_Commers.Controllers
 
 				return BadRequest(new ResponseDto
 				{
-					StatusCode = 400,
+					
 					Message = "Invalid data: " + string.Join(", ", errors)
 
 				});
@@ -55,13 +56,13 @@ namespace E_Commers.Controllers
 			if (customer is null)
 			{
 				_logger.LogWarning($"Login failed: Email '{login.Email}' not found.");
-				return Unauthorized(new ResponseDto { StatusCode = 401, Message = "Invalid Email." });
+				return Unauthorized(new ResponseDto {  Message = "Invalid Email." });
 			}
 
 			if (await _userManager.IsLockedOutAsync(customer))
 			{
 				_logger.LogWarning($"Login failed: Email '{login.Email}' is locked out.");
-				return Unauthorized(new ResponseDto { StatusCode = 403, Message = "Account is locked. Try again later." });
+				return Unauthorized(new ResponseDto { Message = "Account is locked. Try again later." });
 			}
 
 			bool checkpass = await _userManager.CheckPasswordAsync(customer, login.Password);
@@ -70,7 +71,7 @@ namespace E_Commers.Controllers
 				 await _userManager.AccessFailedAsync(customer);
 				_logger.LogWarning($"Login failed: Incorrect password for '{login.Email}'.");
 				await _userManager.AccessFailedAsync(customer);
-				return Unauthorized(new ResponseDto { StatusCode = 401, Message = "Incorrect Email or Password." });
+				return Unauthorized(new ResponseDto { Message = "Incorrect Email or Password." });
 			}
 
 			var token = await _tokenHelper.GenerateTokenAsync(customer.Id);
@@ -79,19 +80,19 @@ namespace E_Commers.Controllers
 				_logger.LogError("Failed to generate token.");
 				return BadRequest(new ResponseDto
 				{
-					StatusCode = 400,
+					
 					Message = token.Message
 				});
 			}
 
 			_logger.LogInformation("Token generated.");
-			var refreshToken = await _tokenHelper.GenerateRefreshToken(customer.Id);
+			var refreshToken = await _RefreshTokenService.GenerateRefreshToken(customer.Id);
 			if (!refreshToken.Success||refreshToken.Data.IsNullOrEmpty())
 			{
 				_logger.LogError("Failed to generate refresh token.");
 				return BadRequest(new ResponseDto
 				{
-					StatusCode = 400,
+	
 					Message = refreshToken.Message
 				});
 			}
@@ -100,12 +101,12 @@ namespace E_Commers.Controllers
 			 var result= await _userManager.UpdateAsync(customer);
 			if(!result.Succeeded)
 			{
-				return StatusCode(500, new ResponseDto { StatusCode = 500, Message=string.Join(",", result.Errors.Select(x => x.Description))  });
+				return StatusCode(500, new ResponseDto { Message=string.Join(",", result.Errors.Select(x => x.Description))  });
 
 			}
 			return Ok(new ResponseDto
 			{
-				StatusCode = 200, 
+	
 				Message = "Token Generated",
 				Data = new 
 				{
@@ -129,7 +130,7 @@ namespace E_Commers.Controllers
 				_logger.LogWarning($"ModelState errors: {errors}");
 				return BadRequest(new ResponseDto
 				{
-					StatusCode = 400,
+					
 					Message = errors
 
 				});
@@ -139,7 +140,7 @@ namespace E_Commers.Controllers
 				_logger.LogError($"Invalid Email Address:{usermodel.Email}");
 				return BadRequest(new ResponseDto
 				{
-					StatusCode = 400,
+				
 					Message = $"Invalid Email Address:{usermodel.Email}"
 
 				});
@@ -164,28 +165,20 @@ namespace E_Commers.Controllers
 				_logger.LogError("User creation failed: {errors}", errors);
 				return BadRequest(new ResponseDto
 				{
-					StatusCode = 400,
+					
 					Message = errors
 				});
 			}
-			if (usermodel.ProfilePicture != null)
-			{
-				string imagepath = await _imagesHelper.SaveImageForCustomerAsync(usermodel.ProfilePicture);
-				if (!string.IsNullOrEmpty(imagepath))
-				{
-					customer.ProfilePicture = imagepath;
-					await _userManager.UpdateAsync(customer);
-				}
-			}
+			
 			IdentityResult result1= await _userManager.AddToRoleAsync(customer,"User");
 			if(!result1.Succeeded)
 			{
 			 await	tran.RollbackAsync();
 				_logger.LogError(result1.Errors.ToString());
-				return StatusCode(500, new ResponseDto { StatusCode = 500, Message = "Error While Add Role to User" });
+				return StatusCode(500, new ResponseDto { Message = "Error While Add Role to User" });
 			}
 			 await	tran.CommitAsync();
-			return Ok(new ResponseDto { StatusCode = 201, Message = $"User created successfully Id:{customer.Id}." });
+			return Ok(new ResponseDto {  Message = $"User created successfully Id:{customer.Id}." });
 		}
 
 		[HttpPost(nameof(RefreshTokenAsync))]
@@ -201,7 +194,7 @@ namespace E_Commers.Controllers
 				_logger.LogWarning($"ModelState errors: {errors}");
 				return BadRequest(new ResponseDto
 				{
-					StatusCode = 400,
+				
 					Message = errors
 
 				});
@@ -210,16 +203,16 @@ namespace E_Commers.Controllers
 			if (customer is null)
 			{
 				_logger.LogWarning("Invalid userid");
-				return Unauthorized( new ResponseDto { Message = "Invalid userid", StatusCode = 401 });
+				return Unauthorized( new ResponseDto { Message = "Invalid userid",  });
 			}
-			var result=await	_tokenHelper.ValidateRefreshTokenAsync(refreshTokenDto.UserId.ToString("D"), refreshTokenDto.RefreshToken);
+			var result=await	_RefreshTokenService.ValidateRefreshTokenAsync(refreshTokenDto.UserId.ToString("D"), refreshTokenDto.RefreshToken);
 			if(!result.Success||!result.Data)
 			{
-				 return Unauthorized(new ResponseDto { Message = result.Message, StatusCode = 401 });
+				 return Unauthorized(new ResponseDto { Message = result.Message,  });
 			}
-			 var token= await _tokenHelper.RefreshToken(refreshTokenDto.UserId.ToString("D"),refreshTokenDto.RefreshToken);
+			 var token= await _RefreshTokenService.RefreshToken(refreshTokenDto.UserId.ToString("D"),refreshTokenDto.RefreshToken);
 
-			return Ok(new ResponseDto { Message = "Token Generated" ,Data= new { Token = token }, StatusCode = 200 });
+			return Ok(new ResponseDto { Message = "Token Generated" ,Data= new { Token = token }, });
 
 		}
 		[HttpPost(nameof(ChangePassword))]
@@ -237,7 +230,7 @@ namespace E_Commers.Controllers
 				_logger.LogWarning($"ModelState errors: {errors}");
 				return BadRequest(new ResponseDto
 				{
-					StatusCode = 400,
+				
 					Message = errors
 				});
 			}
@@ -248,19 +241,19 @@ namespace E_Commers.Controllers
 			if (customer is null)
 			{
 				_logger.LogError("Invalid userid");
-				return Unauthorized(new ResponseDto { Message = "Invalid userid", StatusCode = 401 });
+				return Unauthorized(new ResponseDto { Message = "Invalid userid" });
 			}
 
 			if (!await _userManager.CheckPasswordAsync(customer, model.CurrentPass))
 			{
 				_logger.LogWarning("Current password is incorrect");
-				return BadRequest(new ResponseDto { Message = "Current password is incorrect", StatusCode = 400 });
+				return BadRequest(new ResponseDto { Message = "Current password is incorrect",  });
 			}
 
 			if (!model.NewPass.Equals(model.ConfirmNewPass))
 			{
 				_logger.LogWarning("New password and confirmation password do not match");
-				return BadRequest(new ResponseDto { Message = "New password and confirmation password do not match", StatusCode = 400 });
+				return BadRequest(new ResponseDto { Message = "New password and confirmation password do not match",  });
 			}
 
 			IdentityResult result = await _userManager.ChangePasswordAsync(customer, model.CurrentPass, model.NewPass);
@@ -268,12 +261,12 @@ namespace E_Commers.Controllers
 			{
 				string errorMessages = string.Join("; ", result.Errors.Select(e => e.Description));
 				_logger.LogError($"Failed to change password: {errorMessages}");
-				return BadRequest(new ResponseDto { Message = errorMessages, StatusCode = 400 });
+				return BadRequest(new ResponseDto { Message = errorMessages,  });
 			}
 
 			_logger.LogInformation("Password changed successfully");
 			await _userManager.UpdateSecurityStampAsync(customer);
-			return Ok(new ResponseDto { Message = "Password changed successfully", StatusCode = 200 });
+			return Ok(new ResponseDto { Message = "Password changed successfully", });
 		}
 
 
@@ -290,14 +283,14 @@ namespace E_Commers.Controllers
 				_logger.LogWarning($"ModelState errors: {errors}");
 				return BadRequest(new ResponseDto
 				{
-					StatusCode = 400,
+				
 					Message = errors
 				});
 			}
 			if(!NewEmail.Contains("@")||!NewEmail.EndsWith(".com"))
 			{
 				_logger.LogWarning("Invalid Email Adress");
-				return BadRequest(new ResponseDto { StatusCode = 400, Message = "Invalid Email Adress" });
+				return BadRequest(new ResponseDto { Message = "Invalid Email Adress" });
 			}
 			_logger.LogInformation($"In {nameof(ChangeEmail)} Method");
 
@@ -305,14 +298,14 @@ namespace E_Commers.Controllers
 			if (string.IsNullOrEmpty(oldemail))
 			{
 				_logger.LogWarning("Email Adress not found in token");
-				return Unauthorized(new ResponseDto { StatusCode = 401, Message = "Unauthorized" });
+				return Unauthorized(new ResponseDto {  Message = "Unauthorized" });
 			}
 
 			Customer? customer = await _userManager.FindByEmailAsync(oldemail);
 			if (customer is null)
 			{
 				_logger.LogWarning("User not found. invalid Email Address");
-				return Unauthorized(new ResponseDto { StatusCode = 401, Message = "invalid Email Address" });
+				return Unauthorized(new ResponseDto {  Message = "invalid Email Address" });
 			}
 
 			
@@ -321,14 +314,14 @@ namespace E_Commers.Controllers
 			{
 				string errorMessages = string.Join("; ", result.Errors.Select(e => e.Description));
 				_logger.LogError($"Failed to change email: {errorMessages}");
-				return BadRequest(new ResponseDto { StatusCode = 400, Message = errorMessages });
+				return BadRequest(new ResponseDto {Message = errorMessages });
 			}
 
 			
 			await _userManager.UpdateSecurityStampAsync(customer);
 
 			_logger.LogInformation("Email changed successfully");
-			return Ok(new ResponseDto { StatusCode = 200, Message = "Email changed successfully" });
+			return Ok(new ResponseDto { Message = "Email changed successfully" });
 		}
 
 
@@ -340,14 +333,14 @@ namespace E_Commers.Controllers
 
 			string? userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-			var result = await _tokenHelper.RemoveRefreshTokenAsync(userId);
+			var result = await _RefreshTokenService.RemoveRefreshTokenAsync(userId);
 			if (!result.Success||!result.Data)
 			{
-				return BadRequest(new ResponseDto { StatusCode = 400, Message =result.Message});
+				return BadRequest(new ResponseDto { Message =result.Message});
 			}
 
 			_logger.LogInformation("✅ Logout successful for user {UserId}", userId);
-			return Ok(new ResponseDto { Message = "Logout successfully", StatusCode = 200 });
+			return Ok(new ResponseDto { Message = "Logout successfully", });
 		}
 
 		[Authorize]
@@ -358,28 +351,43 @@ namespace E_Commers.Controllers
 
 			string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 	
-			var result = await _tokenHelper.RemoveRefreshTokenAsync(userId);
+			var result = await _RefreshTokenService.RemoveRefreshTokenAsync(userId);
 			if (!result.Success || !result.Data)
 			{
 				
-				return BadRequest(new ResponseDto { StatusCode = 400, Message = result.Message });
+				return BadRequest(new ResponseDto { Message = result.Message });
 			}
 			Customer? customer = await _userManager.FindByIdAsync(userId);
 			if(customer is null)
 			{
 				_logger.LogError("❌ Can't Find user {UserId}", userId);
-				return BadRequest(new ResponseDto { StatusCode = 400, Message = "User doesn't exsist" });
+				return BadRequest(new ResponseDto { Message = "User doesn't exsist" });
 			}
 			IdentityResult isdeleted= 	await _userManager.DeleteAsync(customer);
 			if(!isdeleted.Succeeded)
 			{
 				_logger.LogError("❌ Can't Deleted user {UserId}", userId);
-				return BadRequest(new ResponseDto { StatusCode = 400, Message = "❌ Can't Deleted user" });
+				return BadRequest(new ResponseDto {  Message = "❌ Can't Deleted user" });
 
 			}
 
 			_logger.LogInformation("✅ Deleted successful for user {UserId}", userId);
-			return Ok(new ResponseDto { Message = "Deleted successfully", StatusCode = 200 });
+			return Ok(new ResponseDto { Message = "Deleted successfully", });
+		}
+		[Authorize]
+		[HttpPost("UploadPhoto")]
+		public async Task<ActionResult<ResponseDto>> UploadPhoto([FromForm] IFormFile image)
+		{
+			_logger.LogInformation($"Executing {nameof(UploadPhoto)}");
+			Result<string>path =  await _imagesHelper.SaveImageAsync(image, "CustomerPhotos");
+
+			if(!path.Success||path.Data is null)
+				return new ResponseDto { Message=path.Message};
+			string userid =User.FindFirst(ClaimTypes.NameIdentifier).Value;
+			Customer customer = await _userManager.FindByIdAsync(userid);
+			customer.ImageUrl = path.Data;
+			return NoContent();
+
 		}
 
 

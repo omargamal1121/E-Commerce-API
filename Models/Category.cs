@@ -16,6 +16,8 @@ namespace E_Commers.Models
 		public string Description { get; set; } = string.Empty;
 		[JsonIgnore]
 		public List<Product> products { get; set; } = new List<Product>();
+
+		public ICollection<string>? ImagesUrl { get; set; }
 		
 
 	}

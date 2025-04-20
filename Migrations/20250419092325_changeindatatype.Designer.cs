@@ -4,6 +4,7 @@ using E_Commers.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace E_Commers.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250419092325_changeindatatype")]
+    partial class changeindatatype
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -112,9 +115,6 @@ namespace E_Commers.Migrations
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)");
-
-                    b.Property<string>("ImagesUrl")
-                        .HasColumnType("longtext");
 
                     b.Property<DateTime?>("ModifiedAt")
                         .HasColumnType("datetime(6)");
@@ -411,9 +411,6 @@ namespace E_Commers.Migrations
 
                     b.Property<int?>("DiscountId")
                         .HasColumnType("int");
-
-                    b.Property<string>("ImagesUrl")
-                        .HasColumnType("longtext");
 
                     b.Property<DateTime?>("ModifiedAt")
                         .HasColumnType("datetime(6)");
@@ -762,9 +759,6 @@ namespace E_Commers.Migrations
 
                     b.Property<DateTime>("DateCreated")
                         .HasColumnType("datetime(6)");
-
-                    b.Property<string>("ImageUrl")
-                        .HasColumnType("longtext");
 
                     b.Property<DateTime?>("LastVisit")
                         .HasColumnType("datetime(6)");

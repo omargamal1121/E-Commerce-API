@@ -1,10 +1,10 @@
 ﻿
-using E_Commers.DtoModels.AccountDtos;
+using E_Commers.DtoModels;
 using E_Commers.DtoModels.CategoryDtos;
 using E_Commers.DtoModels.DiscoutDtos;
 using E_Commers.DtoModels.ProductDtos;
 using E_Commers.Enums;
-using E_Commers.Helper;
+using E_Commers.Services;
 using E_Commers.Models;
 using E_Commers.UOW;
 using Microsoft.AspNetCore.Authorization;
@@ -14,6 +14,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.OpenApi.Models;
 using System.Security.Claims;
 using System.Transactions;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace E_Commers.Controllers
 {
@@ -35,10 +36,10 @@ namespace E_Commers.Controllers
 		public async Task<ActionResult<ResponseDto>> GetAllProducts()
 		{
 			_logger.LogInformation($"Execute {nameof(GetAllProducts)}");
-			ResultDto<IEnumerable<Product>> products   =   await _unitOfWork.Repository<Product>().GetAllAsync(include:p=>p.Include(p=>p.Category).Include(p=>p.Discount),p=>p.DeletedAt==null);
+			Result<IEnumerable<Product>> products   =   await _unitOfWork.Repository<Product>().GetAllAsync(include:p=>p.Include(p=>p.Category).Include(p=>p.Discount),p=>p.DeletedAt==null);
 
 			if (!products.Success)
-				return BadRequest(new ResponseDto { StatusCode = 400, Message = products.Message });
+				return BadRequest(new ResponseDto {  Message = products.Message });
 
 			IEnumerable<ProductDto> productsdto = products.Data.Select(p => new ProductDto
 			{
@@ -53,7 +54,7 @@ namespace E_Commers.Controllers
 				
 			});
 
-			return Ok(new ResponseDto { StatusCode=200,Message= products.Message ,Data=productsdto });
+			return Ok(new ResponseDto { Message= products.Message ,Data=productsdto });
 
 
 		}
@@ -62,10 +63,10 @@ namespace E_Commers.Controllers
 		public async Task<ActionResult<ResponseDto>> GetProduct(int id)
 		{
 			_logger.LogInformation($"Execute {nameof(GetProduct)}");
-			ResultDto<Product> product = await _unitOfWork.Repository<Product>().GetByIdAsync(id);
+			Result<Product> product = await _unitOfWork.Repository<Product>().GetByIdAsync(id);
 
 			if (!product.Success)
-				return BadRequest(new ResponseDto { StatusCode = 400, Message = product.Message });
+				return BadRequest(new ResponseDto { Message = product.Message });
 
 			var productdto= new ProductDto {
 				Id = product.Data.Id,
@@ -78,7 +79,7 @@ namespace E_Commers.Controllers
 				CreatedAt = product.Data.CreatedAt,
 			};
 
-			return Ok(new ResponseDto { StatusCode = 200, Message = product.Message, Data = productdto });
+			return Ok(new ResponseDto { Message = product.Message, Data = productdto });
 		}
 
 		[HttpPost]
@@ -93,7 +94,7 @@ namespace E_Commers.Controllers
 
 				return BadRequest(new ResponseDto
 				{
-					StatusCode = 400,
+					
 					Message = "Invalid data: " + string.Join(", ", errors)
 				});
 			}
@@ -105,28 +106,28 @@ namespace E_Commers.Controllers
 			{
 				return Conflict(new ResponseDto
 				{
-					StatusCode = 409,
+				
 					Message = $"A product with the name '{model.Name}' already exists"
 				});
 			}
 			var checkcategory= await _unitOfWork.Category.GetByIdAsync(model.CategoryId);
 			if (!checkcategory.Success)
-				return NotFound(new ResponseDto { StatusCode = 400, Message = checkcategory.Message });
+				return NotFound(new ResponseDto { Message = checkcategory.Message });
 			using var transaction = await _unitOfWork.BeginTransactionAsync();
 			try
 			{
 				Product product = new Product { Price=model.Price,CategoryId=model.CategoryId ,Quantity=model.Quantity, Description = model.Description, Name = model.Name };
-				ResultDto<bool> result = await _unitOfWork.Product.CreateAsync(product);
+				Result<bool> result = await _unitOfWork.Product.CreateAsync(product);
 
 				if (!result.Success)
 				{
-					return BadRequest(new ResponseDto { StatusCode = 400, Message = result.Message });
+					return BadRequest(new ResponseDto {  Message = result.Message });
 				}
 
 				int changes = await _unitOfWork.CommitAsync();
 				if (changes == 0)
 				{
-					return BadRequest(new ResponseDto { Message = "Nothing added", StatusCode = 500 });
+					return BadRequest(new ResponseDto { Message = "Nothing added"});
 				}
 
 				_logger.LogInformation($"product added successfully, ID: {product.Id}");
@@ -138,23 +139,23 @@ namespace E_Commers.Controllers
 					Timestamp = DateTime.UtcNow
 				};
 
-				ResultDto<bool> logResult = await _unitOfWork.Repository<AdminOperationsLog>().CreateAsync(adminOperations);
+				Result<bool> logResult = await _unitOfWork.Repository<AdminOperationsLog>().CreateAsync(adminOperations);
 				if (!logResult.Success)
 				{
 					await transaction.RollbackAsync();
-					return StatusCode(500, new ResponseDto { StatusCode = 500, Message = logResult.Message });
+					return StatusCode(500, new ResponseDto { Message = logResult.Message });
 				}
 
 				await _unitOfWork.CommitAsync();
 				await transaction.CommitAsync();
 
-				return CreatedAtAction(nameof(GetProduct), new { id = product.Id }, new ResponseDto { Message = $"Added successfully, ID: {product.Id}", StatusCode = 200 });
+				return CreatedAtAction(nameof(GetProduct), new { id = product.Id }, new ResponseDto { Message = $"Added successfully, ID: {product.Id}", });
 			}
 			catch (Exception ex)
 			{
 				_logger.LogError($"Exception: {ex.Message}");
 				await transaction.RollbackAsync();
-				return StatusCode(500, new ResponseDto { Message = "An error occurred while saving data.", StatusCode = 500 });
+				return StatusCode(500, new ResponseDto { Message = "An error occurred while saving data." });
 			}
 		}
 		[HttpPatch("{id}")]
@@ -177,7 +178,7 @@ namespace E_Commers.Controllers
 
 				return BadRequest(new ResponseDto
 				{
-					StatusCode = StatusCodes.Status400BadRequest,
+					
 					Message = $"Validation failed\n Errors:{errors}",
 					
 				});
@@ -194,7 +195,7 @@ namespace E_Commers.Controllers
 				_logger.LogWarning("Product ID {ProductId} not found", id);
 				return NotFound(new ResponseDto
 				{
-					StatusCode = StatusCodes.Status404NotFound,
+					
 					Message = productResult.Message ?? "Product not found"
 				});
 			}
@@ -211,7 +212,7 @@ namespace E_Commers.Controllers
 					_logger.LogWarning("Duplicate product name: {ProductName}", updateDto.Name);
 					return Conflict(new ResponseDto
 					{
-						StatusCode = StatusCodes.Status409Conflict,
+						
 						Message = $"A product with name '{updateDto.Name}' already exists"
 					});
 				}
@@ -236,7 +237,7 @@ namespace E_Commers.Controllers
 				{
 					return NotFound(new ResponseDto
 					{
-						StatusCode = StatusCodes.Status404NotFound,
+						
 						Message = "Specified category does not exist"
 					});
 				}
@@ -258,7 +259,7 @@ namespace E_Commers.Controllers
 					await transaction.RollbackAsync();
 					return StatusCode(StatusCodes.Status500InternalServerError, new ResponseDto
 					{
-						StatusCode = StatusCodes.Status500InternalServerError,
+					
 						Message = "Failed to update product"
 					});
 				}
@@ -279,7 +280,7 @@ namespace E_Commers.Controllers
 					_logger.LogError("Failed to log admin operation for Product ID {ProductId}", id);
 					return StatusCode(StatusCodes.Status500InternalServerError, new ResponseDto
 					{
-						StatusCode = StatusCodes.Status500InternalServerError,
+					
 						Message = "Failed to log operation"
 					});
 				}
@@ -290,7 +291,7 @@ namespace E_Commers.Controllers
 				_logger.LogInformation("Successfully updated Product ID {ProductId}", id);
 				return Ok(new ResponseDto
 				{
-					StatusCode = StatusCodes.Status200OK,
+					
 					Message = $"Product updated successfully ID: {product.Id}",
 					
 				});
@@ -301,7 +302,6 @@ namespace E_Commers.Controllers
 				_logger.LogError(ex, "Error updating Product ID {ProductId}", id);
 				return StatusCode(StatusCodes.Status500InternalServerError, new ResponseDto
 				{
-					StatusCode = StatusCodes.Status500InternalServerError,
 					Message = "An unexpected error occurred"
 				});
 			}
@@ -318,7 +318,7 @@ namespace E_Commers.Controllers
 			if (!resultlist.Success|| !resultlist.Data.Any())
 			{
 				_logger.LogInformation("No Deleted Products found");
-				return Ok(new ResponseDto { StatusCode = 200, Message = "No Deleted Products found" });
+				return Ok(new ResponseDto { Message = "No Deleted Products found" });
 			}
 
 			var ProductsDtos = resultlist.Data.Select(c => new ProductDto
@@ -336,7 +336,7 @@ namespace E_Commers.Controllers
 			}).ToList();
 
 			_logger.LogInformation($"Deleted Prducts found: {ProductsDtos.Count()}");
-			return Ok(new ResponseDto { StatusCode = 200, Message = resultlist.Message,Data= ProductsDtos });
+			return Ok(new ResponseDto { Message = resultlist.Message,Data= ProductsDtos });
 		}
 		[HttpPatch("return-Deleted-Product")]
 		[ResponseCache(Duration =120,VaryByQueryKeys =new string[] { "id"})]
@@ -347,24 +347,24 @@ namespace E_Commers.Controllers
 			string userid = User.FindFirst(ClaimTypes.NameIdentifier).Value;
 
 
-			ResultDto<Product> resultProduct = await _unitOfWork.Product.GetByIdAsync(id);
+			Result<Product> resultProduct = await _unitOfWork.Product.GetByIdAsync(id);
 			if (!resultProduct.Success)
 			{
 				_logger.LogWarning($"Product not found with ID: {id}");
-				return BadRequest(new ResponseDto { StatusCode = 400, Message = $"Product not found with ID: {id}" });
+				return BadRequest(new ResponseDto {Message = $"Product not found with ID: {id}" });
 			}
 
 			using var tran = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
 
 			resultProduct.Data.DeletedAt = null;
-			ResultDto<bool> updateResult = await _unitOfWork.Product.UpdateAsync(resultProduct.Data);
+			Result<bool> updateResult = await _unitOfWork.Product.UpdateAsync(resultProduct.Data);
 			if (!updateResult.Success)
 			{
 				_logger.LogError(updateResult.Message);
-				return StatusCode(500, new ResponseDto { StatusCode = 500, Message = updateResult.Message });
+				return StatusCode(500, new ResponseDto { Message = updateResult.Message });
 			}
 
-			ResultDto<bool> logResult = await _unitOfWork.Repository<AdminOperationsLog>().CreateAsync(new AdminOperationsLog
+			Result<bool> logResult = await _unitOfWork.Repository<AdminOperationsLog>().CreateAsync(new AdminOperationsLog
 			{
 				AdminId = userid,
 				ItemId = resultProduct.Data.Id,
@@ -375,18 +375,18 @@ namespace E_Commers.Controllers
 			if (!logResult.Success)
 			{
 				_logger.LogError(logResult.Message);
-				return StatusCode(500, new ResponseDto { StatusCode = 500, Message = logResult.Message });
+				return StatusCode(500, new ResponseDto { Message = logResult.Message });
 			}
 
 			int saveResult = await _unitOfWork.CommitAsync();
 			if (saveResult == 0)
 			{
 				_logger.LogError("Database update failed, no changes were committed.");
-				return StatusCode(500, new ResponseDto { StatusCode = 500, Message = "Database update failed, no changes were committed." });
+				return StatusCode(500, new ResponseDto { Message = "Database update failed, no changes were committed." });
 			}
 
 			tran.Complete();
-			return Ok(new ResponseDto { StatusCode = 200, Message = $"Product restored: {resultProduct.Data.Id}" });
+			return Ok(new ResponseDto { Message = $"Product restored: {resultProduct.Data.Id}" });
 		}
 
 		[HttpDelete()]
@@ -399,11 +399,11 @@ namespace E_Commers.Controllers
 
 			try
 			{
-				ResultDto<Product> resultProduct = await _unitOfWork.Product.GetByIdAsync(id);
+				Result<Product> resultProduct = await _unitOfWork.Product.GetByIdAsync(id);
 				if (resultProduct.Data is null || resultProduct.Data.DeletedAt.HasValue)
 				{
 					_logger.LogWarning($"No Category with this id: {id}");
-					return BadRequest(new ResponseDto { StatusCode = 400, Message = $"No Category with this id: {id}" });
+					return BadRequest(new ResponseDto {Message = $"No Category with this id: {id}" });
 				}
 
 				string adminId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
@@ -411,17 +411,17 @@ namespace E_Commers.Controllers
 				
 				resultProduct.Data.DeletedAt = DateTime.UtcNow;
 
-				ResultDto<bool> result = await _unitOfWork.Product.UpdateAsync(resultProduct.Data);
+				Result<bool> result = await _unitOfWork.Product.UpdateAsync(resultProduct.Data);
 				if (!result.Success)
 				{
 					_logger.LogError(result.Message);
-					return StatusCode(500, new ResponseDto { StatusCode = 500, Message = result.Message });
+					return StatusCode(500, new ResponseDto { Message = result.Message });
 				}
 
 				if (await _unitOfWork.CommitAsync() == 0)
 				{
 					_logger.LogError("Can't delete category.");
-					return StatusCode(500, new ResponseDto { StatusCode = 500, Message = "Can't delete category." });
+					return StatusCode(500, new ResponseDto { Message = "Can't delete category." });
 				}
 
 				_logger.LogInformation($"Category Deleted successfully, ID: {resultProduct.Data.Id}");
@@ -434,39 +434,39 @@ namespace E_Commers.Controllers
 					Timestamp = DateTime.UtcNow
 				};
 
-				ResultDto<bool> logResult = await _unitOfWork.Repository<AdminOperationsLog>().CreateAsync(adminOperations);
+				Result<bool> logResult = await _unitOfWork.Repository<AdminOperationsLog>().CreateAsync(adminOperations);
 				if (!logResult.Success)
 				{
 					await transaction.RollbackAsync();
-					return StatusCode(500, new ResponseDto { StatusCode = 500, Message = logResult.Message });
+					return StatusCode(500, new ResponseDto { Message = logResult.Message });
 				}
 
 				await _unitOfWork.CommitAsync();
 				await transaction.CommitAsync();
 
-				return Ok(new ResponseDto { Message = $"Deleted successfully, ID: {resultProduct.Data.Id}", StatusCode = 200 });
+				return Ok(new ResponseDto { Message = $"Deleted successfully, ID: {resultProduct.Data.Id}", });
 			}
 			catch (Exception ex)
 			{
 				_logger.LogError($"Transaction failed: {ex.Message}");
 				await transaction.RollbackAsync();
-				return StatusCode(500, new ResponseDto { StatusCode = 500, Message = "An error occurred while deleting the category." });
+				return StatusCode(500, new ResponseDto { Message = "An error occurred while deleting the category." });
 			}
 		}
 		[HttpGet("Category")]
 		public async Task<ActionResult<ResponseDto>> ProductsByCategoryId(int id)
 		{
 			_logger.LogInformation($"Execute {nameof(ProductsByCategoryId)} ");
-			  ResultDto< Category > category = await _unitOfWork.Category.GetByIdAsync(id,x=>x.Include(c=>c.products));
+			  Result< Category > category = await _unitOfWork.Category.GetByIdAsync(id,x=>x.Include(c=>c.products));
 			if(!category.Success|| category.Data is null)
 			{
-				return NotFound(new ResponseDto { StatusCode = 404, Message = category.Message });
+				return NotFound(new ResponseDto { Message = category.Message });
 
 			}
 			if(category.Data.products.Count==0)
 			{
 				_logger.LogWarning("No Products in this Category");
-				return NotFound(new ResponseDto { StatusCode = 404, Message = "No Products in this Category" });
+				return NotFound(new ResponseDto { Message = "No Products in this Category" });
 			}
 			var productsdto = category.Data.products.Select(p => new ProductDto
 			{
@@ -479,23 +479,23 @@ namespace E_Commers.Controllers
 				Category = new CategoryDto(p.Category.Id, p.Category.Name, p.Category.Description, p.Category.CreatedAt),
 				CreatedAt = p.CreatedAt,
 			});
-			return Ok(new ResponseDto { StatusCode = 200, Message = category.Message , Data= productsdto });
+			return Ok(new ResponseDto { Message = category.Message , Data= productsdto });
 		}
 
 		[HttpGet("wareHouse")]
 		public async Task<ActionResult<ResponseDto>> ProductsByWareHouse(int id)
 		{
 			_logger.LogInformation($"Execute {nameof(ProductsByWareHouse)} ");
-			ResultDto<Warehouse> category = await _unitOfWork.WareHouse.GetByIdAsync(id, x => x.Include(c => c.ProductInventories).ThenInclude(i=>i.Product).ThenInclude(d=>d.Category).Include(c => c.ProductInventories).ThenInclude(i => i.Product).ThenInclude(d=>d.Discount));
+			Result<Warehouse> category = await _unitOfWork.WareHouse.GetByIdAsync(id, x => x.Include(c => c.ProductInventories).ThenInclude(i=>i.Product).ThenInclude(d=>d.Category).Include(c => c.ProductInventories).ThenInclude(i => i.Product).ThenInclude(d=>d.Discount));
 			if (!category.Success || category.Data is null)
 			{
-				return NotFound(new ResponseDto { StatusCode = 404, Message = category.Message });
+				return NotFound(new ResponseDto { Message = category.Message });
 
 			}
 			if (category.Data.ProductInventories.Count == 0)
 			{
 				_logger.LogWarning("No Products in this WareHouse");
-				return NotFound(new ResponseDto { StatusCode = 404, Message = "No Products in this WareHouse" });
+				return NotFound(new ResponseDto { Message = "No Products in this WareHouse" });
 			}
 			var productsdto = category.Data.ProductInventories.Select(p => new ProductDto
 			{
@@ -508,7 +508,7 @@ namespace E_Commers.Controllers
 				Category = new CategoryDto(p.Product.Category.Id, p.Product.Category.Name, p.Product.Category.Description, p.Product.Category.CreatedAt),
 				CreatedAt = p.CreatedAt,
 			});
-			return Ok(new ResponseDto { StatusCode = 200, Message = category.Message , Data= productsdto });
+			return Ok(new ResponseDto { Message = category.Message , Data= productsdto });
 		}
 	}
 }

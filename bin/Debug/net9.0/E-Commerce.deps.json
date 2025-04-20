@@ -18,6 +18,7 @@
           "Microsoft.Extensions.Caching.StackExchangeRedis": "8.0.3",
           "Microsoft.Extensions.Logging.Abstractions": "10.0.0-preview.2.25163.2",
           "Pomelo.EntityFrameworkCore.MySql": "8.0.3",
+          "Scalar.AspNetCore": "2.1.16",
           "Serilog.Extensions.Logging": "9.0.1",
           "Swashbuckle.AspNetCore": "7.3.1"
         },
@@ -747,6 +748,14 @@
           }
         }
       },
+      "Scalar.AspNetCore/2.1.16": {
+        "runtime": {
+          "lib/net9.0/Scalar.AspNetCore.dll": {
+            "assemblyVersion": "2.1.16.0",
+            "fileVersion": "2.1.16.0"
+          }
+        }
+      },
       "Serilog/4.2.0": {
         "runtime": {
           "lib/net9.0/Serilog.dll": {
@@ -1448,6 +1457,13 @@
       "sha512": "sha512-YhEdSQUsTx+C8m8Bw7ar5/VesXvCFMItyZF7G1AUY+OM0VPZUOeAVpJ4Wl6fydBGUYZxojTDR3I6Bj/+BPkJNA==",
       "path": "runtime.win-x86.runtime.native.system.data.sqlclient.sni/4.4.0",
       "hashPath": "runtime.win-x86.runtime.native.system.data.sqlclient.sni.4.4.0.nupkg.sha512"
+    },
+    "Scalar.AspNetCore/2.1.16": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-+J7Vx0UnuCu9Y8G/LhsnMliQuwaPrGmdI7hq6VCZFa7m/nGvngfDnvTXkUayp16kdYZksqnRVL+ZxxZNJqHn9Q==",
+      "path": "scalar.aspnetcore/2.1.16",
+      "hashPath": "scalar.aspnetcore.2.1.16.nupkg.sha512"
     },
     "Serilog/4.2.0": {
       "type": "package",

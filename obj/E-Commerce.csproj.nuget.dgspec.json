@@ -95,6 +95,10 @@
               "target": "Package",
               "version": "[8.0.3, )"
             },
+            "Scalar.AspNetCore": {
+              "target": "Package",
+              "version": "[2.1.16, )"
+            },
             "Serilog.Extensions.Logging": {
               "target": "Package",
               "version": "[9.0.1, )"

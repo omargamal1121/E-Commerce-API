@@ -1,11 +1,11 @@
-﻿using E_Commers.DtoModels.AccountDtos;
+﻿using E_Commers.DtoModels;
 using E_Commers.DtoModels.CategoryDtos;
 using E_Commers.DtoModels.DiscoutDtos;
 using E_Commers.DtoModels.InventoryDtos;
 using E_Commers.DtoModels.ProductDtos;
 using E_Commers.DtoModels.WareHouseDtos;
 using E_Commers.Enums;
-using E_Commers.Helper;
+using E_Commers.Services;
 using E_Commers.Models;
 using E_Commers.UOW;
 using Microsoft.AspNetCore.Authorization;
@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using System.Transactions;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace E_Commers.Controllers
 {
@@ -40,7 +41,7 @@ namespace E_Commers.Controllers
 			var Resultcategories = await _unitOfWork.Repository<ProductInventory>().GetAllAsync(filter: c => c.DeletedAt == null,include:i=>i.Include(i=>i.Product).ThenInclude(p=>p.Category));
 			if (!Resultcategories.Data.Any())
 			{
-				return Ok(new ResponseDto { StatusCode = 200, Message = "No Inventory found", });
+				return Ok(new ResponseDto { Message = "No Inventory found", });
 			}
 
 			List<InventoryDto> inventorydtos = Resultcategories.Data.Select(c =>
@@ -66,7 +67,7 @@ namespace E_Commers.Controllers
 
 
 
-			return Ok(new ResponseDto { Message = Resultcategories.Message , Data= inventorydtos, StatusCode = 200 });
+			return Ok(new ResponseDto { Message = Resultcategories.Message , Data= inventorydtos, });
 		}
 
 		[HttpPost]
@@ -80,27 +81,27 @@ namespace E_Commers.Controllers
 
 				return BadRequest(new ResponseDto
 				{
-					StatusCode = 400,
+					
 					Message = "Invalid data: " + string.Join(", ", errors)
 				});
 			}
 			var checkfrominventory=  await _unitOfWork.Product.GetByIdAsync(productDto.ProductId);
 			if(!checkfrominventory.Success||checkfrominventory==null)
-				return NotFound(new ResponseDto { StatusCode=404,Message= checkfrominventory.Message});
+				return NotFound(new ResponseDto {Message= checkfrominventory.Message});
 
 			if(checkfrominventory.Data.Quantity<productDto.Quantity){
 				_logger.LogError($"Must Quantity Of Product U Want To Add it <= {checkfrominventory.Data.Quantity} ");
-				return BadRequest(new ResponseDto { StatusCode = 400, Message = $"Must Quantity Of Product U Want To Add it <= {checkfrominventory.Data.Quantity} " });
+				return BadRequest(new ResponseDto {  Message = $"Must Quantity Of Product U Want To Add it <= {checkfrominventory.Data.Quantity} " });
 			}
 			var checkwarehouse = await _unitOfWork.WareHouse.GetByIdAsync(productDto.WareHouseId);
 			if(!checkwarehouse.Success|| checkwarehouse.Data==null)
-				return NotFound(new ResponseDto { StatusCode=404,Message= checkwarehouse.Message});
+				return NotFound(new ResponseDto { Message= checkwarehouse.Message});
 
 			 var isexsist=  await _unitOfWork.Repository<ProductInventory>().GetByQuery(i=>i.ProductId==productDto.ProductId&&i.WarehouseId==productDto.WareHouseId);
 			if(isexsist.Success)
 			{
 				_logger.LogError("Inventory is already exsist");
-				return Conflict(new ResponseDto { StatusCode=409,Message = "Inventory is already exsist"});
+				return Conflict(new ResponseDto {Message = "Inventory is already exsist"});
 			}
 
 		    var inventory=new ProductInventory {ProductId=productDto.ProductId,WarehouseId=productDto.WareHouseId,Quantity=productDto.Quantity};
@@ -111,12 +112,12 @@ namespace E_Commers.Controllers
 			    string userid=	User.FindFirst(ClaimTypes.NameIdentifier).Value;
 				var iscreated=await _unitOfWork.Repository<ProductInventory>().CreateAsync(inventory);
 				if(!iscreated.Success)
-				return BadRequest(new ResponseDto { StatusCode=400, Message= iscreated.Message});
+				return BadRequest(new ResponseDto { Message= iscreated.Message});
 
 				int changes = await _unitOfWork.CommitAsync();
 				if (changes == 0)
 				{
-					return BadRequest(new ResponseDto { Message = "Nothing added", StatusCode = 500 });
+					return BadRequest(new ResponseDto { Message = "Nothing added"});
 				}
 
 				_logger.LogInformation($"inventory added successfully, ID: {inventory.Id}");
@@ -128,24 +129,24 @@ namespace E_Commers.Controllers
 					Timestamp = DateTime.UtcNow
 				};
 
-				ResultDto<bool> logResult = await _unitOfWork.Repository<AdminOperationsLog>().CreateAsync(adminOperations);
+				Result<bool> logResult = await _unitOfWork.Repository<AdminOperationsLog>().CreateAsync(adminOperations);
 				if (!logResult.Success)
 				{
 					await transaction.RollbackAsync();
-					return StatusCode(500, new ResponseDto { StatusCode = 500, Message = logResult.Message });
+					return StatusCode(500, new ResponseDto { Message = logResult.Message });
 				}
 
 				await _unitOfWork.CommitAsync();
 				await transaction.CommitAsync();
 
-				return CreatedAtAction(nameof(AddProductToWarehouse), new { id = inventory.Id }, new ResponseDto { Message = $"Added successfully, ID: {inventory.Id}", StatusCode = 200 });
+				return CreatedAtAction(nameof(AddProductToWarehouse), new { id = inventory.Id }, new ResponseDto { Message = $"Added successfully, ID: {inventory.Id}", });
 			}
 
 			catch (Exception ex)
 			{
 				_logger.LogError($"Exception: {ex.Message}");
 				await transaction.RollbackAsync();
-				return StatusCode(500, new ResponseDto { Message = "An error occurred while saving data.", StatusCode = 500 });
+				return StatusCode(500, new ResponseDto { Message = "An error occurred while saving data." });
 			}
 
 		}
@@ -160,13 +161,12 @@ namespace E_Commers.Controllers
 
 				return BadRequest(new ResponseDto
 				{
-					StatusCode = 400,
 					Message = "Invalid data: " + string.Join(", ", errors)
 				});
 			}
 			var checkfrominventory = await _unitOfWork.Repository<ProductInventory>().GetByIdAsync(productDto.Id,p=>p.Include(p=>p.Product));
 			if (!checkfrominventory.Success || checkfrominventory.Data == null)
-				return NotFound(new ResponseDto { StatusCode = 404, Message = checkfrominventory.Message });
+				return NotFound(new ResponseDto {  Message = checkfrominventory.Message });
 
 
 
@@ -183,7 +183,7 @@ namespace E_Commers.Controllers
 					await transaction.RollbackAsync();
 					return StatusCode(500, new ResponseDto
 					{
-						StatusCode = 500,
+						
 						Message = productUpdate.Success ? frominventoryUpdate.Message : productUpdate.Message
 					});
 				}
@@ -201,7 +201,7 @@ namespace E_Commers.Controllers
 				if (!logResult.Success)
 				{
 					await transaction.RollbackAsync();
-					return StatusCode(500, new ResponseDto { StatusCode = 500, Message = logResult.Message });
+					return StatusCode(500, new ResponseDto { Message = logResult.Message });
 				}
 
 				// Single commit point
@@ -211,7 +211,7 @@ namespace E_Commers.Controllers
 				return Ok(new ResponseDto
 				{
 					Message = $"Updated successfully, ID: {productDto.Id}",
-					StatusCode = 200
+					
 				});
 			}
 
@@ -219,7 +219,7 @@ namespace E_Commers.Controllers
 			{
 				_logger.LogError($"Exception: {ex.Message}");
 				await transaction.RollbackAsync();
-				return StatusCode(500, new ResponseDto { Message = "An error occurred while saving data.", StatusCode = 500 });
+				return StatusCode(500, new ResponseDto { Message = "An error occurred while saving data.",  });
 			}
 
 		}
@@ -229,7 +229,7 @@ namespace E_Commers.Controllers
 			_logger.LogInformation($"Execute {nameof(GetInventoryByWarehouse)} ");
 			 var isfound=  await _unitOfWork.WareHouse.GetByIdAsync(warehouseId, include: w => w.Include(w => w.ProductInventories).ThenInclude(p=>p.Product).ThenInclude(p=>p.Category));
 			if (!isfound.Success || isfound.Data == null || isfound.Data.ProductInventories.Count==0)
-				return NotFound(new ResponseDto { StatusCode=404,Message=isfound.Message});
+				return NotFound(new ResponseDto {Message=isfound.Message});
 
 
 			List<InventoryDto> invantoriesDtos = isfound.Data.ProductInventories.Select(c =>
@@ -253,7 +253,7 @@ namespace E_Commers.Controllers
 				}
 			}
 			).ToList();
-			return Ok(new ResponseDto { StatusCode = 200, Message = isfound.Message, Data = invantoriesDtos });
+			return Ok(new ResponseDto { Message = isfound.Message, Data = invantoriesDtos });
 		}
 
 		[HttpPatch("TransferQuantity")]
@@ -267,7 +267,7 @@ namespace E_Commers.Controllers
 			{
 				var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
 				_logger.LogError($"Validation Errors: {string.Join(", ", errors)}");
-				return BadRequest(new ResponseDto(400, "Invalid data: " + string.Join(", ", errors)));
+				return BadRequest(new ResponseDto( "Invalid data: " + string.Join(", ", errors)));
 			}
 
 			// Check source inventory
@@ -276,7 +276,7 @@ namespace E_Commers.Controllers
 
 			if (!sourceInventory.Success || sourceInventory.Data == null)
 			{
-				return NotFound(new ResponseDto(404, sourceInventory.Message));
+				return NotFound(new ResponseDto( sourceInventory.Message));
 			}
 
 			// Check target inventory
@@ -285,38 +285,38 @@ namespace E_Commers.Controllers
 
 			if (!targetInventory.Success || targetInventory.Data == null)
 			{
-				return NotFound(new ResponseDto(404, targetInventory.Message));
+				return NotFound(new ResponseDto( targetInventory.Message));
 			}
 
 			// Business validations
 			if (sourceInventory.Data.ProductId != productDto.ProductId)
 			{
 				_logger.LogError("Product ID doesn't match source inventory");
-				return BadRequest(new ResponseDto(400, "Product ID doesn't match source inventory"));
+				return BadRequest(new ResponseDto( "Product ID doesn't match source inventory"));
 			}
 
 			if (targetInventory.Data.ProductId != productDto.ProductId)
 			{
 				_logger.LogError("Product ID doesn't match target inventory");
-				return BadRequest(new ResponseDto(400, "Product ID doesn't match target inventory"));
+				return BadRequest(new ResponseDto( "Product ID doesn't match target inventory"));
 			}
 
 			if (sourceInventory.Data.Id == targetInventory.Data.Id)
 			{
 				_logger.LogError("Cannot transfer between the same inventory");
-				return BadRequest(new ResponseDto(400, "Cannot transfer between the same inventory"));
+				return BadRequest(new ResponseDto( "Cannot transfer between the same inventory"));
 			}
 
 			if (sourceInventory.Data.WarehouseId == targetInventory.Data.WarehouseId)
 			{
 				_logger.LogError("Cannot transfer within the same warehouse");
-				return BadRequest(new ResponseDto(400, "Cannot transfer within the same warehouse"));
+				return BadRequest(new ResponseDto( "Cannot transfer within the same warehouse"));
 			}
 
 			if (sourceInventory.Data.Quantity < productDto.Quantity)
 			{
 				_logger.LogError("Insufficient quantity in source inventory");
-				return BadRequest(new ResponseDto(400, "Insufficient quantity in source inventory"));
+				return BadRequest(new ResponseDto( "Insufficient quantity in source inventory"));
 			}
 
 			// Begin transaction
@@ -336,7 +336,7 @@ namespace E_Commers.Controllers
 					await transaction.RollbackAsync();
 					var errorMessage = !sourceUpdate.Success ? sourceUpdate.Message : targetUpdate.Message;
 					_logger.LogError($"Update failed: {errorMessage}");
-					return StatusCode(500, new ResponseDto(500, errorMessage));
+					return StatusCode(500, new ResponseDto( errorMessage));
 				}
 
 				// Log the operation
@@ -355,7 +355,7 @@ namespace E_Commers.Controllers
 				{
 					await transaction.RollbackAsync();
 					_logger.LogError($"Log creation failed: {logResult.Message}");
-					return StatusCode(500, new ResponseDto(500, logResult.Message));
+					return StatusCode(500, new ResponseDto( logResult.Message));
 				}
 
 				// Commit transaction
@@ -365,7 +365,7 @@ namespace E_Commers.Controllers
 				_logger.LogInformation($"Successfully transferred {productDto.Quantity} units of product {productDto.ProductId}");
 
 				return Ok(new ResponseDto(
-					200,
+					
 					"Transfer completed successfully",
 					new 
 					{
@@ -381,7 +381,7 @@ namespace E_Commers.Controllers
 			{
 				await transaction.RollbackAsync();
 				_logger.LogError(ex, $"Error in {methodName}: {ex.Message}");
-				return StatusCode(500, new ResponseDto(500, "An error occurred during transfer"));
+				return StatusCode(500, new ResponseDto( "An error occurred during transfer"));
 			}
 		}
 
@@ -393,11 +393,11 @@ namespace E_Commers.Controllers
 			_logger.LogInformation($"Executing {nameof(GetInventory)} in InventoryController");
 
 
-			ResultDto<ProductInventory> result = await _unitOfWork.Repository<ProductInventory>().GetByIdAsync(id,include:i=>i.Include(i=>i.Product).ThenInclude(p=>p.Category).Include(i=>i.Warehouse).Include(i => i.Product).ThenInclude(i=>i.Discount));
+			Result<ProductInventory> result = await _unitOfWork.Repository<ProductInventory>().GetByIdAsync(id,include:i=>i.Include(i=>i.Product).ThenInclude(p=>p.Category).Include(i=>i.Warehouse).Include(i => i.Product).ThenInclude(i=>i.Discount));
 			if (!result.Success||result.Data==null)
 			{
 
-				return NotFound(new ResponseDto { StatusCode = 404, Message = result.Message });
+				return NotFound(new ResponseDto {  Message = result.Message });
 			}
 			InventoryDto inventoryDto = new InventoryDto 
 			{
@@ -418,7 +418,7 @@ namespace E_Commers.Controllers
 
 
 
-			return Ok(new ResponseDto { Message = result.Message, Data = result, StatusCode = 200 });
+			return Ok(new ResponseDto { Message = result.Message, Data = result, });
 		}
 
 		[HttpDelete]
@@ -431,11 +431,11 @@ namespace E_Commers.Controllers
 
 			try
 			{
-				ResultDto<ProductInventory> resultinventory = await _unitOfWork.Repository<ProductInventory>().GetByIdAsync(id, c => c.Include(p => p.Product));
+				Result<ProductInventory> resultinventory = await _unitOfWork.Repository<ProductInventory>().GetByIdAsync(id, c => c.Include(p => p.Product));
 				if (!resultinventory.Success||resultinventory.Data is null )
 				{
 					
-					return BadRequest(new ResponseDto { StatusCode = 400, Message = resultinventory.Message });
+					return BadRequest(new ResponseDto { Message = resultinventory.Message });
 				}
 
 				string adminId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
@@ -443,21 +443,21 @@ namespace E_Commers.Controllers
 				if (resultinventory.Data.Quantity != 0)
 				{
 					_logger.LogError("Can't delete Inventory Contain Products.");
-					return StatusCode(400, new ResponseDto { StatusCode = 400, Message = "Can't delete Inventory Contain Products." });
+					return StatusCode( 400,new ResponseDto {  Message = "Can't delete Inventory Contain Products." });
 				}
 				resultinventory.Data.DeletedAt = DateTime.UtcNow;
 
-				ResultDto<bool> result = await _unitOfWork.Repository<ProductInventory>().UpdateAsync(resultinventory.Data);
+				Result<bool> result = await _unitOfWork.Repository<ProductInventory>().UpdateAsync(resultinventory.Data);
 				if (!result.Success)
 				{
 					_logger.LogError(result.Message);
-					return StatusCode(500, new ResponseDto { StatusCode = 500, Message = result.Message });
+					return StatusCode(500, new ResponseDto { Message = result.Message });
 				}
 
 				if (await _unitOfWork.CommitAsync() == 0)
 				{
 					_logger.LogError("Can't delete Inventory.");
-					return StatusCode(500, new ResponseDto { StatusCode = 500, Message = "Can't delete Inventory." });
+					return StatusCode(500, new ResponseDto { Message = "Can't delete Inventory." });
 				}
 
 				_logger.LogInformation($"Inventort Deleted successfully, ID: {resultinventory.Data.Id}");
@@ -470,23 +470,23 @@ namespace E_Commers.Controllers
 					Timestamp = DateTime.UtcNow
 				};
 
-				ResultDto<bool> logResult = await _unitOfWork.Repository<AdminOperationsLog>().CreateAsync(adminOperations);
+				Result<bool> logResult = await _unitOfWork.Repository<AdminOperationsLog>().CreateAsync(adminOperations);
 				if (!logResult.Success)
 				{
 					await transaction.RollbackAsync();
-					return StatusCode(500, new ResponseDto { StatusCode = 500, Message = logResult.Message });
+					return StatusCode(500, new ResponseDto { Message = logResult.Message });
 				}
 
 				await _unitOfWork.CommitAsync();
 				await transaction.CommitAsync();
 
-				return Ok(new ResponseDto { Message = $"Deleted successfully, ID: {resultinventory.Data.Id}", StatusCode = 200 });
+				return Ok(new ResponseDto { Message = $"Deleted successfully, ID: {resultinventory.Data.Id}", });
 			}
 			catch (Exception ex)
 			{
 				_logger.LogError($"Transaction failed: {ex.Message}");
 				await transaction.RollbackAsync();
-				return StatusCode(500, new ResponseDto { StatusCode = 500, Message = "An error occurred while deleting the Inventort." });
+				return StatusCode(500, new ResponseDto { Message = "An error occurred while deleting the Inventort." });
 			}
 		}
 
@@ -500,7 +500,7 @@ namespace E_Commers.Controllers
 
 			if (!resultlist.Success||!resultlist.Data.Any())
 			{
-				return Ok(new ResponseDto { StatusCode = 200, Message = resultlist.Message });
+				return Ok(new ResponseDto { Message = resultlist.Message });
 			}
 
 			var invetoryDtos = resultlist.Data.Select(c =>
@@ -526,7 +526,7 @@ namespace E_Commers.Controllers
 			).ToList();
 
 			_logger.LogInformation($"Deleted Invetories found: {invetoryDtos.Count()}");
-			return Ok(new ResponseDto { StatusCode = 200, Message = resultlist.Message, Data = invetoryDtos });
+			return Ok(new ResponseDto { Message = resultlist.Message, Data = invetoryDtos });
 		}
 		[HttpPatch("return_Deleted_Invetories")]
 		public async Task<ActionResult<ResponseDto>> ReturnRemovedInventoryAsync(int id)
@@ -540,20 +540,20 @@ namespace E_Commers.Controllers
 			if (!resultInvetory.Success)
 			{
 			
-				return BadRequest(new ResponseDto { StatusCode = 400, Message = resultInvetory.Message });
+				return BadRequest(new ResponseDto { Message = resultInvetory.Message });
 			}
 
 			using var tran = await _unitOfWork.BeginTransactionAsync();
 
 			resultInvetory.Data.DeletedAt = null;
-			ResultDto<bool> updateResult = await _unitOfWork.Repository<ProductInventory>().UpdateAsync(resultInvetory.Data);
+			Result<bool> updateResult = await _unitOfWork.Repository<ProductInventory>().UpdateAsync(resultInvetory.Data);
 			if (!updateResult.Success)
 			{
 				_logger.LogError(updateResult.Message);
-				return StatusCode(500, new ResponseDto { StatusCode = 500, Message = updateResult.Message });
+				return StatusCode(500, new ResponseDto { Message = updateResult.Message });
 			}
 
-			ResultDto<bool> logResult = await _unitOfWork.Repository<AdminOperationsLog>().CreateAsync(new AdminOperationsLog
+			Result<bool> logResult = await _unitOfWork.Repository<AdminOperationsLog>().CreateAsync(new AdminOperationsLog
 			{
 				AdminId = userid,
 				ItemId = resultInvetory.Data.Id,
@@ -564,17 +564,17 @@ namespace E_Commers.Controllers
 			if (!logResult.Success)
 			{
 				_logger.LogError(logResult.Message);
-				return StatusCode(500, new ResponseDto { StatusCode = 500, Message = logResult.Message });
+				return StatusCode(500, new ResponseDto { Message = logResult.Message });
 			}
 
 			int saveResult = await _unitOfWork.CommitAsync();
 			if (saveResult == 0)
 			{
 				_logger.LogError("Database update failed, no changes were committed.");
-				return StatusCode(500, new ResponseDto { StatusCode = 500, Message = "Database update failed, no changes were committed." });
+				return StatusCode(500, new ResponseDto { Message = "Database update failed, no changes were committed." });
 			}
 			await tran.CommitAsync();
-			return Ok(new ResponseDto { StatusCode = 200, Message = $"Inventory restored: {resultInvetory.Data.Id}" });
+			return Ok(new ResponseDto { Message = $"Inventory restored: {resultInvetory.Data.Id}" });
 		}
 	}
 }

@@ -1,14 +1,15 @@
-﻿using E_Commers.DtoModels.AccountDtos;
+﻿using E_Commers.DtoModels;
 using E_Commers.DtoModels.CategoryDtos;
 using E_Commers.DtoModels.DiscoutDtos;
 using E_Commers.DtoModels.ProductDtos;
-using E_Commers.Helper;
+using E_Commers.Services;
 using E_Commers.Models;
 using E_Commers.UOW;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace E_Commers.Controllers
 {
@@ -32,11 +33,11 @@ namespace E_Commers.Controllers
 			_logger.LogInformation($"Executing {nameof(GetDiscount)} in DiscountController");
 
 
-			ResultDto<Discount> discountresult = await _unitOfWork.Repository<Discount>().GetByIdAsync(id,include:d=>d.Include(d=>d.products).ThenInclude(p=>p.Category));
+			Result<Discount> discountresult = await _unitOfWork.Repository<Discount>().GetByIdAsync(id,include:d=>d.Include(d=>d.products).ThenInclude(p=>p.Category));
 			if (!discountresult.Success || discountresult.Data is null)
 			{
 
-				return Ok(new ResponseDto { StatusCode = 200, Message = discountresult.Message });
+				return Ok(new ResponseDto { Message = discountresult.Message });
 			}
 			DiscountDto discountDto = new DiscountDto
 			{
@@ -59,7 +60,7 @@ namespace E_Commers.Controllers
 
 
 
-			return Ok(new ResponseDto { Message = discountresult.Message, Data = discountDto, StatusCode = 200 });
+			return Ok(new ResponseDto { Message = discountresult.Message, Data = discountDto, });
 		}
 
 		[HttpGet("GetAll")]
@@ -72,7 +73,7 @@ namespace E_Commers.Controllers
 			var discountresult = await _unitOfWork.Repository<Discount>().GetAllAsync(filter: c => c.DeletedAt == null, include: d => d.Include(d => d.products).ThenInclude(p => p.Category));
 			if (!discountresult.Success||  discountresult.Data is null)
 			{
-				return Ok(new ResponseDto { StatusCode = 200, Message = discountresult.Message, });
+				return Ok(new ResponseDto { Message = discountresult.Message, });
 			}
 
 			List<DiscountDto> discountDtos = discountresult.Data.Select(c =>
@@ -98,7 +99,7 @@ namespace E_Commers.Controllers
 
 
 
-			return Ok(new ResponseDto { Message = discountresult.Message, Data = discountDtos, StatusCode = 200 });
+			return Ok(new ResponseDto { Message = discountresult.Message, Data = discountDtos, });
 		}
 
 		[HttpPost]
@@ -113,7 +114,7 @@ namespace E_Commers.Controllers
 
 				return BadRequest(new ResponseDto
 				{
-					StatusCode = 400,
+					
 					Message = "Invalid data: " + string.Join(", ", errors)
 				});
 			}
@@ -125,7 +126,7 @@ namespace E_Commers.Controllers
 			{
 				return BadRequest(new ResponseDto
 				{
-					StatusCode = 400,
+					
 					Message = $"Their's Discount with this Name:{model.Name}"
 				});
 			}
@@ -134,12 +135,12 @@ namespace E_Commers.Controllers
 			try
 			{
 				Discount discount = new Discount { DiscountPercent= model.DiscountPercent,IsActive=model.IsActive, Description = model.Description, Name = model.Name };
-				ResultDto<bool> result = await _unitOfWork.Repository<Discount>().CreateAsync(discount);
+				Result<bool> result = await _unitOfWork.Repository<Discount>().CreateAsync(discount);
 
 				if (!result.Success)
 				{
 					_logger.LogWarning(result.Message);
-					return BadRequest(new ResponseDto { Message = result.Message, StatusCode = 400 });
+					return BadRequest(new ResponseDto { Message = result.Message,  });
 				}
 
 				_logger.LogInformation($"discount added successfully, ID: {discount.Id}");
@@ -151,23 +152,23 @@ namespace E_Commers.Controllers
 					Timestamp = DateTime.UtcNow
 				};
 
-				ResultDto<bool> logResult = await _unitOfWork.Repository<AdminOperationsLog>().CreateAsync(adminOperations);
+				Result<bool> logResult = await _unitOfWork.Repository<AdminOperationsLog>().CreateAsync(adminOperations);
 				if (!logResult.Success)
 				{
 					await transaction.RollbackAsync();
-					return StatusCode(500, new ResponseDto { StatusCode = 500, Message = logResult.Message });
+					return StatusCode(500, new ResponseDto { Message = logResult.Message });
 				}
 
 				await _unitOfWork.CommitAsync();
 				await transaction.CommitAsync();
 
-				return Ok(new ResponseDto { Message = $"Added successfully, ID: {discount.Id}", StatusCode = 200 });
+				return Ok(new ResponseDto { Message = $"Added successfully, ID: {discount.Id}", });
 			}
 			catch (Exception ex)
 			{
 				_logger.LogError($"Exception: {ex.Message}");
 				await transaction.RollbackAsync();
-				return StatusCode(500, new ResponseDto { Message = "An error occurred while saving data.", StatusCode = 500 });
+				return StatusCode(500, new ResponseDto { Message = "An error occurred while saving data." });
 			}
 		}
 

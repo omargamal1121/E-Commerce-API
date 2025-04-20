@@ -1147,6 +1147,22 @@
           }
         }
       },
+      "Scalar.AspNetCore/2.1.16": {
+        "type": "package",
+        "compile": {
+          "lib/net9.0/Scalar.AspNetCore.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net9.0/Scalar.AspNetCore.dll": {
+            "related": ".xml"
+          }
+        },
+        "frameworkReferences": [
+          "Microsoft.AspNetCore.App"
+        ]
+      },
       "Serilog/4.2.0": {
         "type": "package",
         "compile": {
@@ -3726,6 +3742,23 @@
         "version.txt"
       ]
     },
+    "Scalar.AspNetCore/2.1.16": {
+      "sha512": "+J7Vx0UnuCu9Y8G/LhsnMliQuwaPrGmdI7hq6VCZFa7m/nGvngfDnvTXkUayp16kdYZksqnRVL+ZxxZNJqHn9Q==",
+      "type": "package",
+      "path": "scalar.aspnetcore/2.1.16",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "README.md",
+        "icon.png",
+        "lib/net8.0/Scalar.AspNetCore.dll",
+        "lib/net8.0/Scalar.AspNetCore.xml",
+        "lib/net9.0/Scalar.AspNetCore.dll",
+        "lib/net9.0/Scalar.AspNetCore.xml",
+        "scalar.aspnetcore.2.1.16.nupkg.sha512",
+        "scalar.aspnetcore.nuspec"
+      ]
+    },
     "Serilog/4.2.0": {
       "sha512": "gmoWVOvKgbME8TYR+gwMf7osROiWAURterc6Rt2dQyX7wtjZYpqFiA/pY6ztjGQKKV62GGCyOcmtP1UKMHgSmA==",
       "type": "package",
@@ -5118,6 +5151,7 @@
       "Microsoft.Extensions.Caching.StackExchangeRedis >= 8.0.3",
       "Microsoft.Extensions.Logging.Abstractions >= 10.0.0-preview.2.25163.2",
       "Pomelo.EntityFrameworkCore.MySql >= 8.0.3",
+      "Scalar.AspNetCore >= 2.1.16",
       "Serilog.Extensions.Logging >= 9.0.1",
       "Swashbuckle.AspNetCore >= 7.3.1"
     ]
@@ -5216,6 +5250,10 @@
           "Pomelo.EntityFrameworkCore.MySql": {
             "target": "Package",
             "version": "[8.0.3, )"
+          },
+          "Scalar.AspNetCore": {
+            "target": "Package",
+            "version": "[2.1.16, )"
           },
           "Serilog.Extensions.Logging": {
             "target": "Package",

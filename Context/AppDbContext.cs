@@ -14,6 +14,12 @@ namespace E_Commers.Context
 		{
 
 		}
+		protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
+		{
+			
+			configurationBuilder.Properties<decimal>().HavePrecision(18, 2);
+			base.ConfigureConventions(configurationBuilder);
+		}
 		public DbSet<Customer> customers { get; set; }
 		public DbSet<UserOperationsLog>   userOperationsLogs { get; set; }
 		public DbSet<AdminOperationsLog>  adminOperationsLogs { get; set; }
@@ -33,70 +39,66 @@ namespace E_Commers.Context
 			builder.Entity<Order>()
 				.HasOne(o => o.Payment)
 				.WithOne(p => p.Order)
-				.HasForeignKey<Payment>(p => p.OrderId);
+				.HasForeignKey<Payment>(p => p.OrderId).OnDelete(DeleteBehavior.Restrict);
 
 
 			builder.Entity<Order>()
 				.HasOne(o => o.Customer)
 				.WithMany(c => c.Orders)
-				.HasForeignKey(o => o.CustomerId);
-
-
+				.HasForeignKey(o => o.CustomerId).OnDelete(DeleteBehavior.Restrict);
 			builder.Entity<Item>()
 				.HasOne(i => i.Order)
 				.WithMany(o => o.Items)
-				.HasForeignKey(i => i.OrderId);
-
-
+				.HasForeignKey(i => i.OrderId).OnDelete(DeleteBehavior.Restrict);
 			builder.Entity<Item>()
 				.HasOne(i => i.Product)
 				.WithMany()
-				.HasForeignKey(i => i.ProductId);
+				.HasForeignKey(i => i.ProductId).OnDelete(DeleteBehavior.Restrict);
 
 			builder.Entity<Payment>()
 				.HasOne(p => p.PaymentMethod)
 				.WithMany()
-				.HasForeignKey(p => p.PaymentMethodId);
+				.HasForeignKey(p => p.PaymentMethodId).OnDelete(DeleteBehavior.Restrict);
 
 
 			builder.Entity<Payment>()
 				.HasOne(p => p.PaymentProvider)
 				.WithMany()
-				.HasForeignKey(p => p.PaymentProviderId);
+				.HasForeignKey(p => p.PaymentProviderId).OnDelete(DeleteBehavior.Restrict);
 
 			builder.Entity<Product>()
 				.HasOne(p => p.Category)
 				.WithMany(c => c.products)
-				.HasForeignKey(p => p.CategoryId);
+				.HasForeignKey(p => p.CategoryId).OnDelete(DeleteBehavior.Restrict);
 
 			builder.Entity<ProductInventory>()
 				.HasOne(pi => pi.Product)
 				.WithMany(p => p.InventoryEntries)
-				.HasForeignKey(pi => pi.ProductId);
+				.HasForeignKey(pi => pi.ProductId).OnDelete(DeleteBehavior.Restrict);
 
 			builder.Entity<ProductInventory>()
 				.HasOne(pi => pi.Warehouse)
 				.WithMany(w => w.ProductInventories)
-				.HasForeignKey(pi => pi.WarehouseId);
+				.HasForeignKey(pi => pi.WarehouseId).OnDelete(DeleteBehavior.Restrict);
 
 			builder.Entity<Customer>()
 				.HasMany(c => c.Addresses)
 				.WithOne(a => a.Customer)
-				.HasForeignKey(c => c.CustomerId);
+				.HasForeignKey(c => c.CustomerId).OnDelete(DeleteBehavior.Restrict);
 
 			builder.Entity<Customer>()
 				.HasMany(c => c.userOperationsLogs)
 				.WithOne(a => a.User)
-				.HasForeignKey(c => c.UserId);
+				.HasForeignKey(c => c.UserId).OnDelete(DeleteBehavior.Restrict);
 			builder.Entity<Customer>()
 				.HasMany(c => c.adminOperationsLogs)
 				.WithOne(a => a.Admin)
-				.HasForeignKey(c => c.AdminId);
+				.HasForeignKey(c => c.AdminId).OnDelete(DeleteBehavior.Restrict);
 
 			builder.Entity<Discount>()
 				.HasMany(d => d.products)
 				.WithOne(p => p.Discount)
-				.HasForeignKey(p => p.DiscountId);
+				.HasForeignKey(p => p.DiscountId).OnDelete(DeleteBehavior.Restrict);
 			builder.Entity<Category>()
 				.HasIndex(c => c.Name)
 				.IsUnique();

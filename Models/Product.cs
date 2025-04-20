@@ -30,5 +30,6 @@ namespace E_Commers.Models
 		[Range(0, (double)decimal.MaxValue)]
 		[Required(ErrorMessage = "Price Required")]
 		public decimal Price { get; set; }
+		public ICollection<string>?ImagesUrl { get; set; }
 	}
 }
