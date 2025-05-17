@@ -2,7 +2,7 @@
 
 namespace E_Commers.DtoModels.DiscoutDtos
 {
-	public record CreateDiscountDto
+	public class CreateDiscountDto
 	{
 		[Required(ErrorMessage = "Name is required.")]
 		[StringLength(20, MinimumLength = 5, ErrorMessage = "Name must be between 5 and 20 characters.")]

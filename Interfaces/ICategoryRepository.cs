@@ -5,6 +5,7 @@ namespace E_Commers.Interfaces
 {
 	public interface ICategoryRepository:IRepository<Category>
 	{
+		public  Task<bool> IsHasProductAsync(int id);
 		public Task<Result<List<Product>>> GetProductsByCategoryIdAsync(int categoryId);
 		public Task<Result<Category?>> GetByNameAsync(string Name);
 		public Task<Result<Category?>> GetCategoryByProductIdAsync(int productid);

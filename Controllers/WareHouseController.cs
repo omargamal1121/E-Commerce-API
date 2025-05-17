@@ -81,8 +81,8 @@ namespace E_Commers.Controllers
 							Id = i.Product.Id,
 							Name = i.Product.Name,
 							AvailabeQuantity = i.Product.Quantity,
-							Category = 
-							new CategoryDto(i.Product.CategoryId,i.Product.Category.Name,i.Product.Category.Description,i.Product.Category.CreatedAt),
+				
+						
 							Discount = i.Product.Discount != null ? new DiscountDto
 							{
 								Id = i.Product.Discount.Id,
@@ -134,7 +134,7 @@ namespace E_Commers.Controllers
 			try
 			{
 				Warehouse warehouse = new Warehouse { Address=model.Address,  Phone=model.Phone , Name = model.Name };
-				Result<bool> result = await _unitOfWork.Repository<Warehouse>().CreateAsync(warehouse);
+				Result<Warehouse> result = await _unitOfWork.Repository<Warehouse>().CreateAsync(warehouse);
 
 				if (!result.Success)
 				{
@@ -158,7 +158,7 @@ namespace E_Commers.Controllers
 					Timestamp = DateTime.UtcNow
 				};
 
-				Result<bool> logResult = await _unitOfWork.Repository<AdminOperationsLog>().CreateAsync(adminOperations);
+				Result<AdminOperationsLog> logResult = await _unitOfWork.Repository<AdminOperationsLog>().CreateAsync(adminOperations);
 				if (!logResult.Success)
 				{
 					await transaction.RollbackAsync();
@@ -235,7 +235,7 @@ namespace E_Commers.Controllers
 			}
 			using var transaction = await _unitOfWork.BeginTransactionAsync();
 
-			Result<bool> result = await _unitOfWork.Repository<Warehouse>().UpdateAsync(resultwarehouse.Data);
+			Result<Warehouse> result = await _unitOfWork.Repository<Warehouse>().UpdateAsync(resultwarehouse.Data);
 			if (!result.Success)
 			{
 				_logger.LogError(result.Message);
@@ -251,7 +251,7 @@ namespace E_Commers.Controllers
 				Timestamp = DateTime.UtcNow
 			};
 
-			Result<bool> logResult = await _unitOfWork.Repository<AdminOperationsLog>().CreateAsync(adminOperations);
+			Result<AdminOperationsLog> logResult = await _unitOfWork.Repository<AdminOperationsLog>().CreateAsync(adminOperations);
 			if (!logResult.Success)
 			{
 				await transaction.RollbackAsync();
@@ -271,7 +271,7 @@ namespace E_Commers.Controllers
 
 			try
 			{
-				Result<Warehouse> resultwarehouse = await _unitOfWork.Repository<Warehouse>().GetByIdAsync(id, x => x.Include(c => c.ProductInventories));
+				Result<Warehouse> resultwarehouse = await _unitOfWork.Repository<Warehouse>().GetByIdAsync(id);
 				if (!resultwarehouse.Success || resultwarehouse.Data is null || resultwarehouse.Data.DeletedAt.HasValue)
 				{
 					_logger.LogWarning($"No warehouse with this id: {id}");
@@ -291,7 +291,7 @@ namespace E_Commers.Controllers
 				}
 				resultwarehouse.Data.DeletedAt = DateTime.UtcNow;
 
-				Result<bool> result = await _unitOfWork.Repository<Warehouse>().UpdateAsync(resultwarehouse.Data);
+				Result<Warehouse> result = await _unitOfWork.Repository<Warehouse>().UpdateAsync(resultwarehouse.Data);
 				if (!result.Success)
 				{
 					_logger.LogError(result.Message);
@@ -314,7 +314,7 @@ namespace E_Commers.Controllers
 					Timestamp = DateTime.UtcNow
 				};
 
-				Result<bool> logResult = await _unitOfWork.Repository<AdminOperationsLog>().CreateAsync(adminOperations);
+				Result<AdminOperationsLog> logResult = await _unitOfWork.Repository<AdminOperationsLog>().CreateAsync(adminOperations);
 				if (!logResult.Success)
 				{
 					await transaction.RollbackAsync();
@@ -357,14 +357,14 @@ namespace E_Commers.Controllers
 			using var tran = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
 
 			resultwarehouse.Data.DeletedAt = null;
-			Result<bool> updateResult = await _unitOfWork.WareHouse.UpdateAsync(resultwarehouse.Data);
+			Result<Warehouse> updateResult = await _unitOfWork.WareHouse.UpdateAsync(resultwarehouse.Data);
 			if (!updateResult.Success)
 			{
 				_logger.LogError(updateResult.Message);
 				return StatusCode(500, new ResponseDto { Message = updateResult.Message });
 			}
 
-			Result<bool> logResult = await _unitOfWork.Repository<AdminOperationsLog>().CreateAsync(new AdminOperationsLog
+			Result<AdminOperationsLog> logResult = await _unitOfWork.Repository<AdminOperationsLog>().CreateAsync(new AdminOperationsLog
 			{
 				AdminId = userid,
 				ItemId = resultwarehouse.Data.Id,
@@ -392,7 +392,7 @@ namespace E_Commers.Controllers
 		public async Task<ActionResult<ResponseDto>> GetProductsByWareHouseId([FromRoute] int id)
 		{
 			_logger.LogInformation($"Execute {nameof(GetProductsByWareHouseId)} in WareHouseController");
-			 Result<Warehouse> result= await _unitOfWork.WareHouse.GetByIdAsync(id, w => w.Include(we => we.ProductInventories).ThenInclude(p => p.Product).ThenInclude(c => c.Category));
+			 Result<Warehouse> result= await _unitOfWork.WareHouse.GetByIdAsync(id);
 			if(!result.Success)
 			{
 				_logger.LogError(result.Message);
@@ -429,7 +429,7 @@ namespace E_Commers.Controllers
 				return Unauthorized(new ResponseDto {  Message = "Invalid Admin ID." });
 			}
 
-			Result<Warehouse> from = await _unitOfWork.WareHouse.GetByIdAsync(CurrentWarehouse, x => x.Include(w => w.ProductInventories));
+			Result<Warehouse> from = await _unitOfWork.WareHouse.GetByIdAsync(CurrentWarehouse);
 			if (!from.Success || from.Data.ProductInventories.Count == 0)
 			{
 				_logger.LogWarning("Source warehouse not found or empty.");
@@ -463,8 +463,8 @@ namespace E_Commers.Controllers
 					from.Data.ProductInventories.Remove(item);
 
 				}
-				Result<bool> updatefrom = await _unitOfWork.WareHouse.UpdateAsync(from.Data); 
-				Result<bool> updateto = await _unitOfWork.WareHouse.UpdateAsync(from.Data); 
+				Result<Warehouse> updatefrom = await _unitOfWork.WareHouse.UpdateAsync(from.Data); 
+				Result<Warehouse> updateto = await _unitOfWork.WareHouse.UpdateAsync(from.Data); 
 
 				int changes = await _unitOfWork.CommitAsync();
 				if (changes == 0)

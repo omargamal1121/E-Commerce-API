@@ -33,7 +33,7 @@ namespace E_Commers.Controllers
 			_logger.LogInformation($"Executing {nameof(GetDiscount)} in DiscountController");
 
 
-			Result<Discount> discountresult = await _unitOfWork.Repository<Discount>().GetByIdAsync(id,include:d=>d.Include(d=>d.products).ThenInclude(p=>p.Category));
+			Result<Discount> discountresult = await _unitOfWork.Repository<Discount>().GetByIdAsync(id);
 			if (!discountresult.Success || discountresult.Data is null)
 			{
 
@@ -91,7 +91,7 @@ namespace E_Commers.Controllers
 					AvailabeQuantity = p.Quantity,
 					Description = p.Description,
 					FinalPrice = c.IsActive ? p.Price : p.Price - c.DiscountPercent * p.Price,
-					Category = new CategoryDto(p.Category.Id, p.Category.Name, p.Category.Description, p.Category.CreatedAt),
+					//Category = new CategoryDto(p.Category.Id, p.Category.Name, p.Category.Description, p.Category.CreatedAt),
 					CreatedAt = p.CreatedAt,
 				}).ToList()
 			}
@@ -135,7 +135,7 @@ namespace E_Commers.Controllers
 			try
 			{
 				Discount discount = new Discount { DiscountPercent= model.DiscountPercent,IsActive=model.IsActive, Description = model.Description, Name = model.Name };
-				Result<bool> result = await _unitOfWork.Repository<Discount>().CreateAsync(discount);
+				Result<Discount> result = await _unitOfWork.Repository<Discount>().CreateAsync(discount);
 
 				if (!result.Success)
 				{
@@ -152,7 +152,7 @@ namespace E_Commers.Controllers
 					Timestamp = DateTime.UtcNow
 				};
 
-				Result<bool> logResult = await _unitOfWork.Repository<AdminOperationsLog>().CreateAsync(adminOperations);
+				Result<AdminOperationsLog> logResult = await _unitOfWork.Repository<AdminOperationsLog>().CreateAsync(adminOperations);
 				if (!logResult.Success)
 				{
 					await transaction.RollbackAsync();

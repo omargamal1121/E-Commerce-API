@@ -2,7 +2,7 @@
 
 namespace E_Commers.DtoModels.InventoryDtos
 {
-	public record AddQuantityInvetoryDto
+	public class AddQuantityInvetoryDto
 	{
 		[Required(ErrorMessage = "Invetory Id Required")]
 		public int Id { get; set; }

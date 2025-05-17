@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\DELL\\Desktop\\Intern Intelligence project\\E-Commers\\E-Commers\\E-Commerce.csproj": {}
+    "C:\\Users\\DELL\\Desktop\\Projcet\\E-Commers\\E-Commers\\E-Commerce.csproj": {}
   },
   "projects": {
-    "C:\\Users\\DELL\\Desktop\\Intern Intelligence project\\E-Commers\\E-Commers\\E-Commerce.csproj": {
+    "C:\\Users\\DELL\\Desktop\\Projcet\\E-Commers\\E-Commers\\E-Commerce.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\DELL\\Desktop\\Intern Intelligence project\\E-Commers\\E-Commers\\E-Commerce.csproj",
+        "projectUniqueName": "C:\\Users\\DELL\\Desktop\\Projcet\\E-Commers\\E-Commers\\E-Commerce.csproj",
         "projectName": "E-Commerce",
-        "projectPath": "C:\\Users\\DELL\\Desktop\\Intern Intelligence project\\E-Commers\\E-Commers\\E-Commerce.csproj",
+        "projectPath": "C:\\Users\\DELL\\Desktop\\Projcet\\E-Commers\\E-Commers\\E-Commerce.csproj",
         "packagesPath": "C:\\Users\\DELL\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\DELL\\Desktop\\Intern Intelligence project\\E-Commers\\E-Commers\\obj\\",
+        "outputPath": "C:\\Users\\DELL\\Desktop\\Projcet\\E-Commers\\E-Commers\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -71,6 +71,10 @@
               "target": "Package",
               "version": "[8.0.3, )"
             },
+            "Microsoft.AspNetCore.Mvc.NewtonsoftJson": {
+              "target": "Package",
+              "version": "[9.0.0, )"
+            },
             "Microsoft.EntityFrameworkCore.Design": {
               "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
               "suppressParent": "All",
@@ -90,6 +94,10 @@
             "Microsoft.Extensions.Logging.Abstractions": {
               "target": "Package",
               "version": "[10.0.0-preview.2.25163.2, )"
+            },
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[13.0.3, )"
             },
             "Pomelo.EntityFrameworkCore.MySql": {
               "target": "Package",

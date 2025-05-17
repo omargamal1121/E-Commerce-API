@@ -2,9 +2,9 @@
 
 namespace E_Commers.Models
 {
-	public class UserOperationsLog
+	public class UserOperationsLog:BaseEntity
 	{
-		public int Id { get; set; }
+		
 		public string UserId { get; set; } = string.Empty;
 		public Customer User { get; set; }  
 

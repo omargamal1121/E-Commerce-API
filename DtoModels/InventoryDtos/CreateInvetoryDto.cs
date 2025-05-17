@@ -2,7 +2,7 @@
 
 namespace E_Commers.DtoModels.InventoryDtos
 {
-	public record CreateInvetoryDto
+	public class CreateInvetoryDto
 	{
 
 		[Range(0, int.MaxValue, ErrorMessage = $"Invalid Product Id ")]

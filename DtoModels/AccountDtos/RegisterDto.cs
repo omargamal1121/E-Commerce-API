@@ -36,8 +36,7 @@ namespace E_Commers.DtoModels.AccountDtos
 		//[Display(Name = "Address")]
 		//public string Address { get; set; } = string.Empty;
 
-		[Display(Name = "Profile Image")]
-		public IFormFile? ProfilePicture { get; set; }
+
 
 
 		[Required(ErrorMessage = "Password is required.")]
@@ -48,5 +47,4 @@ namespace E_Commers.DtoModels.AccountDtos
 		[Compare("Password", ErrorMessage = "Confirm password does not match the password.")]
 		[Display(Name = "Confirm Password")]
 		public string ConfirmPassword { get; set; } = string.Empty;
-	}
-}
+	}}

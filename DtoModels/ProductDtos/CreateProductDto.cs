@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace E_Commers.DtoModels.ProductDtos
 {
-	public record CreateProductDto 
+	public class CreateProductDto 
 	{
 		[Required(ErrorMessage = "Name Required")]
 		[StringLength(20, MinimumLength = 5, ErrorMessage = "Description must be between 5 and 20 characters.")]

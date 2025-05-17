@@ -1,21 +1,21 @@
 [
   {
     "ContainingType": "E_Commers.Controllers.AccountController",
-    "Method": "ChangeEmail",
-    "RelativePath": "api/Account/ChangeEmail",
-    "HttpMethod": "POST",
+    "Method": "ChangeEmailAsync",
+    "RelativePath": "api/Account/change-email",
+    "HttpMethod": "PATCH",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "NewEmail",
-        "Type": "System.String",
-        "IsRequired": false
+        "Name": "newemail",
+        "Type": "E_Commers.DtoModels.AccountDtos.ChangeEmailDto",
+        "IsRequired": true
       }
     ],
     "ReturnTypes": [
       {
-        "Type": "E_Commers.DtoModels.ResponseDto",
+        "Type": "E_Commers.DtoModels.Responses.ApiResponse\u00601[[E_Commers.DtoModels.AccountDtos.ChangeEmailResultDto, E-Commerce, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -27,9 +27,9 @@
   },
   {
     "ContainingType": "E_Commers.Controllers.AccountController",
-    "Method": "ChangePassword",
-    "RelativePath": "api/Account/ChangePassword",
-    "HttpMethod": "POST",
+    "Method": "ChangePasswordAsync",
+    "RelativePath": "api/Account/change-password",
+    "HttpMethod": "PATCH",
     "IsController": true,
     "Order": 0,
     "Parameters": [
@@ -41,7 +41,7 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "E_Commers.DtoModels.ResponseDto",
+        "Type": "E_Commers.DtoModels.Responses.ApiResponse\u00601[[System.String, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -53,15 +53,15 @@
   },
   {
     "ContainingType": "E_Commers.Controllers.AccountController",
-    "Method": "Delete",
-    "RelativePath": "api/Account/Delete",
+    "Method": "DeleteAsync",
+    "RelativePath": "api/Account/delete-account",
     "HttpMethod": "DELETE",
     "IsController": true,
     "Order": 0,
     "Parameters": [],
     "ReturnTypes": [
       {
-        "Type": "E_Commers.DtoModels.ResponseDto",
+        "Type": "E_Commers.DtoModels.Responses.ApiResponse\u00601[[System.String, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -73,8 +73,8 @@
   },
   {
     "ContainingType": "E_Commers.Controllers.AccountController",
-    "Method": "Login",
-    "RelativePath": "api/Account/Login",
+    "Method": "LoginAsync",
+    "RelativePath": "api/Account/login",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
@@ -87,7 +87,7 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "E_Commers.DtoModels.ResponseDto",
+        "Type": "E_Commers.DtoModels.Responses.ApiResponse\u00601[[E_Commers.DtoModels.TokenDtos.TokensDto, E-Commerce, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -99,9 +99,130 @@
   },
   {
     "ContainingType": "E_Commers.Controllers.AccountController",
-    "Method": "Logout",
+    "Method": "LogoutAsync",
     "RelativePath": "api/Account/Logout",
     "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "E_Commers.DtoModels.Responses.ApiResponse\u00601[[System.String, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "E_Commers.Controllers.AccountController",
+    "Method": "RefreshTokenAsync",
+    "RelativePath": "api/Account/refresh-token",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "refreshTokenDto",
+        "Type": "E_Commers.DtoModels.RefreshTokenDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "E_Commers.DtoModels.Responses.ApiResponse\u00601[[System.String, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "E_Commers.Controllers.AccountController",
+    "Method": "RegisterAsync",
+    "RelativePath": "api/Account/register",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "usermodel",
+        "Type": "E_Commers.DtoModels.AccountDtos.RegisterDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "E_Commers.DtoModels.Responses.ApiResponse\u00601[[E_Commers.DtoModels.AccountDtos.RegisterResponse, E-Commerce, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "E_Commers.Controllers.AccountController",
+    "Method": "UploadPhotoAsync",
+    "RelativePath": "api/Account/upload-photo",
+    "HttpMethod": "PATCH",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "image",
+        "Type": "Microsoft.AspNetCore.Http.IFormFile",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "E_Commers.DtoModels.Responses.ApiResponse\u00601[[E_Commers.DtoModels.AccountDtos.UploadPhotoResponseDto, E-Commerce, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      },
+      {
+        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 400
+      },
+      {
+        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 401
+      },
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 500
+      }
+    ]
+  },
+  {
+    "ContainingType": "E_Commers.Controllers.AdminOperationController",
+    "Method": "GetAllOperation",
+    "RelativePath": "api/AdminOperation",
+    "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
     "Parameters": [],
@@ -118,165 +239,16 @@
     ]
   },
   {
-    "ContainingType": "E_Commers.Controllers.AccountController",
-    "Method": "RefreshTokenAsync",
-    "RelativePath": "api/Account/RefreshTokenAsync",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "refreshTokenDto",
-        "Type": "E_Commers.DtoModels.RefreshTokenDto",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "E_Commers.DtoModels.ResponseDto",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "E_Commers.Controllers.AccountController",
-    "Method": "Register",
-    "RelativePath": "api/Account/Register",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "Name",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "UserName",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "PhoneNumber",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Age",
-        "Type": "System.Int32",
-        "IsRequired": false
-      },
-      {
-        "Name": "Email",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "ProfilePicture",
-        "Type": "Microsoft.AspNetCore.Http.IFormFile",
-        "IsRequired": false
-      },
-      {
-        "Name": "Password",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "ConfirmPassword",
-        "Type": "System.String",
-        "IsRequired": false
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "E_Commers.DtoModels.ResponseDto",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "E_Commers.Controllers.AccountController",
-    "Method": "UploadPhoto",
-    "RelativePath": "api/Account/UploadPhoto",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "ContentType",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "ContentDisposition",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Headers",
-        "Type": "Microsoft.AspNetCore.Http.IHeaderDictionary",
-        "IsRequired": false
-      },
-      {
-        "Name": "Length",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "Name",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "FileName",
-        "Type": "System.String",
-        "IsRequired": false
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "E_Commers.DtoModels.ResponseDto",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
     "ContainingType": "E_Commers.Controllers.categoriesController",
-    "Method": "GetAll",
+    "Method": "GetAllAsync",
     "RelativePath": "api/categories",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
-    "Parameters": [
-      {
-        "Name": "deleted",
-        "Type": "System.Boolean",
-        "IsRequired": false
-      },
-      {
-        "Name": "includeDates",
-        "Type": "System.Boolean",
-        "IsRequired": false
-      }
-    ],
+    "Parameters": [],
     "ReturnTypes": [
       {
-        "Type": "E_Commers.DtoModels.ResponseDto",
+        "Type": "E_Commers.DtoModels.Responses.ApiResponse\u00601[[System.Collections.Generic.List\u00601[[E_Commers.DtoModels.CategoryDtos.CategoryDto, E-Commerce, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -288,38 +260,33 @@
   },
   {
     "ContainingType": "E_Commers.Controllers.categoriesController",
-    "Method": "CreateCategoryAsnc",
+    "Method": "CreateAsync",
     "RelativePath": "api/categories",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "model",
+        "Name": "categoryDto",
         "Type": "E_Commers.DtoModels.CategoryDtos.CreateCategotyDto",
         "IsRequired": true
       }
     ],
     "ReturnTypes": [
       {
-        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
+        "Type": "E_Commers.DtoModels.Responses.ApiResponse\u00601[[E_Commers.DtoModels.CategoryDtos.CategoryDto, E-Commerce, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
         "MediaTypes": [
           "text/plain",
           "application/json",
           "text/json"
         ],
-        "StatusCode": 400
-      },
-      {
-        "Type": "System.Void",
-        "MediaTypes": [],
-        "StatusCode": 201
+        "StatusCode": 200
       }
     ]
   },
   {
     "ContainingType": "E_Commers.Controllers.categoriesController",
-    "Method": "GetCategory",
+    "Method": "GetByIdAsync",
     "RelativePath": "api/categories/{id}",
     "HttpMethod": "GET",
     "IsController": true,
@@ -333,7 +300,7 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "E_Commers.DtoModels.ResponseDto",
+        "Type": "E_Commers.DtoModels.Responses.ApiResponse\u00601[[E_Commers.DtoModels.CategoryDtos.CategoryDto, E-Commerce, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -345,7 +312,7 @@
   },
   {
     "ContainingType": "E_Commers.Controllers.categoriesController",
-    "Method": "DeleteCategoryAsync",
+    "Method": "DeleteAsync",
     "RelativePath": "api/categories/{id}",
     "HttpMethod": "DELETE",
     "IsController": true,
@@ -359,7 +326,7 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "E_Commers.DtoModels.ResponseDto",
+        "Type": "E_Commers.DtoModels.Responses.ApiResponse\u00601[[System.String, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -371,9 +338,9 @@
   },
   {
     "ContainingType": "E_Commers.Controllers.categoriesController",
-    "Method": "UpdateCategory",
+    "Method": "UpdateAsync",
     "RelativePath": "api/categories/{id}",
-    "HttpMethod": "PATCH",
+    "HttpMethod": "PUT",
     "IsController": true,
     "Order": 0,
     "Parameters": [
@@ -383,14 +350,14 @@
         "IsRequired": true
       },
       {
-        "Name": "updateDto",
-        "Type": "E_Commers.DtoModels.CategoryDtos.CategoryUpdateDto",
+        "Name": "categoryDto",
+        "Type": "E_Commers.DtoModels.CategoryDtos.UpdateCategoryDto",
         "IsRequired": true
       }
     ],
     "ReturnTypes": [
       {
-        "Type": "E_Commers.DtoModels.ResponseDto",
+        "Type": "E_Commers.DtoModels.Responses.ApiResponse\u00601[[E_Commers.DtoModels.CategoryDtos.CategoryDto, E-Commerce, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -402,7 +369,7 @@
   },
   {
     "ContainingType": "E_Commers.Controllers.categoriesController",
-    "Method": "GetProduectsByCategoryId",
+    "Method": "GetProduectsByCategoryIdAsync",
     "RelativePath": "api/categories/{id}/Produects",
     "HttpMethod": "GET",
     "IsController": true,
@@ -416,7 +383,7 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "E_Commers.DtoModels.ResponseDto",
+        "Type": "E_Commers.DtoModels.Responses.ApiResponse\u00601[[System.Collections.Generic.List\u00601[[E_Commers.DtoModels.ProductDtos.ProductDto, E-Commerce, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -442,7 +409,7 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "E_Commers.DtoModels.ResponseDto",
+        "Type": "E_Commers.DtoModels.Responses.ApiResponse\u00601[[E_Commers.DtoModels.CategoryDtos.CategoryDto, E-Commerce, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
         "MediaTypes": [
           "text/plain",
           "application/json",

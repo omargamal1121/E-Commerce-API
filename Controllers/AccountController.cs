@@ -10,117 +10,60 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
+using E_Commers.Interfaces;
+using E_Commers.Services.AccountServices;
+using Microsoft.AspNetCore.Http.HttpResults;
+using E_Commers.DtoModels.Responses;
+using E_Commers.DtoModels.Shared;
+using E_Commers.DtoModels.TokenDtos;
+using E_Commers.ErrorHnadling;
 namespace E_Commers.Controllers
 {
 	[Route("api/[controller]")]
 	[ApiController]
 	public class AccountController : ControllerBase
 	{
-		private readonly ITokenService _tokenHelper;
 		private readonly ILogger<AccountController> _logger;
-		private readonly UserManager<Customer> _userManager;
-		private readonly IImagesServices _imagesHelper;
-		private readonly IUnitOfWork _unitOfWork;
-		private readonly IRefreshTokenService _RefreshTokenService;	
 
-		public AccountController(IRefreshTokenService RefreshTokenService,IUnitOfWork unitOfWork, IImagesServices imagesHelper, ITokenService tokenHelper, UserManager<Customer> userManager, ILogger<AccountController> logger)
+		private readonly IAccountServices _accountServices;
+		private readonly IAccountLinkBuilder _linkBuilder;
+
+		public AccountController(IAccountLinkBuilder linkBuilder, IAccountServices accountServices ,ILogger<AccountController> logger)
 		{
-			_unitOfWork = unitOfWork;
-			_imagesHelper = imagesHelper;
-			_tokenHelper = tokenHelper;
+			_linkBuilder = linkBuilder;
+			_accountServices = accountServices;
 			_logger = logger;
-			_userManager = userManager; 
-			_RefreshTokenService = RefreshTokenService;
+
 		}
 
-		[HttpPost(nameof(Login))]
-		public async Task<ActionResult<ResponseDto>> Login([FromBody] LoginDTo login)
+		[HttpPost("login")]
+		[ActionName(nameof(LoginAsync))]
+		public async Task<ActionResult<ApiResponse<TokensDto>>> LoginAsync([FromBody] LoginDTo login)
 		{
-			_logger.LogInformation($"In {nameof(Login)} Method ");
+
 			if (!ModelState.IsValid)
 			{
-				var errors = ModelState.Values
-									   .SelectMany(v => v.Errors)
-									   .Select(e => e.ErrorMessage)
-									   .ToList();
-
-				return BadRequest(new ResponseDto
-				{
-					
-					Message = "Invalid data: " + string.Join(", ", errors)
-
-				});
+				var errors = string.Join("; ", ModelState.Values
+											.SelectMany(v => v.Errors)
+											.Select(e => e.ErrorMessage));
+				_logger.LogWarning($"ModelState errors: {errors}");
+				return BadRequest(ApiResponse<string>.CreateErrorResponse(new ErrorResponse("Invalid Data", $"errors:{errors}")));
 			}
 
-			Customer? customer = await _userManager.FindByEmailAsync(login.Email);
-			if (customer is null)
-			{
-				_logger.LogWarning($"Login failed: Email '{login.Email}' not found.");
-				return Unauthorized(new ResponseDto {  Message = "Invalid Email." });
-			}
+			_logger.LogInformation($"In {nameof(LoginAsync)} Method ");
+			ApiResponse<TokensDto> response = await _accountServices.LoginAsync(login.Email, login.Password);
 
-			if (await _userManager.IsLockedOutAsync(customer))
-			{
-				_logger.LogWarning($"Login failed: Email '{login.Email}' is locked out.");
-				return Unauthorized(new ResponseDto { Message = "Account is locked. Try again later." });
-			}
+			response.ResponseBody.Links = _linkBuilder.GenerateLinks();
+			response.ResponseBody.Links = _linkBuilder.MakeRelSelf(response.ResponseBody.Links, "login");
 
-			bool checkpass = await _userManager.CheckPasswordAsync(customer, login.Password);
-			if (!checkpass)
-			{
-				 await _userManager.AccessFailedAsync(customer);
-				_logger.LogWarning($"Login failed: Incorrect password for '{login.Email}'.");
-				await _userManager.AccessFailedAsync(customer);
-				return Unauthorized(new ResponseDto { Message = "Incorrect Email or Password." });
-			}
-
-			var token = await _tokenHelper.GenerateTokenAsync(customer.Id);
-			if (!token.Success||token.Data.IsNullOrEmpty())
-			{
-				_logger.LogError("Failed to generate token.");
-				return BadRequest(new ResponseDto
-				{
-					
-					Message = token.Message
-				});
-			}
-
-			_logger.LogInformation("Token generated.");
-			var refreshToken = await _RefreshTokenService.GenerateRefreshToken(customer.Id);
-			if (!refreshToken.Success||refreshToken.Data.IsNullOrEmpty())
-			{
-				_logger.LogError("Failed to generate refresh token.");
-				return BadRequest(new ResponseDto
-				{
-	
-					Message = refreshToken.Message
-				});
-			}
-
-			customer.LastVisit = DateTime.Now;
-			 var result= await _userManager.UpdateAsync(customer);
-			if(!result.Succeeded)
-			{
-				return StatusCode(500, new ResponseDto { Message=string.Join(",", result.Errors.Select(x => x.Description))  });
-
-			}
-			return Ok(new ResponseDto
-			{
-	
-				Message = "Token Generated",
-				Data = new 
-				{
-					userid=customer.Id,
-					Token = token.Data, 
-					RefreshToken = refreshToken.Data 
-				}
-			});
+			return HandleResponse(response, nameof(LoginAsync));
 		}
 
-		[HttpPost(nameof(Register))]
-		public async Task<ActionResult<ResponseDto>> Register([FromForm] RegisterDto usermodel)
+		[HttpPost("register")]
+		[ActionName(nameof(RegisterAsync))]
+		public async Task<ActionResult<ApiResponse<RegisterResponse>>> RegisterAsync([FromBody] RegisterDto usermodel)
 		{
-			_logger.LogInformation($"In {nameof(Register)} Method ");
+			_logger.LogInformation($"In {nameof(RegisterAsync)} Method ");
 			if (!ModelState.IsValid)
 			{
 				var errors = string.Join("; ", ModelState.Values
@@ -128,152 +71,67 @@ namespace E_Commers.Controllers
 												  .Select(e => e.ErrorMessage));
 
 				_logger.LogWarning($"ModelState errors: {errors}");
-				return BadRequest(new ResponseDto
-				{
-					
-					Message = errors
+				return BadRequest(ApiResponse<RegisterResponse>.CreateErrorResponse(new ErrorResponse($"Invalid Data", $"Errors : {errors}"), 400));
+			}
+			var response = await _accountServices.RegisterAsync(usermodel);
 
-				});
-			}
-			if(await _userManager.FindByEmailAsync(usermodel.Email) is not null)
-			{
-				_logger.LogError($"Invalid Email Address:{usermodel.Email}");
-				return BadRequest(new ResponseDto
-				{
-				
-					Message = $"Invalid Email Address:{usermodel.Email}"
-
-				});
-			}
-			Customer customer = new Customer
-			{
-				UserName=usermodel.UserName,
-				Name=usermodel.Name,
-				Age=usermodel.Age,
-				Email=usermodel.Email,
-				PhoneNumber= usermodel.PhoneNumber,
-			
-			};
-			customer.SecurityStamp = Guid.NewGuid().ToString();
-			customer.ConcurrencyStamp = Guid.NewGuid().ToString();
-			using var tran = await _unitOfWork.BeginTransactionAsync();
-
-			IdentityResult result = await _userManager.CreateAsync(customer, usermodel.Password);
-			if (!result.Succeeded)
-			{
-				string errors = string.Join("\n", result.Errors.Select(e => e.Description));
-				_logger.LogError("User creation failed: {errors}", errors);
-				return BadRequest(new ResponseDto
-				{
-					
-					Message = errors
-				});
-			}
-			
-			IdentityResult result1= await _userManager.AddToRoleAsync(customer,"User");
-			if(!result1.Succeeded)
-			{
-			 await	tran.RollbackAsync();
-				_logger.LogError(result1.Errors.ToString());
-				return StatusCode(500, new ResponseDto { Message = "Error While Add Role to User" });
-			}
-			 await	tran.CommitAsync();
-			return Ok(new ResponseDto {  Message = $"User created successfully Id:{customer.Id}." });
+			return HandleResponse(response, actionName:nameof(RegisterAsync),targetrel:"register");
 		}
 
-		[HttpPost(nameof(RefreshTokenAsync))]
-		public async Task<ActionResult<ResponseDto>> RefreshTokenAsync([FromBody]RefreshTokenDto refreshTokenDto)
+		[HttpPost("refresh-token")]
+		[ActionName(nameof(RefreshTokenAsync))]
+		public async Task<ActionResult<ApiResponse<string>>> RefreshTokenAsync([FromBody]RefreshTokenDto refreshTokenDto)
 		{
 			_logger.LogInformation($"In {nameof(RefreshTokenAsync)} Method");
 			if (!ModelState.IsValid)
 			{
 				var errors = string.Join("; ", ModelState.Values
-												  .SelectMany(v => v.Errors)
-												  .Select(e => e.ErrorMessage));
-
+											.SelectMany(v => v.Errors)
+											.Select(e => e.ErrorMessage));
 				_logger.LogWarning($"ModelState errors: {errors}");
-				return BadRequest(new ResponseDto
-				{
-				
-					Message = errors
+				return BadRequest(ApiResponse<string>.CreateErrorResponse(new ErrorResponse("Invalid Data", $"errors:{errors}")));
+			}
 
-				});
-			}
-			Customer? customer = await _userManager.FindByIdAsync(refreshTokenDto.UserId.ToString("D"));
-			if (customer is null)
-			{
-				_logger.LogWarning("Invalid userid");
-				return Unauthorized( new ResponseDto { Message = "Invalid userid",  });
-			}
-			var result=await	_RefreshTokenService.ValidateRefreshTokenAsync(refreshTokenDto.UserId.ToString("D"), refreshTokenDto.RefreshToken);
-			if(!result.Success||!result.Data)
-			{
-				 return Unauthorized(new ResponseDto { Message = result.Message,  });
-			}
-			 var token= await _RefreshTokenService.RefreshToken(refreshTokenDto.UserId.ToString("D"),refreshTokenDto.RefreshToken);
-
-			return Ok(new ResponseDto { Message = "Token Generated" ,Data= new { Token = token }, });
+			var response= await	_accountServices.RefreshTokenAsync(refreshTokenDto.UserId.ToString(), refreshTokenDto.RefreshToken);
+			response.ResponseBody.Links = _linkBuilder.GenerateLinks();
+			response.ResponseBody.Links = _linkBuilder.MakeRelSelf(response.ResponseBody.Links, "refresh-token");
+			return HandleResponse(response,targetrel:"refresh-token");
 
 		}
-		[HttpPost(nameof(ChangePassword))]
+		[HttpPatch("change-password")]
+		[ActionName(nameof(ChangePasswordAsync))]
 		[Authorize]
-		public async Task<ActionResult<ResponseDto>> ChangePassword([FromBody] ChangePasswordDto model)
+		public async Task<ActionResult<ApiResponse<string>>> ChangePasswordAsync([FromBody] ChangePasswordDto model)
 		{
 
-			_logger.LogInformation($"In {nameof(ChangePassword)} Method");
+			_logger.LogInformation($"In {nameof(ChangePasswordAsync)} Method");
 			if (!ModelState.IsValid)
 			{
-				var errors = string.Join("\n ", ModelState.Values
-													  .SelectMany(v => v.Errors)
-													  .Select(e => e.ErrorMessage));
-
+				var errors = string.Join("; ", ModelState.Values
+											.SelectMany(v => v.Errors)
+											.Select(e => e.ErrorMessage));
 				_logger.LogWarning($"ModelState errors: {errors}");
-				return BadRequest(new ResponseDto
-				{
-				
-					Message = errors
-				});
+				return BadRequest(ApiResponse<string>.CreateErrorResponse(new ErrorResponse("Invalid Data", $"errors:{errors}")));
 			}
 
-			string userid = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-
-			Customer? customer = await _userManager.FindByIdAsync(userid);
-			if (customer is null)
+			string? userid =GetIdFromToken();
+			if (userid.IsNullOrEmpty())
 			{
-				_logger.LogError("Invalid userid");
-				return Unauthorized(new ResponseDto { Message = "Invalid userid" });
+				_logger.LogError("Can't find userid in token");
+				//send email
+				return Unauthorized(ApiResponse<string>.CreateErrorResponse(new ErrorResponse("Authoriztion", "Can't find userid in token")));
 			}
 
-			if (!await _userManager.CheckPasswordAsync(customer, model.CurrentPass))
-			{
-				_logger.LogWarning("Current password is incorrect");
-				return BadRequest(new ResponseDto { Message = "Current password is incorrect",  });
-			}
-
-			if (!model.NewPass.Equals(model.ConfirmNewPass))
-			{
-				_logger.LogWarning("New password and confirmation password do not match");
-				return BadRequest(new ResponseDto { Message = "New password and confirmation password do not match",  });
-			}
-
-			IdentityResult result = await _userManager.ChangePasswordAsync(customer, model.CurrentPass, model.NewPass);
-			if (!result.Succeeded)
-			{
-				string errorMessages = string.Join("; ", result.Errors.Select(e => e.Description));
-				_logger.LogError($"Failed to change password: {errorMessages}");
-				return BadRequest(new ResponseDto { Message = errorMessages,  });
-			}
-
-			_logger.LogInformation("Password changed successfully");
-			await _userManager.UpdateSecurityStampAsync(customer);
-			return Ok(new ResponseDto { Message = "Password changed successfully", });
+			var response = await _accountServices.ChangePasswordAsync(userid,model.CurrentPass,model.NewPass);
+			return HandleResponse(response,targetrel: "change-password");
 		}
 
 
 
 		[Authorize]
-		[HttpPost(nameof(ChangeEmail))]
-		public async Task<ActionResult<ResponseDto>> ChangeEmail(string NewEmail)
+		[HttpPatch("change-email")]
+		[ActionName(nameof(ChangeEmailAsync))]
+		public async Task<ActionResult<ApiResponse<ChangeEmailResultDto>>> ChangeEmailAsync(ChangeEmailDto newemail)
 		{
 			if (!ModelState.IsValid)
 			{
@@ -281,113 +139,103 @@ namespace E_Commers.Controllers
 											.SelectMany(v => v.Errors)
 											.Select(e => e.ErrorMessage));
 				_logger.LogWarning($"ModelState errors: {errors}");
-				return BadRequest(new ResponseDto
-				{
-				
-					Message = errors
-				});
+				return BadRequest(ApiResponse<string>.CreateErrorResponse(new ErrorResponse("Invalid Data",$"errors:{errors}")));
 			}
-			if(!NewEmail.Contains("@")||!NewEmail.EndsWith(".com"))
-			{
-				_logger.LogWarning("Invalid Email Adress");
-				return BadRequest(new ResponseDto { Message = "Invalid Email Adress" });
-			}
-			_logger.LogInformation($"In {nameof(ChangeEmail)} Method");
-
-			string? oldemail = User.FindFirst(ClaimTypes.Email)?.Value;
-			if (string.IsNullOrEmpty(oldemail))
-			{
-				_logger.LogWarning("Email Adress not found in token");
-				return Unauthorized(new ResponseDto {  Message = "Unauthorized" });
-			}
-
-			Customer? customer = await _userManager.FindByEmailAsync(oldemail);
-			if (customer is null)
-			{
-				_logger.LogWarning("User not found. invalid Email Address");
-				return Unauthorized(new ResponseDto {  Message = "invalid Email Address" });
-			}
-
 			
-			IdentityResult result = await _userManager.SetEmailAsync(customer, NewEmail);
-			if (!result.Succeeded)
-			{
-				string errorMessages = string.Join("; ", result.Errors.Select(e => e.Description));
-				_logger.LogError($"Failed to change email: {errorMessages}");
-				return BadRequest(new ResponseDto {Message = errorMessages });
-			}
+			_logger.LogInformation($"In {nameof(ChangeEmailAsync)} Method");
+			string? email = GetEmailFromToken();
+			if (email.IsNullOrEmpty())
+				return Unauthorized();
+			var response= await _accountServices.ChangeEmailAsync(newemail.Email, email);
 
-			
-			await _userManager.UpdateSecurityStampAsync(customer);
-
-			_logger.LogInformation("Email changed successfully");
-			return Ok(new ResponseDto { Message = "Email changed successfully" });
+			return HandleResponse(response,targetrel: "change-email");
 		}
-
-
-		[Authorize]
-		[HttpPost(nameof(Logout))]
-		public async Task<ActionResult<ResponseDto>> Logout()
+		private string? GetIdFromToken()
 		{
-			_logger.LogInformation($"In {nameof(Logout)} Method");
+			return HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-			string? userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+		}
+			private string? GetEmailFromToken()
+		{
+			return HttpContext.User.FindFirstValue(ClaimTypes.Email);
 
-			var result = await _RefreshTokenService.RemoveRefreshTokenAsync(userId);
-			if (!result.Success||!result.Data)
-			{
-				return BadRequest(new ResponseDto { Message =result.Message});
-			}
-
-			_logger.LogInformation("✅ Logout successful for user {UserId}", userId);
-			return Ok(new ResponseDto { Message = "Logout successfully", });
 		}
 
 		[Authorize]
-		[HttpDelete(nameof(Delete))]
-		public async Task<ActionResult<ResponseDto>> Delete()
+		[HttpPost("Logout")]
+		[ActionName(nameof(LogoutAsync))]
+		public async Task<ActionResult<ApiResponse<string>>> LogoutAsync()
 		{
-			_logger.LogInformation($"In {nameof(Delete)} Method");
+			_logger.LogInformation($"In {nameof(LogoutAsync)} Method");
 
-			string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+			string? userid =GetIdFromToken();
+			if (userid.IsNullOrEmpty())
+			{
+				_logger.LogError("Can't find userid in token");
+				//send email
+				return Unauthorized(ApiResponse<string>.CreateErrorResponse(new ErrorResponse("Authoriztion", "Can't find userid in token")));
+			}
+			var response = await _accountServices.LogoutAsync(userid);
+
+			return HandleResponse(response,targetrel: "logout");
+
+		}
+
+		[Authorize]
+		[HttpDelete("delete-account")]
+		[ActionName(nameof(DeleteAsync))]
+		public async Task<ActionResult<ApiResponse<string>>> DeleteAsync()
+		{
+			_logger.LogInformation($"In {nameof(DeleteAsync)} Method");
+			string? userid = GetIdFromToken();
+			if (userid.IsNullOrEmpty())
+			{
+				_logger.LogError("Can't Get Userid from token");
+				// send email
+				return Unauthorized(ApiResponse<string>.CreateErrorResponse(new ErrorResponse("Authoriztion", "Can't found userid in token")));
+			}
+			var	response= await _accountServices.DeleteAsync(userid);
+			response.ResponseBody.Links =_linkBuilder.MakeRelSelf( _linkBuilder.GenerateLinks(),"Delete");
+			return HandleResponse(response, "delete",userid);
+		}
+		[Authorize]
+		[HttpPatch("upload-photo")]
+		[ActionName(nameof(UploadPhotoAsync))]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		[ProducesResponseType(StatusCodes.Status400BadRequest)]
+		[ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+		[ProducesResponseType(StatusCodes.Status500InternalServerError)]
+		public async Task<ActionResult<ApiResponse<UploadPhotoResponseDto>>> UploadPhotoAsync([FromForm] UploadPhotoDto image)
+		{
+			if (!ModelState.IsValid)
+			{
+				var errors = string.Join("; ", ModelState.Values
+											.SelectMany(v => v.Errors)
+											.Select(e => e.ErrorMessage));
+				_logger.LogWarning($"ModelState errors: {errors}");
+				return BadRequest(ApiResponse<string>.CreateErrorResponse(new ErrorResponse("Invalid Data", $"errors:{errors}")));
+			}
+
+			_logger.LogInformation($"Executing {nameof(UploadPhotoAsync)}");
+			string? id = GetIdFromToken();
+			if(id.IsNullOrEmpty())
+				return Unauthorized();
+			  var response= await _accountServices.UploadPhotoAsync(image.image, id);
+			return HandleResponse(response,targetrel: "upload - photo");
 	
-			var result = await _RefreshTokenService.RemoveRefreshTokenAsync(userId);
-			if (!result.Success || !result.Data)
-			{
-				
-				return BadRequest(new ResponseDto { Message = result.Message });
-			}
-			Customer? customer = await _userManager.FindByIdAsync(userId);
-			if(customer is null)
-			{
-				_logger.LogError("❌ Can't Find user {UserId}", userId);
-				return BadRequest(new ResponseDto { Message = "User doesn't exsist" });
-			}
-			IdentityResult isdeleted= 	await _userManager.DeleteAsync(customer);
-			if(!isdeleted.Succeeded)
-			{
-				_logger.LogError("❌ Can't Deleted user {UserId}", userId);
-				return BadRequest(new ResponseDto {  Message = "❌ Can't Deleted user" });
-
-			}
-
-			_logger.LogInformation("✅ Deleted successful for user {UserId}", userId);
-			return Ok(new ResponseDto { Message = "Deleted successfully", });
 		}
-		[Authorize]
-		[HttpPost("UploadPhoto")]
-		public async Task<ActionResult<ResponseDto>> UploadPhoto([FromForm] IFormFile image)
+		private ActionResult<ApiResponse<T>> HandleResponse<T>(ApiResponse<T> response, string ?actionName=null,string ?targetrel=null)where T : class
 		{
-			_logger.LogInformation($"Executing {nameof(UploadPhoto)}");
-			Result<string>path =  await _imagesHelper.SaveImageAsync(image, "CustomerPhotos");
-
-			if(!path.Success||path.Data is null)
-				return new ResponseDto { Message=path.Message};
-			string userid =User.FindFirst(ClaimTypes.NameIdentifier).Value;
-			Customer customer = await _userManager.FindByIdAsync(userid);
-			customer.ImageUrl = path.Data;
-			return NoContent();
-
+			response.ResponseBody.Links = _linkBuilder.MakeRelSelf(_linkBuilder.GenerateLinks(), actionName);
+			return response.Statuscode switch
+			{
+				200 => Ok(response),
+				201 => CreatedAtAction(actionName, response),
+				400 => BadRequest(response),
+				401 => Unauthorized(response),
+				409 => Conflict(response),
+				_ => StatusCode(response.Statuscode, response)
+			};
 		}
 
 

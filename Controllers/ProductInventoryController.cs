@@ -57,9 +57,9 @@ namespace E_Commers.Controllers
 					Name = c.Product.Name,
 					AvailabeQuantity = c.Product.Quantity,
 					Description = c.Product.Description,
-					Discount = c.Product.Discount == null ? null : new DiscountDto(c.Product.Discount.Id, c.Product.Discount.Name, c.Product.Discount.DiscountPercent, c.Product.Discount.Description, c.Product.Discount.IsActive),
+				//	Discount = c.Product.Discount == null ? null : new DiscountDto(c.Product.Discount.Id, c.Product.Discount.Name, c.Product.Discount.DiscountPercent, c.Product.Discount.Description, c.Product.Discount.IsActive),
 					FinalPrice = c.Product.Discount == null || !c.Product.Discount.IsActive ? c.Product.Price : c.Product.Price - c.Product.Discount.DiscountPercent * c.Product.Price,
-					Category = new CategoryDto(c.Product.Category.Id, c.Product.Category.Name, c.Product.Category.Description, c.Product.Category.CreatedAt),
+					//Category = new CategoryDto(c.Product.Category.Id, c.Product.Category.Name, c.Product.Category.Description, c.Product.Category.CreatedAt),
 					CreatedAt = c.Product.CreatedAt,
 				}
 			}
@@ -129,7 +129,7 @@ namespace E_Commers.Controllers
 					Timestamp = DateTime.UtcNow
 				};
 
-				Result<bool> logResult = await _unitOfWork.Repository<AdminOperationsLog>().CreateAsync(adminOperations);
+				Result<AdminOperationsLog> logResult = await _unitOfWork.Repository<AdminOperationsLog>().CreateAsync(adminOperations);
 				if (!logResult.Success)
 				{
 					await transaction.RollbackAsync();
@@ -164,7 +164,7 @@ namespace E_Commers.Controllers
 					Message = "Invalid data: " + string.Join(", ", errors)
 				});
 			}
-			var checkfrominventory = await _unitOfWork.Repository<ProductInventory>().GetByIdAsync(productDto.Id,p=>p.Include(p=>p.Product));
+			var checkfrominventory = await _unitOfWork.Repository<ProductInventory>().GetByIdAsync(productDto.Id);
 			if (!checkfrominventory.Success || checkfrominventory.Data == null)
 				return NotFound(new ResponseDto {  Message = checkfrominventory.Message });
 
@@ -227,7 +227,7 @@ namespace E_Commers.Controllers
 		public async Task<ActionResult<ResponseDto>> GetInventoryByWarehouse(int warehouseId)
 		{
 			_logger.LogInformation($"Execute {nameof(GetInventoryByWarehouse)} ");
-			 var isfound=  await _unitOfWork.WareHouse.GetByIdAsync(warehouseId, include: w => w.Include(w => w.ProductInventories).ThenInclude(p=>p.Product).ThenInclude(p=>p.Category));
+			 var isfound=  await _unitOfWork.WareHouse.GetByIdAsync(warehouseId);
 			if (!isfound.Success || isfound.Data == null || isfound.Data.ProductInventories.Count==0)
 				return NotFound(new ResponseDto {Message=isfound.Message});
 
@@ -272,7 +272,7 @@ namespace E_Commers.Controllers
 
 			// Check source inventory
 			var sourceInventory = await _unitOfWork.Repository<ProductInventory>()
-				.GetByIdAsync(productDto.FromInventoryId, p => p.Include(p => p.Product));
+				.GetByIdAsync(productDto.FromInventoryId);
 
 			if (!sourceInventory.Success || sourceInventory.Data == null)
 			{
@@ -281,7 +281,7 @@ namespace E_Commers.Controllers
 
 			// Check target inventory
 			var targetInventory = await _unitOfWork.Repository<ProductInventory>()
-				.GetByIdAsync(productDto.ToInventoryId, p => p.Include(p => p.Product));
+				.GetByIdAsync(productDto.ToInventoryId);
 
 			if (!targetInventory.Success || targetInventory.Data == null)
 			{
@@ -393,7 +393,7 @@ namespace E_Commers.Controllers
 			_logger.LogInformation($"Executing {nameof(GetInventory)} in InventoryController");
 
 
-			Result<ProductInventory> result = await _unitOfWork.Repository<ProductInventory>().GetByIdAsync(id,include:i=>i.Include(i=>i.Product).ThenInclude(p=>p.Category).Include(i=>i.Warehouse).Include(i => i.Product).ThenInclude(i=>i.Discount));
+			Result<ProductInventory> result = await _unitOfWork.Repository<ProductInventory>().GetByIdAsync(id);
 			if (!result.Success||result.Data==null)
 			{
 
@@ -431,7 +431,7 @@ namespace E_Commers.Controllers
 
 			try
 			{
-				Result<ProductInventory> resultinventory = await _unitOfWork.Repository<ProductInventory>().GetByIdAsync(id, c => c.Include(p => p.Product));
+				Result<ProductInventory> resultinventory = await _unitOfWork.Repository<ProductInventory>().GetByIdAsync(id);
 				if (!resultinventory.Success||resultinventory.Data is null )
 				{
 					
@@ -447,7 +447,7 @@ namespace E_Commers.Controllers
 				}
 				resultinventory.Data.DeletedAt = DateTime.UtcNow;
 
-				Result<bool> result = await _unitOfWork.Repository<ProductInventory>().UpdateAsync(resultinventory.Data);
+				Result<ProductInventory> result = await _unitOfWork.Repository<ProductInventory>().UpdateAsync(resultinventory.Data);
 				if (!result.Success)
 				{
 					_logger.LogError(result.Message);
@@ -470,7 +470,7 @@ namespace E_Commers.Controllers
 					Timestamp = DateTime.UtcNow
 				};
 
-				Result<bool> logResult = await _unitOfWork.Repository<AdminOperationsLog>().CreateAsync(adminOperations);
+				Result<AdminOperationsLog> logResult = await _unitOfWork.Repository<AdminOperationsLog>().CreateAsync(adminOperations);
 				if (!logResult.Success)
 				{
 					await transaction.RollbackAsync();
@@ -517,9 +517,7 @@ namespace E_Commers.Controllers
 						Name = c.Product.Name,
 						AvailabeQuantity = c.Product.Quantity,
 						Description = c.Product.Description,
-						Discount = c.Product.Discount == null ? null : new DiscountDto(c.Product.Discount.Id, c.Product.Discount.Name, c.Product.Discount.DiscountPercent, c.Product.Discount.Description, c.Product.Discount.IsActive),
 						FinalPrice = c.Product.Discount == null || !c.Product.Discount.IsActive ? c.Product.Price : c.Product.Price - c.Product.Discount.DiscountPercent * c.Product.Price,
-						Category = new CategoryDto(c.Product.Category.Id, c.Product.Category.Name, c.Product.Category.Description, c.Product.Category.CreatedAt),
 						CreatedAt = c.Product.CreatedAt,
 					}
 				}
@@ -546,14 +544,14 @@ namespace E_Commers.Controllers
 			using var tran = await _unitOfWork.BeginTransactionAsync();
 
 			resultInvetory.Data.DeletedAt = null;
-			Result<bool> updateResult = await _unitOfWork.Repository<ProductInventory>().UpdateAsync(resultInvetory.Data);
+			Result<ProductInventory> updateResult = await _unitOfWork.Repository<ProductInventory>().UpdateAsync(resultInvetory.Data);
 			if (!updateResult.Success)
 			{
 				_logger.LogError(updateResult.Message);
 				return StatusCode(500, new ResponseDto { Message = updateResult.Message });
 			}
 
-			Result<bool> logResult = await _unitOfWork.Repository<AdminOperationsLog>().CreateAsync(new AdminOperationsLog
+			Result<AdminOperationsLog> logResult = await _unitOfWork.Repository<AdminOperationsLog>().CreateAsync(new AdminOperationsLog
 			{
 				AdminId = userid,
 				ItemId = resultInvetory.Data.Id,

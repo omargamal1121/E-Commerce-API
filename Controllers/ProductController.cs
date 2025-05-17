@@ -36,7 +36,7 @@ namespace E_Commers.Controllers
 		public async Task<ActionResult<ResponseDto>> GetAllProducts()
 		{
 			_logger.LogInformation($"Execute {nameof(GetAllProducts)}");
-			Result<IEnumerable<Product>> products   =   await _unitOfWork.Repository<Product>().GetAllAsync(include:p=>p.Include(p=>p.Category).Include(p=>p.Discount),p=>p.DeletedAt==null);
+			Result<IQueryable<Product>> products   =   await _unitOfWork.Repository<Product>().GetAllAsync(include:p=>p.Include(p=>p.Category).Include(p=>p.Discount),p=>p.DeletedAt==null);
 
 			if (!products.Success)
 				return BadRequest(new ResponseDto {  Message = products.Message });
@@ -47,9 +47,9 @@ namespace E_Commers.Controllers
 				Name= p.Name,
 				AvailabeQuantity= p.Quantity,
 				Description= p.Description,
-				Discount = p.Discount == null ? null : new DiscountDto(p.Discount.Id,p.Discount.Name,p.Discount.DiscountPercent,p.Discount.Description,p.Discount.IsActive),
+			//	Discount = p.Discount == null ? null : new DiscountDto(p.Discount.Id,p.Discount.Name,p.Discount.DiscountPercent,p.Discount.Description,p.Discount.IsActive),
 				FinalPrice=p.Discount==null||!p.Discount.IsActive?p.Price:p.Price-p.Discount.DiscountPercent*p.Price,
-				Category= new CategoryDto(p.Category.Id, p.Category.Name, p.Category.Description, p.Category.CreatedAt),
+			//	Category= new CategoryDto(p.Category.Id, p.Category.Name, p.Category.Description, p.Category.CreatedAt),
 				CreatedAt=p.CreatedAt,
 				
 			});
@@ -117,7 +117,7 @@ namespace E_Commers.Controllers
 			try
 			{
 				Product product = new Product { Price=model.Price,CategoryId=model.CategoryId ,Quantity=model.Quantity, Description = model.Description, Name = model.Name };
-				Result<bool> result = await _unitOfWork.Product.CreateAsync(product);
+				Result<Product> result = await _unitOfWork.Product.CreateAsync(product);
 
 				if (!result.Success)
 				{
@@ -139,7 +139,7 @@ namespace E_Commers.Controllers
 					Timestamp = DateTime.UtcNow
 				};
 
-				Result<bool> logResult = await _unitOfWork.Repository<AdminOperationsLog>().CreateAsync(adminOperations);
+				Result<AdminOperationsLog> logResult = await _unitOfWork.Repository<AdminOperationsLog>().CreateAsync(adminOperations);
 				if (!logResult.Success)
 				{
 					await transaction.RollbackAsync();
@@ -330,8 +330,7 @@ namespace E_Commers.Controllers
 				Id = c.Id,
 				ModifiedAt = c.ModifiedAt,
 				AvailabeQuantity=c.Quantity,
-				Category=new CategoryDto(c.Category.Id, c.Category.Name,c.Category.Description,c.Category.CreatedAt),
-				Discount=c.Discount is null?null:new DiscountDto(c.Discount.Id,c.Discount.Name,c.Discount.DiscountPercent,c.Discount.Description,c.Discount.IsActive), 
+			
 				FinalPrice= c.Price
 			}).ToList();
 
@@ -357,14 +356,14 @@ namespace E_Commers.Controllers
 			using var tran = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
 
 			resultProduct.Data.DeletedAt = null;
-			Result<bool> updateResult = await _unitOfWork.Product.UpdateAsync(resultProduct.Data);
+			Result<Product> updateResult = await _unitOfWork.Product.UpdateAsync(resultProduct.Data);
 			if (!updateResult.Success)
 			{
 				_logger.LogError(updateResult.Message);
 				return StatusCode(500, new ResponseDto { Message = updateResult.Message });
 			}
 
-			Result<bool> logResult = await _unitOfWork.Repository<AdminOperationsLog>().CreateAsync(new AdminOperationsLog
+			Result<AdminOperationsLog> logResult = await _unitOfWork.Repository<AdminOperationsLog>().CreateAsync(new AdminOperationsLog
 			{
 				AdminId = userid,
 				ItemId = resultProduct.Data.Id,
@@ -411,7 +410,7 @@ namespace E_Commers.Controllers
 				
 				resultProduct.Data.DeletedAt = DateTime.UtcNow;
 
-				Result<bool> result = await _unitOfWork.Product.UpdateAsync(resultProduct.Data);
+				Result<Product> result = await _unitOfWork.Product.UpdateAsync(resultProduct.Data);
 				if (!result.Success)
 				{
 					_logger.LogError(result.Message);
@@ -434,7 +433,7 @@ namespace E_Commers.Controllers
 					Timestamp = DateTime.UtcNow
 				};
 
-				Result<bool> logResult = await _unitOfWork.Repository<AdminOperationsLog>().CreateAsync(adminOperations);
+				Result<AdminOperationsLog> logResult = await _unitOfWork.Repository<AdminOperationsLog>().CreateAsync(adminOperations);
 				if (!logResult.Success)
 				{
 					await transaction.RollbackAsync();
@@ -457,7 +456,7 @@ namespace E_Commers.Controllers
 		public async Task<ActionResult<ResponseDto>> ProductsByCategoryId(int id)
 		{
 			_logger.LogInformation($"Execute {nameof(ProductsByCategoryId)} ");
-			  Result< Category > category = await _unitOfWork.Category.GetByIdAsync(id,x=>x.Include(c=>c.products));
+			  Result< Category > category = await _unitOfWork.Category.GetByIdAsync(id);
 			if(!category.Success|| category.Data is null)
 			{
 				return NotFound(new ResponseDto { Message = category.Message });
@@ -486,7 +485,7 @@ namespace E_Commers.Controllers
 		public async Task<ActionResult<ResponseDto>> ProductsByWareHouse(int id)
 		{
 			_logger.LogInformation($"Execute {nameof(ProductsByWareHouse)} ");
-			Result<Warehouse> category = await _unitOfWork.WareHouse.GetByIdAsync(id, x => x.Include(c => c.ProductInventories).ThenInclude(i=>i.Product).ThenInclude(d=>d.Category).Include(c => c.ProductInventories).ThenInclude(i => i.Product).ThenInclude(d=>d.Discount));
+			Result<Warehouse> category = await _unitOfWork.WareHouse.GetByIdAsync(id);
 			if (!category.Success || category.Data is null)
 			{
 				return NotFound(new ResponseDto { Message = category.Message });

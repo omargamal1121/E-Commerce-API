@@ -60,7 +60,7 @@ namespace E_Commers.Migrations
 
                     b.HasIndex("AdminId");
 
-                    b.ToTable("adminOperationsLogs");
+                    b.ToTable("adminOperationsLogs", (string)null);
                 });
 
             modelBuilder.Entity("E_Commers.Models.Cart", b =>
@@ -91,7 +91,7 @@ namespace E_Commers.Migrations
 
                     b.HasIndex("customerId");
 
-                    b.ToTable("Cart");
+                    b.ToTable("Cart", (string)null);
                 });
 
             modelBuilder.Entity("E_Commers.Models.Category", b =>
@@ -129,7 +129,7 @@ namespace E_Commers.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("Categories");
+                    b.ToTable("Categories", (string)null);
                 });
 
             modelBuilder.Entity("E_Commers.Models.CustomerAddress", b =>
@@ -172,7 +172,7 @@ namespace E_Commers.Migrations
 
                     b.HasIndex("CustomerId");
 
-                    b.ToTable("CustomerAddress");
+                    b.ToTable("CustomerAddress", (string)null);
                 });
 
             modelBuilder.Entity("E_Commers.Models.Discount", b =>
@@ -214,7 +214,7 @@ namespace E_Commers.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("Discount");
+                    b.ToTable("Discount", (string)null);
                 });
 
             modelBuilder.Entity("E_Commers.Models.Item", b =>
@@ -248,7 +248,7 @@ namespace E_Commers.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("Items");
+                    b.ToTable("Items", (string)null);
                 });
 
             modelBuilder.Entity("E_Commers.Models.Order", b =>
@@ -280,7 +280,7 @@ namespace E_Commers.Migrations
 
                     b.HasIndex("CustomerId");
 
-                    b.ToTable("Orders");
+                    b.ToTable("Orders", (string)null);
                 });
 
             modelBuilder.Entity("E_Commers.Models.Payment", b =>
@@ -327,7 +327,7 @@ namespace E_Commers.Migrations
 
                     b.HasIndex("PaymentProviderId");
 
-                    b.ToTable("Payments");
+                    b.ToTable("Payments", (string)null);
                 });
 
             modelBuilder.Entity("E_Commers.Models.PaymentMethod", b =>
@@ -345,7 +345,7 @@ namespace E_Commers.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("PaymentMethods");
+                    b.ToTable("PaymentMethods", (string)null);
                 });
 
             modelBuilder.Entity("E_Commers.Models.PaymentProvider", b =>
@@ -384,7 +384,7 @@ namespace E_Commers.Migrations
 
                     b.HasIndex("PaymentMethodId");
 
-                    b.ToTable("PaymentProviders");
+                    b.ToTable("PaymentProviders", (string)null);
                 });
 
             modelBuilder.Entity("E_Commers.Models.Product", b =>
@@ -439,7 +439,7 @@ namespace E_Commers.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("Products");
+                    b.ToTable("Products", (string)null);
                 });
 
             modelBuilder.Entity("E_Commers.Models.ProductInventory", b =>
@@ -474,7 +474,7 @@ namespace E_Commers.Migrations
 
                     b.HasIndex("WarehouseId");
 
-                    b.ToTable("ProductInventory");
+                    b.ToTable("ProductInventory", (string)null);
                 });
 
             modelBuilder.Entity("E_Commers.Models.UserOperationsLog", b =>
@@ -506,7 +506,7 @@ namespace E_Commers.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("userOperationsLogs");
+                    b.ToTable("userOperationsLogs", (string)null);
                 });
 
             modelBuilder.Entity("E_Commers.Models.Warehouse", b =>
@@ -545,7 +545,7 @@ namespace E_Commers.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("warehouses");
+                    b.ToTable("warehouses", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -760,7 +760,10 @@ namespace E_Commers.Migrations
                     b.Property<int>("Age")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("DateCreated")
+                    b.Property<DateTime>("CreateAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime>("DeletedAt")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("ImageUrl")

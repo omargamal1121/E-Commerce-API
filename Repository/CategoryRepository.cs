@@ -12,11 +12,13 @@ namespace E_Commers.Repository
 	{
 
 		private readonly DbSet<Category> _categories;
+		private readonly DbSet<Product> _products;
 		private readonly ILogger<CategoryRepository> _logger;
 
 		public CategoryRepository(IConnectionMultiplexer redis, AppDbContext context, ILogger<CategoryRepository> logger) : base(redis,context, logger)
 		{
 			_categories = context.Categories; 
+			_products = context.Products;
 			_logger = logger;
 		}
 
@@ -81,6 +83,10 @@ namespace E_Commers.Repository
 			}
 			_logger.LogInformation("Category found in cache");
 			return Result<Category?>.Ok(JsonConvert.DeserializeObject< Category >(serlizecategory));
+		}
+		public async Task<bool>IsHasProductAsync(int id)
+		{
+			return await _products.AnyAsync(p => p.CategoryId == id);
 		}
 		public async Task<Result<List<Product>>> GetProductsByCategoryIdAsync(int categoryId)
 		{

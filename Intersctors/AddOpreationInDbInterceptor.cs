@@ -1,94 +1,96 @@
 ﻿using E_Commers.Enums;
 using E_Commers.Models;
-using Microsoft.AspNetCore.Mvc.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Diagnostics;
-using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Threading;
 
 namespace E_Commers.Intersctors
 {
-	public class AddOpreationInDbInterceptor : SaveChangesInterceptor
+	public class AddOperationInDbInterceptor : SaveChangesInterceptor
 	{
-		private readonly IHttpContextAccessor _context;
+		private readonly IHttpContextAccessor _contextAccessor;
 
-		public AddOpreationInDbInterceptor(IHttpContextAccessor context)
+		public AddOperationInDbInterceptor(IHttpContextAccessor contextAccessor)
 		{
-			_context = context;
+		
+			_contextAccessor = contextAccessor;
 		}
-
 
 		private void HandleLogOperation(ChangeTracker changeTracker, DbContext context, string? userId, bool isUser)
 		{
-
 			var entities = changeTracker.Entries()
 				.Where(entry =>
 					(entry.State == EntityState.Added || entry.State == EntityState.Modified) &&
 					entry.Entity is BaseEntity baseEntity &&
-					baseEntity.DeletedAt == null);
+					baseEntity.DeletedAt == null&&entry.Entity is not AdminOperationsLog&& entry.Entity is not UserOperationsLog).ToList();
 
 			foreach (var entry in entities)
 			{
 				var baseEntity = (BaseEntity)entry.Entity;
-		
+				var operationType = entry.State == EntityState.Added ? Opreations.AddOpreation : Opreations.UpdateOpreation;
 
 				if (isUser)
 				{
 					var log = new UserOperationsLog
 					{
-						OperationType = Opreations.DeleteOpreation,
+						OperationType = operationType,
 						UserId = userId,
-						Description = $"{entry.State}_{baseEntity.GetType().Name} with ID: {baseEntity.Id}",
+						Description = $"{entry.State} {baseEntity.GetType().Name} with ID: {baseEntity.Id}",
 						Timestamp = DateTime.UtcNow,
 						ItemId = baseEntity.Id
 					};
-					context.Add(log);
+					context.Set<UserOperationsLog>().Add(log);
 
 				}
 				else
 				{
-					var log =
-					new AdminOperationsLog
+					var log = new AdminOperationsLog
 					{
-						OperationType = Opreations.DeleteOpreation,
+						OperationType = operationType,
 						AdminId = userId,
 						Description = $"{entry.State} {baseEntity.GetType().Name} with ID: {baseEntity.Id}",
 						Timestamp = DateTime.UtcNow,
 						ItemId = baseEntity.Id
 					};
-					context.Add(log);
+					context.Set<AdminOperationsLog>().Add(log);
 				}
 			}
 		}
-		public override ValueTask<int> SavedChangesAsync(SaveChangesCompletedEventData eventData, int result, CancellationToken cancellationToken = default)
+		
+		public override ValueTask<InterceptionResult<int>> SavingChangesAsync(DbContextEventData eventData, InterceptionResult<int> result, CancellationToken cancellationToken = default)
 		{
-			if (eventData is null || eventData.Context is null || _context is null || _context.HttpContext is null) return new(result);
+			if (eventData?.Context == null || _contextAccessor?.HttpContext == null)
+				return base.SavingChangesAsync(eventData, result, cancellationToken);
 
+			var userId = _contextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+			if (string.IsNullOrEmpty(userId))
+				return base.SavingChangesAsync(eventData, result, cancellationToken);
 
-			string? userId = _context.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-			var roles = _context.HttpContext.User.Claims.Where(x => x.Type == ClaimTypes.Role).Select(x => x.Value);
-			bool isUser = roles.Contains("User");
-
+			var isUser = _contextAccessor.HttpContext.User.IsInRole("User");
 			HandleLogOperation(eventData.Context.ChangeTracker, eventData.Context, userId, isUser);
-			
 
-			return new(result);
+
+			return base.SavingChangesAsync(eventData, result, cancellationToken);
 		}
+
 		public override InterceptionResult<int> SavingChanges(DbContextEventData eventData, InterceptionResult<int> result)
 		{
-			if (eventData is null || eventData.Context is null || _context is null || _context.HttpContext is null) return result;
+			if (eventData?.Context == null || _contextAccessor?.HttpContext == null)
+				return base.SavingChanges(eventData, result);
 
+			var userId = _contextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+			if (string.IsNullOrEmpty(userId))
+			{
+				return base.SavingChanges(eventData, result);
+			}
 
-			string? userId = _context.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-			var roles = _context.HttpContext.User.Claims.Where(x => x.Type == ClaimTypes.Role).Select(x => x.Value);
-			bool isUser = roles.Contains("User");
-
+			var isUser = _contextAccessor.HttpContext.User.IsInRole("User");
 			HandleLogOperation(eventData.Context.ChangeTracker, eventData.Context, userId, isUser);
+				
 
-
-			return result;
+			return base.SavingChanges(eventData, result);
 		}
 	}
-
 }

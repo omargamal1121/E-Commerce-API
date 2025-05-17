@@ -1,10 +1,11 @@
 ﻿using E_Commers.DtoModels.ProductDtos;
+using E_Commers.DtoModels.Shared;
 using E_Commers.Models;
 using System.ComponentModel.DataAnnotations;
 
 namespace E_Commers.DtoModels.DiscoutDtos
 {
-	public record DiscountDto:BaseDto
+	public class DiscountDto:BaseDto
 	{
 		public DiscountDto()
 		{

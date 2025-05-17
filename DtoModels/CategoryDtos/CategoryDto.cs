@@ -1,9 +1,16 @@
-﻿using E_Commers.Models;
+﻿using E_Commers.DtoModels.ProductDtos;
+using E_Commers.DtoModels.Shared;
+using E_Commers.Models;
 
 
 namespace E_Commers.DtoModels.CategoryDtos
 {
-	public record CategoryDto:BaseDto
+	public class UpdateCategoryDto 
+	{
+		public string Name { get; set; }
+		public string Description { get; set; }
+	}
+	public class CategoryDto:BaseDto
 	{
 		public CategoryDto()
 		{
@@ -14,7 +21,7 @@ namespace E_Commers.DtoModels.CategoryDtos
 		{
 			Id = id;
 			Name = name;
-			Description = Description;
+			Description = description;
 			CreatedAt = create;
 			ModifiedAt = modeify;
 			DeletedAt = delete;
@@ -23,6 +30,5 @@ namespace E_Commers.DtoModels.CategoryDtos
 		public string Name { get; set; }
 		public string? Description { get; set; }
 
-	
 	}
 }

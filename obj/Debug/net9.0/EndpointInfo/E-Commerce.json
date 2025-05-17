@@ -5,13 +5,18 @@
     "version": "v1"
   },
   "paths": {
-    "/api/Account/Login": {
+    "/api/Account/login": {
       "post": {
         "tags": [
           "Account"
         ],
         "requestBody": {
           "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginDTo"
+              }
+            },
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/LoginDTo"
@@ -35,17 +40,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/ResponseDto"
+                  "$ref": "#/components/schemas/TokensDtoApiResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ResponseDto"
+                  "$ref": "#/components/schemas/TokensDtoApiResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ResponseDto"
+                  "$ref": "#/components/schemas/TokensDtoApiResponse"
                 }
               }
             }
@@ -53,86 +58,31 @@
         }
       }
     },
-    "/api/Account/Register": {
+    "/api/Account/register": {
       "post": {
         "tags": [
           "Account"
         ],
         "requestBody": {
           "content": {
-            "multipart/form-data": {
+            "application/json-patch+json": {
               "schema": {
-                "required": [
-                  "Age",
-                  "ConfirmPassword",
-                  "Email",
-                  "Name",
-                  "Password",
-                  "PhoneNumber",
-                  "UserName"
-                ],
-                "type": "object",
-                "properties": {
-                  "Name": {
-                    "pattern": "^[a-zA-Z\\s]+$",
-                    "type": "string"
-                  },
-                  "UserName": {
-                    "pattern": "^[a-zA-Z0-9]+$",
-                    "type": "string"
-                  },
-                  "PhoneNumber": {
-                    "pattern": "^01[0-9]{9}$",
-                    "type": "string",
-                    "format": "tel"
-                  },
-                  "Age": {
-                    "maximum": 100,
-                    "minimum": 18,
-                    "type": "integer",
-                    "format": "int32"
-                  },
-                  "Email": {
-                    "type": "string",
-                    "format": "email"
-                  },
-                  "ProfilePicture": {
-                    "type": "string",
-                    "format": "binary"
-                  },
-                  "Password": {
-                    "type": "string"
-                  },
-                  "ConfirmPassword": {
-                    "type": "string"
-                  }
-                }
-              },
-              "encoding": {
-                "Name": {
-                  "style": "form"
-                },
-                "UserName": {
-                  "style": "form"
-                },
-                "PhoneNumber": {
-                  "style": "form"
-                },
-                "Age": {
-                  "style": "form"
-                },
-                "Email": {
-                  "style": "form"
-                },
-                "ProfilePicture": {
-                  "style": "form"
-                },
-                "Password": {
-                  "style": "form"
-                },
-                "ConfirmPassword": {
-                  "style": "form"
-                }
+                "$ref": "#/components/schemas/RegisterDto"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterDto"
               }
             }
           }
@@ -143,17 +93,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/ResponseDto"
+                  "$ref": "#/components/schemas/RegisterResponseApiResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ResponseDto"
+                  "$ref": "#/components/schemas/RegisterResponseApiResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ResponseDto"
+                  "$ref": "#/components/schemas/RegisterResponseApiResponse"
                 }
               }
             }
@@ -161,13 +111,18 @@
         }
       }
     },
-    "/api/Account/RefreshTokenAsync": {
+    "/api/Account/refresh-token": {
       "post": {
         "tags": [
           "Account"
         ],
         "requestBody": {
           "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/RefreshTokenDto"
+              }
+            },
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/RefreshTokenDto"
@@ -191,17 +146,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/ResponseDto"
+                  "$ref": "#/components/schemas/StringApiResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ResponseDto"
+                  "$ref": "#/components/schemas/StringApiResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ResponseDto"
+                  "$ref": "#/components/schemas/StringApiResponse"
                 }
               }
             }
@@ -209,13 +164,18 @@
         }
       }
     },
-    "/api/Account/ChangePassword": {
-      "post": {
+    "/api/Account/change-password": {
+      "patch": {
         "tags": [
           "Account"
         ],
         "requestBody": {
           "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangePasswordDto"
+              }
+            },
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/ChangePasswordDto"
@@ -239,17 +199,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/ResponseDto"
+                  "$ref": "#/components/schemas/StringApiResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ResponseDto"
+                  "$ref": "#/components/schemas/StringApiResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ResponseDto"
+                  "$ref": "#/components/schemas/StringApiResponse"
                 }
               }
             }
@@ -257,37 +217,52 @@
         }
       }
     },
-    "/api/Account/ChangeEmail": {
-      "post": {
+    "/api/Account/change-email": {
+      "patch": {
         "tags": [
           "Account"
         ],
-        "parameters": [
-          {
-            "name": "NewEmail",
-            "in": "query",
-            "schema": {
-              "type": "string"
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangeEmailDto"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangeEmailDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangeEmailDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangeEmailDto"
+              }
             }
           }
-        ],
+        },
         "responses": {
           "200": {
             "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/ResponseDto"
+                  "$ref": "#/components/schemas/ChangeEmailResultDtoApiResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ResponseDto"
+                  "$ref": "#/components/schemas/ChangeEmailResultDtoApiResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ResponseDto"
+                  "$ref": "#/components/schemas/ChangeEmailResultDtoApiResponse"
                 }
               }
             }
@@ -306,17 +281,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/ResponseDto"
+                  "$ref": "#/components/schemas/StringApiResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ResponseDto"
+                  "$ref": "#/components/schemas/StringApiResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ResponseDto"
+                  "$ref": "#/components/schemas/StringApiResponse"
                 }
               }
             }
@@ -324,10 +299,131 @@
         }
       }
     },
-    "/api/Account/Delete": {
+    "/api/Account/delete-account": {
       "delete": {
         "tags": [
           "Account"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Account/upload-photo": {
+      "patch": {
+        "tags": [
+          "Account"
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "image": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              },
+              "encoding": {
+                "image": {
+                  "style": "form"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/UploadPhotoResponseDtoApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UploadPhotoResponseDtoApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UploadPhotoResponseDtoApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/AdminOperation": {
+      "get": {
+        "tags": [
+          "AdminOperation"
         ],
         "responses": {
           "200": {
@@ -375,17 +471,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/ResponseDto"
+                  "$ref": "#/components/schemas/CategoryDtoApiResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ResponseDto"
+                  "$ref": "#/components/schemas/CategoryDtoApiResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ResponseDto"
+                  "$ref": "#/components/schemas/CategoryDtoApiResponse"
                 }
               }
             }
@@ -413,24 +509,24 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/ResponseDto"
+                  "$ref": "#/components/schemas/StringApiResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ResponseDto"
+                  "$ref": "#/components/schemas/StringApiResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ResponseDto"
+                  "$ref": "#/components/schemas/StringApiResponse"
                 }
               }
             }
           }
         }
       },
-      "patch": {
+      "put": {
         "tags": [
           "categories"
         ],
@@ -447,19 +543,24 @@
         ],
         "requestBody": {
           "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCategoryDto"
+              }
+            },
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/CategoryUpdateDto"
+                "$ref": "#/components/schemas/UpdateCategoryDto"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/CategoryUpdateDto"
+                "$ref": "#/components/schemas/UpdateCategoryDto"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/CategoryUpdateDto"
+                "$ref": "#/components/schemas/UpdateCategoryDto"
               }
             }
           }
@@ -470,17 +571,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/ResponseDto"
+                  "$ref": "#/components/schemas/CategoryDtoApiResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ResponseDto"
+                  "$ref": "#/components/schemas/CategoryDtoApiResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ResponseDto"
+                  "$ref": "#/components/schemas/CategoryDtoApiResponse"
                 }
               }
             }
@@ -493,41 +594,23 @@
         "tags": [
           "categories"
         ],
-        "parameters": [
-          {
-            "name": "deleted",
-            "in": "query",
-            "schema": {
-              "type": "boolean",
-              "default": false
-            }
-          },
-          {
-            "name": "includeDates",
-            "in": "query",
-            "schema": {
-              "type": "boolean",
-              "default": false
-            }
-          }
-        ],
         "responses": {
           "200": {
             "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/ResponseDto"
+                  "$ref": "#/components/schemas/CategoryDtoListApiResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ResponseDto"
+                  "$ref": "#/components/schemas/CategoryDtoListApiResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ResponseDto"
+                  "$ref": "#/components/schemas/CategoryDtoListApiResponse"
                 }
               }
             }
@@ -540,6 +623,11 @@
         ],
         "requestBody": {
           "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCategotyDto"
+              }
+            },
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/CreateCategotyDto"
@@ -558,28 +646,25 @@
           }
         },
         "responses": {
-          "400": {
-            "description": "Bad Request",
+          "200": {
+            "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
+                  "$ref": "#/components/schemas/CategoryDtoApiResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
+                  "$ref": "#/components/schemas/CategoryDtoApiResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
+                  "$ref": "#/components/schemas/CategoryDtoApiResponse"
                 }
               }
             }
-          },
-          "201": {
-            "description": "Created"
           }
         }
       }
@@ -606,17 +691,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/ResponseDto"
+                  "$ref": "#/components/schemas/CategoryDtoApiResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ResponseDto"
+                  "$ref": "#/components/schemas/CategoryDtoApiResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ResponseDto"
+                  "$ref": "#/components/schemas/CategoryDtoApiResponse"
                 }
               }
             }
@@ -646,17 +731,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/ResponseDto"
+                  "$ref": "#/components/schemas/ProductDtoListApiResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ResponseDto"
+                  "$ref": "#/components/schemas/ProductDtoListApiResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ResponseDto"
+                  "$ref": "#/components/schemas/ProductDtoListApiResponse"
                 }
               }
             }
@@ -750,6 +835,11 @@
         ],
         "requestBody": {
           "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateDiscountDto"
+              }
+            },
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/CreateDiscountDto"
@@ -808,6 +898,11 @@
         ],
         "requestBody": {
           "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateProductDto"
+              }
+            },
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/CreateProductDto"
@@ -926,6 +1021,11 @@
         ],
         "requestBody": {
           "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateProductDto"
+              }
+            },
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/UpdateProductDto"
@@ -1159,6 +1259,11 @@
         ],
         "requestBody": {
           "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateInvetoryDto"
+              }
+            },
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/CreateInvetoryDto"
@@ -1244,6 +1349,11 @@
         ],
         "requestBody": {
           "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddQuantityInvetoryDto"
+              }
+            },
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/AddQuantityInvetoryDto"
@@ -1332,6 +1442,11 @@
         ],
         "requestBody": {
           "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/TransfereQuantityInvetoryDto"
+              }
+            },
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/TransfereQuantityInvetoryDto"
@@ -1517,6 +1632,11 @@
         ],
         "requestBody": {
           "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateWareHouseDto"
+              }
+            },
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/CreateWareHouseDto"
@@ -1613,6 +1733,11 @@
         ],
         "requestBody": {
           "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateWareHouseDto"
+              }
+            },
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/UpdateWareHouseDto"
@@ -1805,15 +1930,171 @@
         },
         "additionalProperties": false
       },
-      "CategoryUpdateDto": {
+      "CategoryDto": {
         "type": "object",
         "properties": {
-          "newName": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "modifiedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "deletedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "name": {
             "type": "string",
             "nullable": true
           },
           "description": {
             "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "CategoryDtoApiResponse": {
+        "type": "object",
+        "properties": {
+          "statuscode": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "responseBody": {
+            "$ref": "#/components/schemas/CategoryDtoResponseBody"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CategoryDtoListApiResponse": {
+        "type": "object",
+        "properties": {
+          "statuscode": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "responseBody": {
+            "$ref": "#/components/schemas/CategoryDtoListResponseBody"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CategoryDtoListResponseBody": {
+        "type": "object",
+        "properties": {
+          "errors": {
+            "$ref": "#/components/schemas/ErrorResponse"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CategoryDto"
+            },
+            "nullable": true
+          },
+          "links": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LinkDto"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "CategoryDtoResponseBody": {
+        "type": "object",
+        "properties": {
+          "errors": {
+            "$ref": "#/components/schemas/ErrorResponse"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "$ref": "#/components/schemas/CategoryDto"
+          },
+          "links": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LinkDto"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ChangeEmailDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ChangeEmailResultDto": {
+        "type": "object",
+        "properties": {
+          "oldEmail": {
+            "type": "string",
+            "nullable": true
+          },
+          "newEmail": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ChangeEmailResultDtoApiResponse": {
+        "type": "object",
+        "properties": {
+          "statuscode": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "responseBody": {
+            "$ref": "#/components/schemas/ChangeEmailResultDtoResponseBody"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ChangeEmailResultDtoResponseBody": {
+        "type": "object",
+        "properties": {
+          "errors": {
+            "$ref": "#/components/schemas/ErrorResponse"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "$ref": "#/components/schemas/ChangeEmailResultDto"
+          },
+          "links": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LinkDto"
+            },
             "nullable": true
           }
         },
@@ -1983,6 +2264,84 @@
         },
         "additionalProperties": false
       },
+      "DiscountDto": {
+        "required": [
+          "description",
+          "discountPercent",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "modifiedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "deletedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "name": {
+            "maxLength": 20,
+            "minLength": 5,
+            "type": "string"
+          },
+          "description": {
+            "maxLength": 50,
+            "minLength": 10,
+            "type": "string"
+          },
+          "discountPercent": {
+            "maximum": 1,
+            "minimum": 0,
+            "type": "number",
+            "format": "double"
+          },
+          "isActive": {
+            "type": "boolean"
+          },
+          "products": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProductDto"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "detail": {
+            "type": "string",
+            "nullable": true
+          },
+          "instance": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "LinkDto": {
         "type": "object",
         "properties": {
@@ -2047,6 +2406,93 @@
         },
         "additionalProperties": { }
       },
+      "ProductDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "modifiedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "deletedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "category": {
+            "$ref": "#/components/schemas/CategoryDto"
+          },
+          "discount": {
+            "$ref": "#/components/schemas/DiscountDto"
+          },
+          "availabeQuantity": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "finalPrice": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ProductDtoListApiResponse": {
+        "type": "object",
+        "properties": {
+          "statuscode": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "responseBody": {
+            "$ref": "#/components/schemas/ProductDtoListResponseBody"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ProductDtoListResponseBody": {
+        "type": "object",
+        "properties": {
+          "errors": {
+            "$ref": "#/components/schemas/ErrorResponse"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProductDto"
+            },
+            "nullable": true
+          },
+          "links": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LinkDto"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "RefreshTokenDto": {
         "required": [
           "refreshToken",
@@ -2065,6 +2511,118 @@
         },
         "additionalProperties": false
       },
+      "RegisterDto": {
+        "required": [
+          "age",
+          "confirmPassword",
+          "email",
+          "name",
+          "password",
+          "phoneNumber",
+          "userName"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "minLength": 1,
+            "pattern": "^[a-zA-Z\\s]+$",
+            "type": "string"
+          },
+          "userName": {
+            "minLength": 1,
+            "pattern": "^[a-zA-Z0-9]+$",
+            "type": "string"
+          },
+          "phoneNumber": {
+            "minLength": 1,
+            "pattern": "^01[0-9]{9}$",
+            "type": "string",
+            "format": "tel"
+          },
+          "age": {
+            "maximum": 100,
+            "minimum": 18,
+            "type": "integer",
+            "format": "int32"
+          },
+          "email": {
+            "minLength": 1,
+            "type": "string",
+            "format": "email"
+          },
+          "password": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "confirmPassword": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "RegisterResponse": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "userName": {
+            "type": "string",
+            "nullable": true
+          },
+          "phoneNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "age": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "RegisterResponseApiResponse": {
+        "type": "object",
+        "properties": {
+          "statuscode": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "responseBody": {
+            "$ref": "#/components/schemas/RegisterResponseResponseBody"
+          }
+        },
+        "additionalProperties": false
+      },
+      "RegisterResponseResponseBody": {
+        "type": "object",
+        "properties": {
+          "errors": {
+            "$ref": "#/components/schemas/ErrorResponse"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "$ref": "#/components/schemas/RegisterResponse"
+          },
+          "links": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LinkDto"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "ResponseDto": {
         "type": "object",
         "properties": {
@@ -2074,6 +2632,97 @@
           },
           "data": {
             "nullable": true
+          },
+          "links": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LinkDto"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "StringApiResponse": {
+        "type": "object",
+        "properties": {
+          "statuscode": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "responseBody": {
+            "$ref": "#/components/schemas/StringResponseBody"
+          }
+        },
+        "additionalProperties": false
+      },
+      "StringResponseBody": {
+        "type": "object",
+        "properties": {
+          "errors": {
+            "$ref": "#/components/schemas/ErrorResponse"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "type": "string",
+            "nullable": true
+          },
+          "links": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LinkDto"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "TokensDto": {
+        "type": "object",
+        "properties": {
+          "userid": {
+            "type": "string",
+            "nullable": true
+          },
+          "token": {
+            "type": "string",
+            "nullable": true
+          },
+          "refreshToken": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "TokensDtoApiResponse": {
+        "type": "object",
+        "properties": {
+          "statuscode": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "responseBody": {
+            "$ref": "#/components/schemas/TokensDtoResponseBody"
+          }
+        },
+        "additionalProperties": false
+      },
+      "TokensDtoResponseBody": {
+        "type": "object",
+        "properties": {
+          "errors": {
+            "$ref": "#/components/schemas/ErrorResponse"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "$ref": "#/components/schemas/TokensDto"
           },
           "links": {
             "type": "array",
@@ -2111,6 +2760,20 @@
             "minimum": 0,
             "type": "integer",
             "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "UpdateCategoryDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -2169,6 +2832,56 @@
           "newPhone": {
             "type": "string",
             "format": "tel",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "UploadPhotoResponseDto": {
+        "type": "object",
+        "properties": {
+          "imageUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
+      "UploadPhotoResponseDtoApiResponse": {
+        "type": "object",
+        "properties": {
+          "statuscode": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "responseBody": {
+            "$ref": "#/components/schemas/UploadPhotoResponseDtoResponseBody"
+          }
+        },
+        "additionalProperties": false
+      },
+      "UploadPhotoResponseDtoResponseBody": {
+        "type": "object",
+        "properties": {
+          "errors": {
+            "$ref": "#/components/schemas/ErrorResponse"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "$ref": "#/components/schemas/UploadPhotoResponseDto"
+          },
+          "links": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LinkDto"
+            },
             "nullable": true
           }
         },

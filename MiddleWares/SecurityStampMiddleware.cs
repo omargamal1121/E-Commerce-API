@@ -1,5 +1,8 @@
-﻿using E_Commers.Models;
+﻿using E_Commers.Context;
+using E_Commers.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
@@ -37,8 +40,8 @@ public class SecurityStampMiddleware
 
 				using (var scope = _serviceScopeFactory.CreateScope())
 				{
-					var userManager = scope.ServiceProvider.GetRequiredService<UserManager<Customer>>();
-					Customer? customer = await userManager.FindByIdAsync(userId);
+					var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+					Customer? customer = await dbContext.customers.Select(x => new Customer { Id = x.Id,SecurityStamp=x.SecurityStamp }).FirstOrDefaultAsync(x=>x.Id==userId);
 
 					if (customer is null)
 					{
@@ -51,7 +54,7 @@ public class SecurityStampMiddleware
 					string customerSecurityStamp = customer.SecurityStamp ?? string.Empty;
 					string tokenSecurityStamp = jwtToken.Claims.FirstOrDefault(c => c.Type == "SecurityStamp")?.Value ?? string.Empty;
 
-					if (string.IsNullOrEmpty(tokenSecurityStamp) || !tokenSecurityStamp.Equals(customerSecurityStamp))
+					if (customerSecurityStamp.IsNullOrEmpty()|| string.IsNullOrEmpty(tokenSecurityStamp) || !tokenSecurityStamp.Equals(customerSecurityStamp))
 					{
 						context.Response.StatusCode = 401;
 						await context.Response.WriteAsync("{\n \"statusCode\": 401\n");

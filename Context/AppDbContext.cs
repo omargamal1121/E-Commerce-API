@@ -109,6 +109,11 @@ namespace E_Commers.Context
 				.IsUnique();builder.Entity<Discount>()
 				.HasIndex(c => c.Name)
 				.IsUnique();
+
+			//builder.Entity<Customer>().UseTptMappingStrategy();
+
+			builder.Entity<Category>().Property(c => c.ImagesUrl).HasConversion(i=>string.Join(";",i),i=>i.Split(';',StringSplitOptions.RemoveEmptyEntries).ToList());
+			builder.Entity<Product>().Property(c => c.ImagesUrl).HasConversion(i=>string.Join(";",i),i=>i.Split(';',StringSplitOptions.RemoveEmptyEntries).ToList());
 		
 			
 		

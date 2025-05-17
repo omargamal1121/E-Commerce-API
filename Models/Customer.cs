@@ -14,7 +14,8 @@ namespace E_Commers.Models
 		public int Age { get; set; }
 
 		public string? ProfilePicture { get; set; }
-		public DateTime DateCreated { get; set; } = DateTime.UtcNow;
+		public DateTime CreateAt { get; set; } = DateTime.UtcNow;
+		public DateTime? DeletedAt { get; set; }
 		public DateTime? LastVisit { get; set; }
 
 		public List<Order> Orders { get; set; } = new List<Order>();
