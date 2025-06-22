@@ -1,5 +1,4 @@
-﻿
-using E_Commers.DtoModels;
+﻿using E_Commers.DtoModels;
 using E_Commers.DtoModels.CategoryDtos;
 using E_Commers.DtoModels.DiscoutDtos;
 using E_Commers.DtoModels.ProductDtos;
@@ -15,6 +14,11 @@ using Microsoft.OpenApi.Models;
 using System.Security.Claims;
 using System.Transactions;
 using System.IdentityModel.Tokens.Jwt;
+using E_Commers.Services.Product;
+using E_Commers.DtoModels.Responses;
+using E_Commers.Interfaces;
+using E_Commers.ErrorHnadling;
+using E_Commers.DtoModels.InventoryDtos;
 
 namespace E_Commers.Controllers
 {
@@ -24,287 +28,129 @@ namespace E_Commers.Controllers
 	public class ProductController : ControllerBase
 	{
 		private readonly IUnitOfWork _unitOfWork;
+		private readonly IProductLinkBuilder _productLinkBuilder;
+		private readonly IProductsServices _productsServices;
 		private readonly ILogger<ProductController> _logger;
-		public ProductController(IUnitOfWork unitOfWork,ILogger<ProductController> logger )
+		public ProductController(IProductLinkBuilder productLinkBuilder, IUnitOfWork unitOfWork,IProductsServices productsServices,ILogger<ProductController> logger )
 		{
+			_productLinkBuilder = productLinkBuilder;
+			_productsServices = productsServices;
 			_logger = logger;
 			_unitOfWork = unitOfWork;	
 		}
 
 		[HttpGet]
 		[ResponseCache(Duration =120)]
-		public async Task<ActionResult<ResponseDto>> GetAllProducts()
+		public async Task<ActionResult<ApiResponse<List<ProductDto>>>> GetAllProducts()
 		{
-			_logger.LogInformation($"Execute {nameof(GetAllProducts)}");
-			Result<IQueryable<Product>> products   =   await _unitOfWork.Repository<Product>().GetAllAsync(include:p=>p.Include(p=>p.Category).Include(p=>p.Discount),p=>p.DeletedAt==null);
-
-			if (!products.Success)
-				return BadRequest(new ResponseDto {  Message = products.Message });
-
-			IEnumerable<ProductDto> productsdto = products.Data.Select(p => new ProductDto
-			{
-				Id= p.Id,
-				Name= p.Name,
-				AvailabeQuantity= p.Quantity,
-				Description= p.Description,
-			//	Discount = p.Discount == null ? null : new DiscountDto(p.Discount.Id,p.Discount.Name,p.Discount.DiscountPercent,p.Discount.Description,p.Discount.IsActive),
-				FinalPrice=p.Discount==null||!p.Discount.IsActive?p.Price:p.Price-p.Discount.DiscountPercent*p.Price,
-			//	Category= new CategoryDto(p.Category.Id, p.Category.Name, p.Category.Description, p.Category.CreatedAt),
-				CreatedAt=p.CreatedAt,
-				
-			});
-
-			return Ok(new ResponseDto { Message= products.Message ,Data=productsdto });
-
-
+			_logger.LogInformation($"Executing {nameof(GetAllProducts)}");
+			var response = await _productsServices.GetAllAsync();
+			return HandleResponse(response, nameof(GetAllProducts));
 		}
-		[HttpGet("id")]
+		[HttpGet("{id}")]
 		[ResponseCache(Duration =60,VaryByQueryKeys =new string[] {"id"})]
-		public async Task<ActionResult<ResponseDto>> GetProduct(int id)
+		public async Task<ActionResult<ApiResponse<ProductDto>>> GetProduct(int id)
 		{
-			_logger.LogInformation($"Execute {nameof(GetProduct)}");
-			Result<Product> product = await _unitOfWork.Repository<Product>().GetByIdAsync(id);
-
-			if (!product.Success)
-				return BadRequest(new ResponseDto { Message = product.Message });
-
-			var productdto= new ProductDto {
-				Id = product.Data.Id,
-				Name = product.Data.Name,
-				AvailabeQuantity = product.Data.Quantity,
-				Description = product.Data.Description,
-				Discount = product.Data.Discount == null ? null : new DiscountDto(product.Data.Discount.Id, product.Data.Discount.Name, product.Data.Discount.DiscountPercent, product.Data.Discount.Description, product.Data.Discount.IsActive),
-				FinalPrice = product.Data.Discount == null || !product.Data.Discount.IsActive ? product.Data.Price : product.Data.Price - product.Data.Discount.DiscountPercent * product.Data.Price,
-				Category = new CategoryDto(product.Data.Category.Id, product.Data.Category.Name, product.Data.Category.Description, product.Data.Category.CreatedAt),
-				CreatedAt = product.Data.CreatedAt,
+			_logger.LogInformation($"Executing {nameof(GetProduct)} for ID: {id}");
+			var response = await _productsServices.GetProductByIdAsync(id);
+			return HandleResponse(response, nameof(GetProduct), id);
+		}
+		private ActionResult<ApiResponse<T>> HandleResponse<T>(
+	 ApiResponse<T> response,
+	 string actionName,
+	 int? id = null)
+			where T : class
+		{
+			
+			
+				response.ResponseBody.Links = _productLinkBuilder.MakeRelSelf(
+					_productLinkBuilder.GenerateLinks(id),
+					actionName
+				);
+			
+			return response.Statuscode switch
+			{
+				200 => Ok(response),
+				201 => CreatedAtAction(actionName, new { id }, response),
+				400 => BadRequest(response),
+				401 => Unauthorized(response),
+				404 => NotFound(response),
+				409 => Conflict(response),
+				_ => StatusCode(response.Statuscode, response),
 			};
-
-			return Ok(new ResponseDto { Message = product.Message, Data = productdto });
 		}
 
 		[HttpPost]
-		public async Task<ActionResult> CreateProduct(CreateProductDto model)
+		public async Task<ActionResult<ApiResponse<ProductDto>>> CreateProduct(CreateProductDto model)
 		{
 			_logger.LogInformation($"Executing {nameof(CreateProduct)}");
 
 			if (!ModelState.IsValid)
 			{
-				var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
-				_logger.LogError($"Validation Errors: {string.Join(", ", errors)}");
-
-				return BadRequest(new ResponseDto
-				{
-					
-					Message = "Invalid data: " + string.Join(", ", errors)
-				});
-			}
-
-			string userid = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-
-			var checkname = await _unitOfWork.Product.GetByQuery(p=>p.Name==model.Name);
-			if (checkname.Success)
-			{
-				return Conflict(new ResponseDto
-				{
-				
-					Message = $"A product with the name '{model.Name}' already exists"
-				});
-			}
-			var checkcategory= await _unitOfWork.Category.GetByIdAsync(model.CategoryId);
-			if (!checkcategory.Success)
-				return NotFound(new ResponseDto { Message = checkcategory.Message });
-			using var transaction = await _unitOfWork.BeginTransactionAsync();
-			try
-			{
-				Product product = new Product { Price=model.Price,CategoryId=model.CategoryId ,Quantity=model.Quantity, Description = model.Description, Name = model.Name };
-				Result<Product> result = await _unitOfWork.Product.CreateAsync(product);
-
-				if (!result.Success)
-				{
-					return BadRequest(new ResponseDto {  Message = result.Message });
-				}
-
-				int changes = await _unitOfWork.CommitAsync();
-				if (changes == 0)
-				{
-					return BadRequest(new ResponseDto { Message = "Nothing added"});
-				}
-
-				_logger.LogInformation($"product added successfully, ID: {product.Id}");
-
-				AdminOperationsLog adminOperations = new()
-				{
-					AdminId = userid,
-					Description = $"Added product: {product.Id}",
-					Timestamp = DateTime.UtcNow
-				};
-
-				Result<AdminOperationsLog> logResult = await _unitOfWork.Repository<AdminOperationsLog>().CreateAsync(adminOperations);
-				if (!logResult.Success)
-				{
-					await transaction.RollbackAsync();
-					return StatusCode(500, new ResponseDto { Message = logResult.Message });
-				}
-
-				await _unitOfWork.CommitAsync();
-				await transaction.CommitAsync();
-
-				return CreatedAtAction(nameof(GetProduct), new { id = product.Id }, new ResponseDto { Message = $"Added successfully, ID: {product.Id}", });
-			}
-			catch (Exception ex)
-			{
-				_logger.LogError($"Exception: {ex.Message}");
-				await transaction.RollbackAsync();
-				return StatusCode(500, new ResponseDto { Message = "An error occurred while saving data." });
-			}
-		}
-		[HttpPatch("{id}")]
-		
-		public async Task<ActionResult<ResponseDto>> UpdateProduct(
-			[FromRoute] int id,
-			[FromBody] UpdateProductDto updateDto)
-		{
-			_logger.LogInformation("Executing {MethodName} for Product ID: {ProductId}", nameof(UpdateProduct), id);
-
-			// 1. Model Validation
-			if (!ModelState.IsValid)
-			{
-				var errors = ModelState.Values
+				var errors = string.Join(", ", ModelState.Values
 					.SelectMany(v => v.Errors)
 					.Select(e => e.ErrorMessage)
-					.ToList();
-
-				_logger.LogWarning("Validation failed for Product ID {ProductId}: {Errors}", id, string.Join(", ", errors));
-
-				return BadRequest(new ResponseDto
-				{
-					
-					Message = $"Validation failed\n Errors:{errors}",
-					
-				});
+					.ToList());
+				_logger.LogError($"Validation Errors: { errors}");
+				return BadRequest(ApiResponse<Product>.CreateErrorResponse(new ErrorResponse("Invalid data",errors)));
 			}
 
-			// 2. Get Admin ID (with null check)
-			var adminId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-			
+			var userId = HttpContext.Items["UserId"]?.ToString();
+			var response = await _productsServices.CreateProductAsync(model, userId);
+			return HandleResponse(response, nameof(GetProduct),response.ResponseBody?.Data?.Id);
+		}
+		[HttpPut("{id}")]
+		public async Task<ActionResult<ApiResponse<ProductDto>>> UpdateProduct(int id, UpdateProductDto model)
+		{
+			_logger.LogInformation($"Executing {nameof(UpdateProduct)} for ID: {id}");
 
-			// 3. Fetch Product
-			var productResult = await _unitOfWork.Product.GetByIdAsync(id);
-			if (!productResult.Success || productResult.Data == null)
+			if (!ModelState.IsValid)
 			{
-				_logger.LogWarning("Product ID {ProductId} not found", id);
-				return NotFound(new ResponseDto
-				{
-					
-					Message = productResult.Message ?? "Product not found"
-				});
+				var errors = string.Join(", ", ModelState.Values
+					.SelectMany(v => v.Errors)
+					.Select(e => e.ErrorMessage)
+					.ToList());
+				_logger.LogError($"Validation Errors: {errors}");
+				return BadRequest(ApiResponse<Product>.CreateErrorResponse(new ErrorResponse("Invalid data", errors)));
 			}
 
-			var product = productResult.Data;
+			var userId = HttpContext.Items["UserId"]?.ToString();
+			var response = await _productsServices.UpdateProductAsync(id, model, userId);
+			return HandleResponse(response, nameof(GetProduct), id);
+		}
 
-			// 4. Check for Duplicate Name (if name is being updated)
-			if (!string.IsNullOrWhiteSpace(updateDto.Name) &&
-				!product.Name.Equals(updateDto.Name, StringComparison.OrdinalIgnoreCase))
-			{
-				var nameCheck = await _unitOfWork.Product.GetByQuery(p=>p.Name == updateDto.Name);
-				if (!nameCheck.Success && nameCheck.Data != null)
-				{
-					_logger.LogWarning("Duplicate product name: {ProductName}", updateDto.Name);
-					return Conflict(new ResponseDto
-					{
-						
-						Message = $"A product with name '{updateDto.Name}' already exists"
-					});
-				}
-			
-				product.Name = updateDto.Name;
-			}
+		[HttpDelete("{id}")]
+		public async Task<ActionResult<ApiResponse<string>>> DeleteProduct(int id)
+		{
+			_logger.LogInformation($"Executing {nameof(DeleteProduct)} for ID: {id}");
+			var userId = HttpContext.Items["UserId"]?.ToString();
+			var response = await _productsServices.DeleteProductAsync(id, userId);
+			return HandleResponse(response, nameof(GetProduct), id);
+		}
 
-			// 5. Update Fields (if provided)
-			if (!string.IsNullOrWhiteSpace(updateDto.Description))
-				product.Description = updateDto.Description;
+		[HttpGet("category/{categoryId}")]
+		public async Task<ActionResult<ApiResponse<List<ProductDto>>>> GetProductsByCategory(int categoryId)
+		{
+			_logger.LogInformation($"Executing {nameof(GetProductsByCategory)} for category ID: {categoryId}");
+			var response = await _productsServices.GetProductsByCategoryId(categoryId);
+			return HandleResponse(response, nameof(GetProductsByCategory), categoryId);
+		}
 
-			if (updateDto.Quantity.HasValue && updateDto.Quantity != product.Quantity)
-			{
-				_logger.LogInformation("Updating quantity for Product ID {ProductId}", id);
-				product.Quantity = updateDto.Quantity.Value;
-			}
+		[HttpGet("{productId}/inventory")]
+		public async Task<ActionResult<ApiResponse<List<InventoryDto>>>> GetProductInventory(int productId)
+		{
+			_logger.LogInformation($"Executing {nameof(GetProductInventory)} for product ID: {productId}");
+			var response = await _productsServices.GetProductInventoryAsync(productId);
+			return HandleResponse(response, nameof(GetProductInventory), productId);
+		}
 
-			if (updateDto.CategoryId.HasValue && updateDto.CategoryId != product.CategoryId)
-			{
-				var categoryCheck = await _unitOfWork.Category.GetByIdAsync(updateDto.CategoryId.Value);
-				if (!categoryCheck.Success || categoryCheck.Data == null)
-				{
-					return NotFound(new ResponseDto
-					{
-						
-						Message = "Specified category does not exist"
-					});
-				}
-				product.CategoryId = updateDto.CategoryId.Value;
-			}
-
-			if (updateDto.Price.HasValue && updateDto.Price != product.Price)
-				product.Price = updateDto.Price.Value;
-
-			// 6. Save Changes (Transaction)
-			await using var transaction = await _unitOfWork.BeginTransactionAsync();
-
-			try
-			{
-				var updateResult = await _unitOfWork.Product.UpdateAsync(product);
-				if (!updateResult.Success)
-				{
-					_logger.LogError("Failed to update Product ID {ProductId}: {Error}", id, updateResult.Message);
-					await transaction.RollbackAsync();
-					return StatusCode(StatusCodes.Status500InternalServerError, new ResponseDto
-					{
-					
-						Message = "Failed to update product"
-					});
-				}
-
-				// 7. Log Admin Action
-				var adminLog = new AdminOperationsLog
-				{
-					OperationType = Opreations.UpdateOpreation,
-					AdminId = adminId,
-					Description = $"Updated Product: {product.Id}",
-					Timestamp = DateTime.UtcNow
-				};
-
-				var logResult = await _unitOfWork.Repository<AdminOperationsLog>().CreateAsync(adminLog);
-				if (!logResult.Success)
-				{
-					await transaction.RollbackAsync();
-					_logger.LogError("Failed to log admin operation for Product ID {ProductId}", id);
-					return StatusCode(StatusCodes.Status500InternalServerError, new ResponseDto
-					{
-					
-						Message = "Failed to log operation"
-					});
-				}
-
-				await _unitOfWork.CommitAsync();
-				await transaction.CommitAsync();
-
-				_logger.LogInformation("Successfully updated Product ID {ProductId}", id);
-				return Ok(new ResponseDto
-				{
-					
-					Message = $"Product updated successfully ID: {product.Id}",
-					
-				});
-			}
-			catch (Exception ex)
-			{
-				await transaction.RollbackAsync();
-				_logger.LogError(ex, "Error updating Product ID {ProductId}", id);
-				return StatusCode(StatusCodes.Status500InternalServerError, new ResponseDto
-				{
-					Message = "An unexpected error occurred"
-				});
-			}
+		[HttpPatch("{productId}/quantity")]
+		public async Task<ActionResult<ApiResponse<ProductDto>>> UpdateProductQuantity(int productId, [FromBody] int quantity)
+		{
+			_logger.LogInformation($"Executing {nameof(UpdateProductQuantity)} for product ID: {productId}");
+			var userId = HttpContext.Items["UserId"]?.ToString();
+			var response = await _productsServices.UpdateProductQuantityAsync(productId, quantity, userId);
+			return HandleResponse(response, nameof(GetProduct), productId);
 		}
 
 		[HttpGet("deleted-Products")]
@@ -313,7 +159,7 @@ namespace E_Commers.Controllers
 		{
 			_logger.LogInformation($"Executing {nameof(GetDeletedProductsAsync)}");
 
-			var resultlist = await _unitOfWork.Product.GetAllAsync(p=>p.Include(c=>c.Category).Include(c => c.Discount), filter: c => c.DeletedAt.HasValue);
+			var resultlist = await _unitOfWork.Product.GetAllAsync(p=>p.Include(c=>c.SubCategory).Include(c => c.Discount), filter: c => c.DeletedAt.HasValue);
 
 			if (!resultlist.Success|| !resultlist.Data.Any())
 			{
@@ -331,7 +177,7 @@ namespace E_Commers.Controllers
 				ModifiedAt = c.ModifiedAt,
 				AvailabeQuantity=c.Quantity,
 			
-				FinalPrice= c.Price
+			
 			}).ToList();
 
 			_logger.LogInformation($"Deleted Prducts found: {ProductsDtos.Count()}");
@@ -462,23 +308,23 @@ namespace E_Commers.Controllers
 				return NotFound(new ResponseDto { Message = category.Message });
 
 			}
-			if(category.Data.products.Count==0)
-			{
-				_logger.LogWarning("No Products in this Category");
-				return NotFound(new ResponseDto { Message = "No Products in this Category" });
-			}
-			var productsdto = category.Data.products.Select(p => new ProductDto
-			{
-				Id = p.Id,
-				Name = p.Name,
-				AvailabeQuantity = p.Quantity,
-				Description = p.Description,
-				Discount = p.Discount == null ? null : new DiscountDto(p.Discount.Id, p.Discount.Name, p.Discount.DiscountPercent, p.Discount.Description, p.Discount.IsActive),
-				FinalPrice = p.Discount == null || !p.Discount.IsActive ? p.Price : p.Price - p.Discount.DiscountPercent * p.Price,
-				Category = new CategoryDto(p.Category.Id, p.Category.Name, p.Category.Description, p.Category.CreatedAt),
-				CreatedAt = p.CreatedAt,
-			});
-			return Ok(new ResponseDto { Message = category.Message , Data= productsdto });
+			//if(category.Data.products.Count==0)
+			//{
+			//	_logger.LogWarning("No Products in this Category");
+			//	return NotFound(new ResponseDto { Message = "No Products in this Category" });
+			//}
+			//var productsdto = category.Data.subCategories.Select(p => new ProductDto
+			//{
+			//	Id = p.Id,
+			//	Name = p.Name,
+			//	AvailabeQuantity = p.Quantity,
+			//	Description = p.Description,
+			//	Discount = p.Discount == null ? null : new DiscountDto(p.Discount.Id, p.Discount.Name, p.Discount.DiscountPercent, p.Discount.Description, p.Discount.IsActive),
+			//	FinalPrice = p.Discount == null || !p.Discount.IsActive ? p.Price : p.Price - p.Discount.DiscountPercent * p.Price,
+			//	Category = new CategoryDto(p.Category.Id, p.Category.Name, p.Category.Description, p.Category.CreatedAt),
+			//	CreatedAt = p.CreatedAt,
+			//});
+			return Ok(new ResponseDto { Message = category.Message, Data = new object() });
 		}
 
 		[HttpGet("wareHouse")]
@@ -503,8 +349,8 @@ namespace E_Commers.Controllers
 				AvailabeQuantity = p.Quantity,
 				Description = p.Product.Description,
 				Discount = p.Product.Discount == null ? null : new DiscountDto(p.Product.Discount.Id, p.Product.Discount.Name, p.Product.Discount.DiscountPercent, p.Product.Discount.Description, p.Product.Discount.IsActive),
-				FinalPrice = p.Product.Discount == null || !p.Product.Discount.IsActive ? p.Product.Price : p.Product.Price - p.Product.Discount.DiscountPercent * p.Product.Price,
-				Category = new CategoryDto(p.Product.Category.Id, p.Product.Category.Name, p.Product.Category.Description, p.Product.Category.CreatedAt),
+				//FinalPrice = p.Product.Discount == null || !p.Product.Discount.IsActive ? p.Product.Price : p.Product.Price - p.Product.Discount.DiscountPercent * p.Product.Price,
+				//Category = new CategoryDto(p.Product.Category.Id, p.Product.Category.Name, p.Product.Category.Description, p.Product.Category.CreatedAt),
 				CreatedAt = p.CreatedAt,
 			});
 			return Ok(new ResponseDto { Message = category.Message , Data= productsdto });

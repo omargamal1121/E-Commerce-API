@@ -14,7 +14,7 @@ namespace E_Commers.Services.AdminOpreationServices
 			_logger = logger;
 			_unitOfWork = unitOfWork;
 		}
-		public async Task<Result<bool>> AddAdminOpreationAsync(string description, Opreations opreation, string userid, int itemid)
+		public async Task<Result<AdminOperationsLog>> AddAdminOpreationAsync(string description, Opreations opreation, string userid, int itemid)
 		{
 			_logger.LogInformation($"Execute {nameof(AddAdminOpreationAsync)}");
 			var adminopreation = new AdminOperationsLog
@@ -27,12 +27,12 @@ namespace E_Commers.Services.AdminOpreationServices
 
 			};
 			var iscreated = await _unitOfWork.Repository<AdminOperationsLog>().CreateAsync(adminopreation);
-			if (!iscreated.Success)
+			if (!iscreated.Success||iscreated.Data is null)
 			{
 				_logger.LogError(iscreated.Message);
-				return Result<bool>.Fail(iscreated.Message);
+				return Result<AdminOperationsLog>.Fail(iscreated.Message);
 			}
-			return Result<bool>.Ok(true);
+			return Result<AdminOperationsLog>.Ok(iscreated.Data);
 		}
 
 		public Task<Result<bool>> DeleteAdminOpreationAsync(int id)

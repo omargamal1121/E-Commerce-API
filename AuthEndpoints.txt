@@ -1,0 +1,84 @@
+# Authentication Endpoints and Request Body Formats
+
+## 1. Register
+- **Endpoint:** POST /api/account/register
+- **Body:**
+{
+  "name": "string",             // Full Name (letters and spaces only)
+  "userName": "string",         // User Name (letters and numbers only)
+  "phoneNumber": "string",      // Phone Number (Egyptian 11-digit, starts with 01)
+  "age": 0,                     // Age (between 18 and 100)
+  "email": "string",            // Email Address (valid email)
+  "password": "string",         // Password
+  "confirmPassword": "string"   // Confirm Password (must match password)
+}
+## 2. Login
+- **Endpoint:** POST /api/account/login
+- **Body:**
+{
+  "email": "string",
+  "password": "string"
+}
+
+## 3. Confirm Email
+- **Endpoint:** POST /api/account/confirm-email
+- **Body:**
+{
+  "userId": "string",
+  "token": "string"
+}
+
+## 4. Resend Confirmation Email
+- **Endpoint:** POST /api/account/resend-confirmation-email
+- **Body:**
+{
+  "email": "string"
+}
+
+## 5. Request Password Reset
+- **Endpoint:** POST /api/account/request-password-reset
+- **Body:**
+{
+  "email": "string"
+}
+
+## 6. Reset Password
+- **Endpoint:** POST /api/account/reset-password
+- **Body:**
+{
+  "email": "string",
+  "token": "string",
+  "newPassword": "string"
+}
+
+## 7. Change Password
+- **Endpoint:** POST /api/account/change-password
+- **Body:**
+{
+  "userId": "string",
+  "oldPassword": "string",
+  "newPassword": "string"
+}
+
+## 8. Change Email
+- **Endpoint:** POST /api/account/change-email
+- **Body:**
+{
+  "oldEmail": "string",
+  "newEmail": "string"
+}
+
+## 9. Logout
+- **Endpoint:** POST /api/account/logout
+- **Body:**
+{
+  "userId": "string"
+}
+
+## 10. Refresh Token
+- **Endpoint:** POST /api/account/refresh-token
+- **Body:**
+{
+  "userId": "string",
+  "refreshToken": "string"
+} 

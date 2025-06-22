@@ -12,11 +12,9 @@ namespace E_Commers.Repository
 	{
 		private readonly DbSet<Product> _entity;
 		private readonly ILogger<ProductRepository> _logger;
-		private readonly IConnectionMultiplexer _redis;
 
-		public ProductRepository(IConnectionMultiplexer redis, AppDbContext context, ILogger<ProductRepository> logger) : base(redis,context, logger)
+		public ProductRepository( AppDbContext context, ILogger<ProductRepository> logger) : base(context, logger)
 		{
-			_redis = redis;
 			_logger = logger;
 			_entity = context.Products;
 		}
@@ -25,9 +23,10 @@ namespace E_Commers.Repository
 		{
 			_logger.LogInformation($"Executing {nameof(GetProductsByCategoryAsync)} categoryId:{categoryId}");
 
-			return await _entity.Where(p => p.CategoryId == categoryId)
-								.AsNoTracking()
-								.ToListAsync();
+			return new List<Product>();	
+			//return await _entity.Where(p => p.CategoryId == categoryId)
+			//					.AsNoTracking()
+			//					.ToListAsync();
 		}
 
 		public async Task<Result<bool>> UpdatePriceAsync(int productId, decimal newPrice)
@@ -47,13 +46,13 @@ namespace E_Commers.Repository
 				return Result<bool>.Fail($"Invalid price: {newPrice}. Must be greater than zero.");
 			}
 
-			if (product.Price == newPrice)
-			{
-				_logger.LogWarning($"Product ID {productId} already has this price.");
-				return Result<bool>.Fail($"Product ID {productId} already has this price.");
-			}
+			//if (product.Price == newPrice)
+			//{
+			//	_logger.LogWarning($"Product ID {productId} already has this price.");
+			//	return Result<bool>.Fail($"Product ID {productId} already has this price.");
+			//}
 
-			product.Price = newPrice;
+			//product.Price = newPrice;
 
 			_logger.LogInformation($"Price updated for product ID {productId}, awaiting commit.");
 			return Result<bool>.Ok(true, "Price updated successfully.");

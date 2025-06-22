@@ -1,12 +1,11 @@
-using System.Reflection;
-using System.Text;
 using E_Commers.BackgroundJops;
 using E_Commers.Context;
 using E_Commers.DtoModels;
-using E_Commers.Interceptors;
+using E_Commers.DtoModels.Responses;
+using E_Commers.ErrorHnadling;
 using E_Commers.Interfaces;
-using E_Commers.Intersctors;
 using E_Commers.Mappings;
+using E_Commers.Middleware;
 using E_Commers.Models;
 using E_Commers.Repository;
 using E_Commers.Services;
@@ -14,12 +13,16 @@ using E_Commers.Services.AccountServices;
 using E_Commers.Services.AdminOpreationServices;
 using E_Commers.Services.Cache;
 using E_Commers.Services.Category;
+using E_Commers.Services.EmailServices;
 using E_Commers.Services.Product;
+using E_Commers.Services.ProductInventoryServices;
+using E_Commers.Services.WareHouseServices;
 using E_Commers.UOW;
 using Hangfire;
 using Hangfire.MySql;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
 using Microsoft.AspNetCore.RateLimiting;
@@ -30,8 +33,12 @@ using MySqlConnector;
 using Newtonsoft.Json;
 using Scalar.AspNetCore;
 using Serilog;
+using Serilog;
+using Serilog.AspNetCore;
 using StackExchange.Redis;
-
+using System.Reflection;
+using System.Text;
+using System.Threading.RateLimiting;
 namespace E_Commers
 {
     public class Program
@@ -50,10 +57,17 @@ namespace E_Commers
                 .ConfigureApiBehaviorOptions(options =>
                     options.SuppressModelStateInvalidFilter = true
                 );
-            builder.Logging.AddConsole(); 
-            builder.Services.AddTransient<ICategoryLinkBuilder, CategoryLinkBuilder>();
+			Log.Logger = new LoggerConfiguration()
+                .WriteTo.Console()
+			 .WriteTo.File("Logs/log.txt", rollingInterval: RollingInterval.Day)
+			 .CreateLogger();
+
+			builder.Host.UseSerilog();
+			builder.Services.AddTransient<ICategoryLinkBuilder, CategoryLinkBuilder>();
             builder.Services.AddTransient<IProductLinkBuilder, ProductLinkBuilder>();
+            builder.Services.AddTransient<IProductInventoryLinkBuilder, ProductInventoryLinkBuilder>();
 			builder.Services.AddTransient<IAccountLinkBuilder, AccountLinkBuilder>();
+			builder.Services.AddTransient<IWareHouseLinkBuilder, WareHouseLinkBuilder>();
             builder
                 .Services.AddIdentity<Customer, IdentityRole>()
                 .AddEntityFrameworkStores<AppDbContext>()
@@ -61,18 +75,24 @@ namespace E_Commers
             builder.Services.AddScoped<ITokenService, TokenService>();
             builder.Services.AddScoped<IRefreshTokenService, RefreshTokenService>();
             builder.Services.AddTransient<IImagesServices, ImagesServices>();
+            builder.Services.AddTransient<IErrorNotificationService, ErrorNotificationService>();
             builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
             builder.Services.AddScoped<ICategoryServices, CategoryServices>();
             builder.Services.AddScoped<IWareHouseRepository, WareHouseRepository>();
             builder.Services.AddScoped<IProductRepository, ProductRepository>();
+            builder.Services.AddScoped<IProductInventoryRepository, ProductInventoryRepository>();
             builder.Services.AddScoped<IAdminOpreationServices, AdminOpreationServices>();
+            builder.Services.AddScoped<IWareHouseServices, WareHouseServices>();
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
             builder.Services.AddHttpContextAccessor();
             builder.Services.AddScoped(typeof(IRepository<>), typeof(MainRepository<>));
             builder.Services.AddScoped<IAccountServices, AccountServices>();
             builder.Services.AddScoped<IProductsServices, ProductsServices>();
+            builder.Services.AddScoped<IProductInventoryService, Services.ProductInventoryServices.ProductInventoryService>();
             builder.Services.AddAutoMapper(typeof(MappingProfile));
-            builder.Services.AddScoped<CategoryCleanupService>();
+			builder.Services.AddTransient<IEmailSender, EmailSender>();
+			builder.Services.AddScoped<ErrorNotificationService>();
+			builder.Services.AddScoped<CategoryCleanupService>();
             builder.Services.AddSingleton<IConnectionMultiplexer>(
                 ConnectionMultiplexer.Connect("Localhost:6379")
             );
@@ -109,16 +129,65 @@ namespace E_Commers
                     }
                 );
             });
-            builder.Services.AddRateLimiter(options =>
-                options.AddFixedWindowLimiter(
-                    "Limiter",
-                    options =>
-                    {
-                        options.Window = TimeSpan.FromMinutes(1);
-                        options.PermitLimit = 10;
-                    }
-                )
-            );
+            builder.Services.AddRateLimiter(async options =>
+            {
+                
+                options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(context =>
+                    RateLimitPartition.GetFixedWindowLimiter(
+                        partitionKey: context.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+                        factory: _ => new FixedWindowRateLimiterOptions
+                        {
+                            PermitLimit = 100,
+                            Window = TimeSpan.FromMinutes(1),
+                            AutoReplenishment = true
+                        }));
+
+                options.AddPolicy("login", context =>
+                    RateLimitPartition.GetSlidingWindowLimiter(
+                        partitionKey: context.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+                        factory: _ => new SlidingWindowRateLimiterOptions
+                        {
+                            PermitLimit = 6,
+                            SegmentsPerWindow= 3,
+                            Window = TimeSpan.FromMinutes(1),
+                            AutoReplenishment = true
+                        }));
+
+             
+                options.AddPolicy("register", context =>
+                    RateLimitPartition.GetSlidingWindowLimiter(
+                        partitionKey: context.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+                        factory: _ => new SlidingWindowRateLimiterOptions
+                        {
+                            PermitLimit = 6,
+                            SegmentsPerWindow = 3,
+							Window = TimeSpan.FromMinutes(1),
+                            AutoReplenishment = true
+                        }));
+
+                options.AddPolicy("reset", context =>
+                    RateLimitPartition.GetSlidingWindowLimiter(
+                        partitionKey: context.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+                        factory: _ => new SlidingWindowRateLimiterOptions
+                        {
+                            PermitLimit = 6,
+                            SegmentsPerWindow = 3,
+							Window = TimeSpan.FromMinutes(1),
+                            AutoReplenishment = true
+                        }));
+                options.OnRejected= async (context,token) =>
+                {
+                    context.HttpContext.Response.StatusCode = 429; // Too Many Request
+                    context.HttpContext.Response.ContentType = "application/json";
+
+                    var response = ApiResponse<string>.CreateErrorResponse(new ErrorResponse("Requests","Too many request"),429);
+                    await context.HttpContext.Response.WriteAsync(
+                        JsonConvert.SerializeObject(response),
+                        token
+                    );
+
+				};
+			});
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen(c =>
             {
@@ -157,7 +226,7 @@ namespace E_Commers
                 })
                 .AddJwtBearer(options =>
                 {
-                    options.SaveToken = true; //save token in httpcontext
+                    options.SaveToken = true; 
                     options.RequireHttpsMetadata = false;
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
@@ -205,6 +274,7 @@ namespace E_Commers
             }
 
             app.UseAuthentication();
+            app.UseUserAuthentication();
             app.UseAuthorization();
             app.UseMiddleware<SecurityStampMiddleware>();
             app.UseRateLimiter();

@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\DELL\\Desktop\\Projcet\\E-Commers\\E-Commers\\E-Commerce.csproj": {}
+    "D:\\fashion\\Projcet\\E-Commers\\E-Commers\\E-Commerce.csproj": {}
   },
   "projects": {
-    "C:\\Users\\DELL\\Desktop\\Projcet\\E-Commers\\E-Commers\\E-Commerce.csproj": {
+    "D:\\fashion\\Projcet\\E-Commers\\E-Commers\\E-Commerce.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\DELL\\Desktop\\Projcet\\E-Commers\\E-Commers\\E-Commerce.csproj",
+        "projectUniqueName": "D:\\fashion\\Projcet\\E-Commers\\E-Commers\\E-Commerce.csproj",
         "projectName": "E-Commerce",
-        "projectPath": "C:\\Users\\DELL\\Desktop\\Projcet\\E-Commers\\E-Commers\\E-Commerce.csproj",
+        "projectPath": "D:\\fashion\\Projcet\\E-Commers\\E-Commers\\E-Commerce.csproj",
         "packagesPath": "C:\\Users\\DELL\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\DELL\\Desktop\\Projcet\\E-Commers\\E-Commers\\obj\\",
+        "outputPath": "D:\\fashion\\Projcet\\E-Commers\\E-Commers\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -45,7 +45,7 @@
           "auditLevel": "low",
           "auditMode": "direct"
         },
-        "SdkAnalysisLevel": "9.0.100"
+        "SdkAnalysisLevel": "9.0.300"
       },
       "frameworks": {
         "net9.0": {
@@ -107,9 +107,21 @@
               "target": "Package",
               "version": "[2.1.16, )"
             },
+            "Serilog": {
+              "target": "Package",
+              "version": "[4.3.0, )"
+            },
+            "Serilog.AspNetCore": {
+              "target": "Package",
+              "version": "[9.0.0, )"
+            },
             "Serilog.Extensions.Logging": {
               "target": "Package",
               "version": "[9.0.1, )"
+            },
+            "Serilog.Sinks.File": {
+              "target": "Package",
+              "version": "[7.0.0, )"
             },
             "Swashbuckle.AspNetCore": {
               "target": "Package",
@@ -135,7 +147,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.102/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.301/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

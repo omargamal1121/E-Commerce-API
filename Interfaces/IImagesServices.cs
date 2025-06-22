@@ -1,4 +1,5 @@
-﻿using E_Commers.Services;
+﻿using E_Commers.Models;
+using E_Commers.Services;
 
 namespace E_Commers.Interfaces
 {
@@ -6,8 +7,8 @@ namespace E_Commers.Interfaces
 	{
 		bool IsValidExtension(string extension);
 		string GetFolderPath(params string[] folders);
-		Task<Result<string>> SaveImageAsync(IFormFile image, string folderName);
+		Task<Result<Image>> SaveImageAsync(IFormFile image, string folderName);
 		Result<string> DeleteImage(string folderName,string imagename);
-		Task<Result<List<string>>> SaveImagesAsync(IFormFileCollection images, string folderName);
+		Task<Result<List<Image>>> SaveImagesAsync(IFormFileCollection images, string folderName);
 	}
 }

@@ -10,5 +10,6 @@ namespace E_Commers.Interfaces
 
     public interface ICategoryLinkBuilder : ILinkBuilder { }
     public interface IProductLinkBuilder : ILinkBuilder { }
+    public interface IWareHouseLinkBuilder : ILinkBuilder { }
     public interface IAccountLinkBuilder : ILinkBuilder { }
 }

@@ -16,12 +16,21 @@ public class UnitOfWork : IUnitOfWork
 	private readonly IConnectionMultiplexer _redis;
 	public ICategoryRepository Category { get; }
 	public IWareHouseRepository  WareHouse { get; }
-
 	public IProductRepository Product { get; }
-	public UnitOfWork(IProductRepository product,IWareHouseRepository wareHouse,IConnectionMultiplexer redis, AppDbContext context, ICategoryRepository category, ILoggerFactory loggerFactory)
+	public IProductInventoryRepository ProductInventory { get; }
+
+	public UnitOfWork(
+		IProductRepository product,
+		IWareHouseRepository wareHouse,
+		IProductInventoryRepository productInventory,
+		IConnectionMultiplexer redis,
+		AppDbContext context,
+		ICategoryRepository category,
+		ILoggerFactory loggerFactory)
 	{
 		Product = product;
 		WareHouse = wareHouse;
+		ProductInventory = productInventory;
 		_redis = redis;
 		_context = context;
 		Category = category;
@@ -47,7 +56,7 @@ public class UnitOfWork : IUnitOfWork
 			var logger = _loggerFactory.CreateLogger<MainRepository<T>>();
 
 		
-			var repository = new MainRepository<T>(_redis,_context, logger);
+			var repository = new MainRepository<T>(_context, logger);
 			_repositories.Add(typeof(T), repository);
 		}
 

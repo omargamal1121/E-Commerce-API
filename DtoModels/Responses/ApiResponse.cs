@@ -22,9 +22,8 @@ namespace E_Commers.DtoModels.Responses
 		}
 		public static ApiResponse<T> CreateErrorResponse(ErrorResponse error, int statusCode = 400, List<LinkDto>? links=null)
 		{
-			var responsebody = new ResponseBody<T>(error, links: links);
+			var responsebody = new ResponseBody<T>(error: error, links: links);
 			return new ApiResponse<T>(statusCode, responsebody );
 		}
-
 	}
 }

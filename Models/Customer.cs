@@ -23,6 +23,8 @@ namespace E_Commers.Models
 		public ICollection<AdminOperationsLog> adminOperationsLogs{ get; set; } = new List<AdminOperationsLog>();
 		public ICollection<UserOperationsLog>  userOperationsLogs { get; set; } = new List<UserOperationsLog>();
 
-		public string? ImageUrl { get; set; } 
+
+		public int? ImageId { get; set; }   
+		public Image? Image { get; set; }
 	}
 }

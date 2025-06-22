@@ -15,63 +15,65 @@ using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using System.Transactions;
 using System.IdentityModel.Tokens.Jwt;
+using E_Commers.DtoModels.Responses;
+using E_Commers.Interfaces;
+using E_Commers.Services.WareHouseServices;
 
 namespace E_Commers.Controllers
 {
 	[Route("api/[controller]")]
 	[ApiController]
 	[Authorize(Roles ="Admin")]
-	public class ProductInventoryController : ControllerBase
+	public class ProductInventoriesController : ControllerBase
 	{
 		private readonly IUnitOfWork _unitOfWork;
-		private readonly ILogger<ProductInventoryController> _logger;
-		public ProductInventoryController(IUnitOfWork unitOfWork, ILogger<ProductInventoryController> logger)
+		private readonly IProductInventoryLinkBuilder _productInventoryLinkBuilder;
+		private readonly IProductInventoryService _productInventoryService;
+		private readonly ILogger<ProductInventoriesController> _logger;
+		public ProductInventoriesController(IProductInventoryLinkBuilder productInventoryLinkBuilder,IProductInventoryService productInventoryService,IUnitOfWork unitOfWork, ILogger<ProductInventoriesController> logger)
 		{
+			_productInventoryLinkBuilder=productInventoryLinkBuilder;
+			_productInventoryService = productInventoryService;
 			_logger = logger;
 			_unitOfWork = unitOfWork;
 		}
 
-		[HttpGet("GetAll")]
-		[ResponseCache(Duration = 120, VaryByQueryKeys = new string[] { "includeDates" })]
-		public async Task<ActionResult<ResponseDto>> GetAll([FromQuery] bool includeDates = false)
+		[HttpGet()]
+
+		public async Task<ActionResult<ApiResponse<List<InventoryDto>>>> GetAllAsync()
 		{
-			_logger.LogInformation($"Executing {nameof(GetAll)} in ProductInventoryController");
+			_logger.LogInformation($"Executing {nameof(GetAllAsync)} in ProductInventoryController");
+			var responce=await _productInventoryService.GetAllInventoryAsync();
+			return HandleResponse(responce, nameof(GetAllAsync));
 
 
-			var Resultcategories = await _unitOfWork.Repository<ProductInventory>().GetAllAsync(filter: c => c.DeletedAt == null,include:i=>i.Include(i=>i.Product).ThenInclude(p=>p.Category));
-			if (!Resultcategories.Data.Any())
+			
+		}
+		private ActionResult<ApiResponse<T>> HandleResponse<T>(
+ApiResponse<T> response,
+string actionName,
+		int? id = null)
+			where T : class
+		{
+
+			response.ResponseBody.Links = _productInventoryLinkBuilder.MakeRelSelf(
+				_productInventoryLinkBuilder
+				.GenerateLinks(id),
+				actionName
+			);
+			return response.Statuscode switch
 			{
-				return Ok(new ResponseDto { Message = "No Inventory found", });
-			}
-
-			List<InventoryDto> inventorydtos = Resultcategories.Data.Select(c =>
-			new InventoryDto
-			{
-				CreatedAt = includeDates ? c.CreatedAt : null,
-				ModifiedAt = includeDates ? c.ModifiedAt : null,
-				Id = c.Id,
-				Quantityinsidewarehouse=c.Quantity,
-				WareHousid=c.WarehouseId,
-				Product=new ProductDto {
-					Id = c.Product.Id,
-					Name = c.Product.Name,
-					AvailabeQuantity = c.Product.Quantity,
-					Description = c.Product.Description,
-				//	Discount = c.Product.Discount == null ? null : new DiscountDto(c.Product.Discount.Id, c.Product.Discount.Name, c.Product.Discount.DiscountPercent, c.Product.Discount.Description, c.Product.Discount.IsActive),
-					FinalPrice = c.Product.Discount == null || !c.Product.Discount.IsActive ? c.Product.Price : c.Product.Price - c.Product.Discount.DiscountPercent * c.Product.Price,
-					//Category = new CategoryDto(c.Product.Category.Id, c.Product.Category.Name, c.Product.Category.Description, c.Product.Category.CreatedAt),
-					CreatedAt = c.Product.CreatedAt,
-				}
-			}
-			).ToList();
-
-
-
-			return Ok(new ResponseDto { Message = Resultcategories.Message , Data= inventorydtos, });
+				200 => Ok(response),
+				201 => CreatedAtAction(actionName, response),
+				400 => BadRequest(response),
+				401 => Unauthorized(response),
+				409 => Conflict(response),
+				_ => StatusCode(response.Statuscode, response),
+			};
 		}
 
 		[HttpPost]
-		public async Task<ActionResult<ResponseDto>> AddProductToWarehouse(CreateInvetoryDto productDto)
+		public async Task<ActionResult<ApiResponse<InventoryDto>>> AddProductToWarehouse(CreateInvetoryDto productDto)
 		{
 			_logger.LogInformation($"Execute {nameof(AddProductToWarehouse)}");
 			if(!ModelState.IsValid)
@@ -79,76 +81,19 @@ namespace E_Commers.Controllers
 				var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
 				_logger.LogError($"Validation Errors: {string.Join(", ", errors)}");
 
-				return BadRequest(new ResponseDto
-				{
-					
-					Message = "Invalid data: " + string.Join(", ", errors)
-				});
+              return ApiResponse<InventoryDto>.CreateErrorResponse(new ErrorHnadling.ErrorResponse("Auth", "Can't found userid in token"));
+
 			}
-			var checkfrominventory=  await _unitOfWork.Product.GetByIdAsync(productDto.ProductId);
-			if(!checkfrominventory.Success||checkfrominventory==null)
-				return NotFound(new ResponseDto {Message= checkfrominventory.Message});
+			var userid = GetUseridFromToken();
+			if (userid == null)
+				return ApiResponse<InventoryDto>.CreateErrorResponse(new ErrorHnadling.ErrorResponse("Auth", "Can't found userid in token"));
+			var response  =await _productInventoryService.CreateInventoryAsync(productDto, userid);
+			return HandleResponse(response, nameof(AddProductToWarehouse),response.ResponseBody?.Data?.Id);
 
-			if(checkfrominventory.Data.Quantity<productDto.Quantity){
-				_logger.LogError($"Must Quantity Of Product U Want To Add it <= {checkfrominventory.Data.Quantity} ");
-				return BadRequest(new ResponseDto {  Message = $"Must Quantity Of Product U Want To Add it <= {checkfrominventory.Data.Quantity} " });
-			}
-			var checkwarehouse = await _unitOfWork.WareHouse.GetByIdAsync(productDto.WareHouseId);
-			if(!checkwarehouse.Success|| checkwarehouse.Data==null)
-				return NotFound(new ResponseDto { Message= checkwarehouse.Message});
-
-			 var isexsist=  await _unitOfWork.Repository<ProductInventory>().GetByQuery(i=>i.ProductId==productDto.ProductId&&i.WarehouseId==productDto.WareHouseId);
-			if(isexsist.Success)
-			{
-				_logger.LogError("Inventory is already exsist");
-				return Conflict(new ResponseDto {Message = "Inventory is already exsist"});
-			}
-
-		    var inventory=new ProductInventory {ProductId=productDto.ProductId,WarehouseId=productDto.WareHouseId,Quantity=productDto.Quantity};
-
-				var transaction = await _unitOfWork.BeginTransactionAsync();
-			try
-			{
-			    string userid=	User.FindFirst(ClaimTypes.NameIdentifier).Value;
-				var iscreated=await _unitOfWork.Repository<ProductInventory>().CreateAsync(inventory);
-				if(!iscreated.Success)
-				return BadRequest(new ResponseDto { Message= iscreated.Message});
-
-				int changes = await _unitOfWork.CommitAsync();
-				if (changes == 0)
-				{
-					return BadRequest(new ResponseDto { Message = "Nothing added"});
-				}
-
-				_logger.LogInformation($"inventory added successfully, ID: {inventory.Id}");
-
-				AdminOperationsLog adminOperations = new()
-				{
-					AdminId = userid,
-					Description = $"Added inventory: {inventory.Id}",
-					Timestamp = DateTime.UtcNow
-				};
-
-				Result<AdminOperationsLog> logResult = await _unitOfWork.Repository<AdminOperationsLog>().CreateAsync(adminOperations);
-				if (!logResult.Success)
-				{
-					await transaction.RollbackAsync();
-					return StatusCode(500, new ResponseDto { Message = logResult.Message });
-				}
-
-				await _unitOfWork.CommitAsync();
-				await transaction.CommitAsync();
-
-				return CreatedAtAction(nameof(AddProductToWarehouse), new { id = inventory.Id }, new ResponseDto { Message = $"Added successfully, ID: {inventory.Id}", });
-			}
-
-			catch (Exception ex)
-			{
-				_logger.LogError($"Exception: {ex.Message}");
-				await transaction.RollbackAsync();
-				return StatusCode(500, new ResponseDto { Message = "An error occurred while saving data." });
-			}
-
+		}
+		private string? GetUseridFromToken()
+		{
+			return User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
 		}
 		[HttpPatch("IncreaseQuantity")]
 		public async Task<ActionResult<ResponseDto>> IncreaseQuantityofProductToWarehouse(AddQuantityInvetoryDto productDto)
@@ -247,8 +192,8 @@ namespace E_Commers.Controllers
 					AvailabeQuantity = c.Product.Quantity,
 					Description = c.Product.Description,
 					Discount = c.Product.Discount == null ? null : new DiscountDto(c.Product.Discount.Id, c.Product.Discount.Name, c.Product.Discount.DiscountPercent, c.Product.Discount.Description, c.Product.Discount.IsActive),
-					FinalPrice = c.Product.Discount == null || !c.Product.Discount.IsActive ? c.Product.Price : c.Product.Price - c.Product.Discount.DiscountPercent * c.Product.Price,
-					Category = new CategoryDto(c.Product.Category.Id, c.Product.Category.Name, c.Product.Category.Description, c.Product.Category.CreatedAt),
+					//FinalPrice = c.Product.Discount == null || !c.Product.Discount.IsActive ? c.Product.Price : c.Product.Price - c.Product.Discount.DiscountPercent * c.Product.Price,
+					//Category = new CategoryDto(c.Product.Category.Id, c.Product.Category.Name, c.Product.Category.Description, c.Product.Category.CreatedAt),
 					CreatedAt = c.Product.CreatedAt,
 				}
 			}
@@ -388,37 +333,13 @@ namespace E_Commers.Controllers
 		
 
 		[HttpGet("{id}")]
-		public async Task<ActionResult<ResponseDto>> GetInventory([FromRoute] int id)
+		public async Task<ActionResult<ApiResponse<InventoryDto>>> GetInventory([FromRoute] int id)
 		{
 			_logger.LogInformation($"Executing {nameof(GetInventory)} in InventoryController");
 
 
-			Result<ProductInventory> result = await _unitOfWork.Repository<ProductInventory>().GetByIdAsync(id);
-			if (!result.Success||result.Data==null)
-			{
-
-				return NotFound(new ResponseDto {  Message = result.Message });
-			}
-			InventoryDto inventoryDto = new InventoryDto 
-			{
-				Id=result.Data.Id,
-				CreatedAt=result.Data.CreatedAt,
-				Product=new ProductDto 
-				{
-					Id = result.Data.Product.Id,
-					Name = result.Data.Product.Name,
-					AvailabeQuantity = result.Data.Product.Quantity,
-					Description = result.Data.Product.Description,
-					Discount = result.Data.Product.Discount == null ? null : new DiscountDto(result.Data.Product.Discount.Id, result.Data.Product.Discount.Name, result.Data.Product.Discount.DiscountPercent, result.Data.Product.Discount.Description, result.Data.Product.Discount.IsActive),
-					FinalPrice = result.Data.Product.Discount == null || !result.Data.Product.Discount.IsActive ? result.Data.Product.Price : result.Data.Product.Price - result.Data.Product.Discount.DiscountPercent * result.Data.Product.Price,
-					Category = new CategoryDto(result.Data.Product.Category.Id, result.Data.Product.Category.Name, result.Data.Product.Category.Description, result.Data.Product.Category.CreatedAt),
-					CreatedAt = result.Data.Product.CreatedAt,
-				}
-			};
-
-
-
-			return Ok(new ResponseDto { Message = result.Message, Data = result, });
+			var response = await _productInventoryService.GetInventoryById(id);
+			return HandleResponse(response,nameof(GetInventory));
 		}
 
 		[HttpDelete]
@@ -517,7 +438,7 @@ namespace E_Commers.Controllers
 						Name = c.Product.Name,
 						AvailabeQuantity = c.Product.Quantity,
 						Description = c.Product.Description,
-						FinalPrice = c.Product.Discount == null || !c.Product.Discount.IsActive ? c.Product.Price : c.Product.Price - c.Product.Discount.DiscountPercent * c.Product.Price,
+						//FinalPrice = c.Product.Discount == null || !c.Product.Discount.IsActive ? c.Product.Price : c.Product.Price - c.Product.Discount.DiscountPercent * c.Product.Price,
 						CreatedAt = c.Product.CreatedAt,
 					}
 				}
@@ -573,6 +494,16 @@ namespace E_Commers.Controllers
 			}
 			await tran.CommitAsync();
 			return Ok(new ResponseDto { Message = $"Inventory restored: {resultInvetory.Data.Id}" });
+		}
+
+		
+		[HttpGet("GetProductsInInventory")]
+		[ResponseCache(Duration = 120, VaryByQueryKeys = new string[] { "includeDeleted" })]
+		public async Task<ActionResult<ResponseDto>> GetProductsInInventory([FromQuery] bool includeDeleted = false)
+		{
+			_logger.LogInformation($"Executing {nameof(GetProductsInInventory)} in ProductInventoryController");
+			throw new NotImplementedException();
+
 		}
 	}
 }

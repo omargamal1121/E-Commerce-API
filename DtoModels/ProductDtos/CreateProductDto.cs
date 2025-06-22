@@ -1,5 +1,4 @@
-﻿
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace E_Commers.DtoModels.ProductDtos
 {
@@ -23,5 +22,9 @@ namespace E_Commers.DtoModels.ProductDtos
 		[Range(0, (double)decimal.MaxValue)]
 		[Required(ErrorMessage = "Price Required")]
 		public decimal Price { get; set; }
+
+		[Required(ErrorMessage = "Warehouse Id Required")]
+		[Range(0, int.MaxValue, ErrorMessage = "Invalid Warehouse Id")]
+		public int WarehouseId { get; set; }
 	}
 }

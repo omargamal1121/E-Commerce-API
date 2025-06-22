@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 using System.Security.Claims;
 using System.Threading;
 
-namespace E_Commers.Intersctors
+namespace E_Commers.Interfaces.Intersctors
 {
 	public class AddOperationInDbInterceptor : SaveChangesInterceptor
 	{

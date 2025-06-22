@@ -15,8 +15,8 @@ namespace E_Commers.Models
 		public string Description { get; set; } = string.Empty;
 
 		[ForeignKey("Category")]
-		public int CategoryId { get; set; }
-		public   Category Category { get; set; }
+		public int SubCategoryId { get; set; }
+		public SubCategory SubCategory { get; set; }
 
 		[Required(ErrorMessage = "Quantity Required")]
 		[Range(0,int.MaxValue)]
@@ -29,7 +29,9 @@ namespace E_Commers.Models
 
 		[Range(0, (double)decimal.MaxValue)]
 		[Required(ErrorMessage = "Price Required")]
-		public decimal Price { get; set; }
-		public ICollection<string>?ImagesUrl { get; set; }
+		public ICollection<Image> Images { get; set; }
+
+		// Product Variants
+		public ICollection<ProductVariant> ProductVariants { get; set; } = new List<ProductVariant>();
 	}
 }

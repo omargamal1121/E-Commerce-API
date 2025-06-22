@@ -29,9 +29,12 @@ namespace E_Commers.Context
 		public DbSet<Product> Products { get; set; }
 		public DbSet<Payment> Payments { get; set; }
 		public DbSet<Category> Categories { get; set; }
+		public DbSet<ProductInventory> ProductInventory { get; set; }
 		public DbSet<PaymentMethod> PaymentMethods { get; set; }
 		public DbSet<PaymentProvider> PaymentProviders { get; set; }
 		public DbSet<Warehouse> warehouses { get; set; }
+		public DbSet<Image> Images { get; set; }
+		public DbSet<ProductVariant> ProductVariants { get; set; }
 
 		protected override void OnModelCreating(ModelBuilder builder)
 		{
@@ -66,9 +69,9 @@ namespace E_Commers.Context
 				.WithMany()
 				.HasForeignKey(p => p.PaymentProviderId).OnDelete(DeleteBehavior.Restrict);
 
-			builder.Entity<Product>()
+			builder.Entity<SubCategory>()
 				.HasOne(p => p.Category)
-				.WithMany(c => c.products)
+				.WithMany(c => c.subCategories)
 				.HasForeignKey(p => p.CategoryId).OnDelete(DeleteBehavior.Restrict);
 
 			builder.Entity<ProductInventory>()
@@ -109,14 +112,29 @@ namespace E_Commers.Context
 				.IsUnique();builder.Entity<Discount>()
 				.HasIndex(c => c.Name)
 				.IsUnique();
+			builder.Entity<Product>()
+				.HasMany(p => p.Images)
+				.WithMany(i => i.Products)
+				.UsingEntity(j => j.ToTable("ProductImages"));
 
-			//builder.Entity<Customer>().UseTptMappingStrategy();
+			builder.Entity<Category>()
+				.HasMany(c => c.Images)
+				.WithMany(i => i.Categories)
+				.UsingEntity(j => j.ToTable("CategoryImages"));
 
-			builder.Entity<Category>().Property(c => c.ImagesUrl).HasConversion(i=>string.Join(";",i),i=>i.Split(';',StringSplitOptions.RemoveEmptyEntries).ToList());
-			builder.Entity<Product>().Property(c => c.ImagesUrl).HasConversion(i=>string.Join(";",i),i=>i.Split(';',StringSplitOptions.RemoveEmptyEntries).ToList());
-		
-			
-		
+			builder.Entity<Product>().HasOne(p => p.SubCategory).WithMany(s => s.Products).HasForeignKey(p=>p.SubCategoryId);
+
+			builder.Entity<Product>()
+				.HasMany(p => p.ProductVariants)
+				.WithOne(pv => pv.Product)
+				.HasForeignKey(pv => pv.ProductId)
+				.OnDelete(DeleteBehavior.Restrict);
+
+			builder.Entity<Customer>()
+	.HasOne(c => c.Image)
+	.WithMany(i => i.Customers) // new property in Image
+	.HasForeignKey(c => c.ImageId)
+	.OnDelete(DeleteBehavior.SetNull);
 
 		}
 	}

@@ -43,15 +43,11 @@ namespace E_Commers.Services
 			{
 				new(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString()),
 				new(ClaimTypes.NameIdentifier, user.Id),
-				new(ClaimTypes.Name, user.Name ?? user.UserName ?? string.Empty),
-				new("UserName", user.UserName ?? string.Empty),
-				new("SecurityStamp", user.SecurityStamp ?? string.Empty),
-				new(ClaimTypes.Email, user.Email ?? string.Empty),
-				new(ClaimTypes.MobilePhone, user.PhoneNumber ?? string.Empty),
+				new("SecurityStamp", user.SecurityStamp ?? Guid.NewGuid().ToString()),
 			};
 			foreach(var role in await _userManager.GetRolesAsync(user))
 			{
-				claims.Add( new Claim ( ClaimTypes.Role, role));
+				claims.Add( new Claim (ClaimTypes.Role, role));
 			}
 
 			var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
@@ -71,8 +67,24 @@ namespace E_Commers.Services
 				signingCredentials: signingCredentials
 			);
 
+
 			string tokenString = new JwtSecurityTokenHandler().WriteToken(token);
 			_logger.LogInformation($"✅ Access Token generated successfully for User ID: {userId}");
+			var test = new SecurityTokenDescriptor
+			{
+				Subject= new ClaimsIdentity(claims),
+				Issuer= issuer,
+				Audience= audience,
+				SigningCredentials = signingCredentials,
+				EncryptingCredentials= new EncryptingCredentials(
+					new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey)),
+					SecurityAlgorithms.Aes128KW,
+					SecurityAlgorithms.Aes128CbcHmacSha256
+				),
+				Expires = DateTime.UtcNow.AddMinutes(expiresInMinutes)
+
+
+			};
 			return  Result<string>.Ok(tokenString,$"✅ Access Token generated successfully for User ID: {userId}") ;
 		}
 	

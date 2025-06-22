@@ -1,0 +1,147 @@
+2025-06-11 03:26:17.714 +03:00 [INF] DB tables already exist. Exit install
+2025-06-11 03:26:19.281 +03:00 [WRN] The property 'Category.ImagesUrl' is a collection or enumeration type with a value converter but with no value comparer. Set a value comparer to ensure the collection/enumeration elements are compared correctly.
+2025-06-11 03:26:19.291 +03:00 [WRN] The property 'Product.ImagesUrl' is a collection or enumeration type with a value converter but with no value comparer. Set a value comparer to ensure the collection/enumeration elements are compared correctly.
+2025-06-11 03:26:19.565 +03:00 [INF] Executed DbCommand (4ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='E-Commerce' AND TABLE_NAME='__EFMigrationsHistory';
+2025-06-11 03:26:19.580 +03:00 [INF] Executed DbCommand (0ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='E-Commerce' AND TABLE_NAME='__EFMigrationsHistory';
+2025-06-11 03:26:19.646 +03:00 [INF] Executed DbCommand (43ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT `MigrationId`, `ProductVersion`
+FROM `__EFMigrationsHistory`
+ORDER BY `MigrationId`;
+2025-06-11 03:26:19.664 +03:00 [INF] No migrations were applied. The database is already up to date.
+2025-06-11 03:26:19.691 +03:00 [INF] User profile is available. Using 'C:\Users\DELL\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2025-06-11 03:26:20.032 +03:00 [INF] Executed DbCommand (51ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-06-11 03:26:20.102 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-06-11 03:26:20.145 +03:00 [INF] Executed DbCommand (20ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`ImageUrl`, `a`.`LastVisit`, `a`.`Name`, `a`.`ProfilePicture`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-06-11 03:26:20.884 +03:00 [INF] Now listening on: https://localhost:7288
+2025-06-11 03:26:20.885 +03:00 [INF] Now listening on: http://localhost:5069
+2025-06-11 03:26:20.957 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-06-11 03:26:20.960 +03:00 [INF] Hosting environment: Development
+2025-06-11 03:26:20.962 +03:00 [INF] Content root path: C:\Users\DELL\Desktop\Projcet\E-Commers\E-Commers
+2025-06-11 03:26:21.913 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/swagger - null null
+2025-06-11 03:26:22.507 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/swagger - 301 0 null 595.4394ms
+2025-06-11 03:26:22.516 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/swagger/index.html - null null
+2025-06-11 03:26:23.080 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/swagger/index.html - 200 null text/html;charset=utf-8 562.8834ms
+2025-06-11 03:26:23.315 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/swagger/swagger-ui.css - null null
+2025-06-11 03:26:23.316 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/swagger/index.css - null null
+2025-06-11 03:26:23.316 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/swagger/swagger-ui-bundle.js - null null
+2025-06-11 03:26:23.335 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/swagger/swagger-ui-standalone-preset.js - null null
+2025-06-11 03:26:23.335 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/swagger/index.js - null null
+2025-06-11 03:26:23.366 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/swagger/index.js - 200 null application/javascript;charset=utf-8 30.9891ms
+2025-06-11 03:26:23.380 +03:00 [INF] Sending file. Request path: '/index.css'. Physical path: 'N/A'
+2025-06-11 03:26:23.388 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/swagger/index.css - 200 202 text/css 72.6426ms
+2025-06-11 03:26:23.383 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/_framework/aspnetcore-browser-refresh.js - null null
+2025-06-11 03:26:23.398 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/_vs/browserLink - null null
+2025-06-11 03:26:23.432 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/_framework/aspnetcore-browser-refresh.js - 200 16505 application/javascript; charset=utf-8 49.2117ms
+2025-06-11 03:26:23.437 +03:00 [INF] Sending file. Request path: '/swagger-ui.css'. Physical path: 'N/A'
+2025-06-11 03:26:23.445 +03:00 [INF] Sending file. Request path: '/swagger-ui-standalone-preset.js'. Physical path: 'N/A'
+2025-06-11 03:26:23.453 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/swagger/swagger-ui.css - 200 154948 text/css 137.491ms
+2025-06-11 03:26:23.456 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/swagger/swagger-ui-standalone-preset.js - 200 229223 text/javascript 118.2014ms
+2025-06-11 03:26:23.594 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/_vs/browserLink - 200 null text/javascript; charset=UTF-8 195.8665ms
+2025-06-11 03:26:23.694 +03:00 [INF] Sending file. Request path: '/swagger-ui-bundle.js'. Physical path: 'N/A'
+2025-06-11 03:26:23.696 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/swagger/swagger-ui-bundle.js - 200 1466324 text/javascript 380.3705ms
+2025-06-11 03:26:23.949 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/swagger/v1/swagger.json - null null
+2025-06-11 03:26:24.048 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 98.4818ms
+2025-06-11 05:21:17.824 +03:00 [INF] DB tables already exist. Exit install
+2025-06-11 05:21:19.218 +03:00 [WRN] The property 'Category.ImagesUrl' is a collection or enumeration type with a value converter but with no value comparer. Set a value comparer to ensure the collection/enumeration elements are compared correctly.
+2025-06-11 05:21:19.232 +03:00 [WRN] The property 'Product.ImagesUrl' is a collection or enumeration type with a value converter but with no value comparer. Set a value comparer to ensure the collection/enumeration elements are compared correctly.
+2025-06-11 05:21:19.514 +03:00 [INF] Executed DbCommand (6ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='E-Commerce' AND TABLE_NAME='__EFMigrationsHistory';
+2025-06-11 05:21:19.531 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='E-Commerce' AND TABLE_NAME='__EFMigrationsHistory';
+2025-06-11 05:21:19.562 +03:00 [INF] Executed DbCommand (8ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT `MigrationId`, `ProductVersion`
+FROM `__EFMigrationsHistory`
+ORDER BY `MigrationId`;
+2025-06-11 05:21:19.582 +03:00 [INF] No migrations were applied. The database is already up to date.
+2025-06-11 05:21:19.617 +03:00 [INF] User profile is available. Using 'C:\Users\DELL\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2025-06-11 05:21:19.973 +03:00 [INF] Executed DbCommand (52ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-06-11 05:21:20.045 +03:00 [INF] Executed DbCommand (2ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-06-11 05:21:20.067 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`ImageUrl`, `a`.`LastVisit`, `a`.`Name`, `a`.`ProfilePicture`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-06-11 05:21:20.934 +03:00 [INF] Now listening on: https://localhost:7288
+2025-06-11 05:21:20.944 +03:00 [INF] Now listening on: http://localhost:5069
+2025-06-11 05:21:21.030 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-06-11 05:21:21.033 +03:00 [INF] Hosting environment: Development
+2025-06-11 05:21:21.034 +03:00 [INF] Content root path: C:\Users\DELL\Desktop\Projcet\E-Commers\E-Commers
+2025-06-11 05:21:21.457 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/swagger/index.html - null null
+2025-06-11 05:21:21.653 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/swagger/index.html - 200 null text/html;charset=utf-8 196.1365ms
+2025-06-11 05:21:22.244 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/swagger/index.js - null null
+2025-06-11 05:21:22.249 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/swagger/index.js - 200 null application/javascript;charset=utf-8 5.4604ms
+2025-06-11 05:21:22.311 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/_framework/aspnetcore-browser-refresh.js - null null
+2025-06-11 05:21:22.322 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/_framework/aspnetcore-browser-refresh.js - 200 16505 application/javascript; charset=utf-8 11.087ms
+2025-06-11 05:21:22.383 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/_vs/browserLink - null null
+2025-06-11 05:21:22.422 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/_vs/browserLink - 200 null text/javascript; charset=UTF-8 38.6749ms
+2025-06-11 05:21:24.538 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/swagger/v1/swagger.json - null null
+2025-06-11 05:21:24.650 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 112.1533ms
+2025-06-11 05:21:24.782 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/swagger/favicon-32x32.png - null null
+2025-06-11 05:21:24.814 +03:00 [INF] Sending file. Request path: '/favicon-32x32.png'. Physical path: 'N/A'
+2025-06-11 05:21:24.816 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/swagger/favicon-32x32.png - 200 628 image/png 33.6373ms
+2025-06-11 05:26:09.987 +03:00 [INF] Request starting HTTP/1.1 POST https://localhost:7288/api/Account/Login - application/json 77
+2025-06-11 05:26:10.041 +03:00 [INF] Executing UserAuthenticationMiddleware
+2025-06-11 05:26:10.056 +03:00 [INF] Executing endpoint 'E_Commers.Controllers.AccountController.LoginAsync (E-Commerce)'
+2025-06-11 05:26:10.091 +03:00 [INF] Route matched with {action = "LoginAsync", controller = "Account"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[E_Commers.DtoModels.Responses.ApiResponse`1[E_Commers.DtoModels.TokenDtos.TokensDto]]] LoginAsync(E_Commers.DtoModels.AccountDtos.LoginDTo) on controller E_Commers.Controllers.AccountController (E-Commerce).
+2025-06-11 05:26:10.433 +03:00 [INF] In LoginAsync Method 
+2025-06-11 05:26:10.458 +03:00 [INF] Executed DbCommand (3ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`ImageUrl`, `a`.`LastVisit`, `a`.`Name`, `a`.`ProfilePicture`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-06-11 05:26:10.604 +03:00 [INF] 🔐 Generating Access Token for User ID: 123d445b-9783-46a5-aa55-7dd3db78dacb
+2025-06-11 05:26:10.704 +03:00 [INF] Executed DbCommand (14ms) [Parameters=[@__userId_0='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a0`.`Name`
+FROM `AspNetUserRoles` AS `a`
+INNER JOIN `AspNetRoles` AS `a0` ON `a`.`RoleId` = `a0`.`Id`
+WHERE `a`.`UserId` = @__userId_0
+2025-06-11 05:26:10.760 +03:00 [INF] ✅ Access Token generated successfully for User ID: 123d445b-9783-46a5-aa55-7dd3db78dacb
+2025-06-11 05:26:10.763 +03:00 [INF] 🔑 Generating Refresh Token for User ID: 123d445b-9783-46a5-aa55-7dd3db78dacb
+2025-06-11 05:26:10.773 +03:00 [INF] RefreshToken Generated
+2025-06-11 05:26:10.774 +03:00 [INF] User logged in successfully.
+2025-06-11 05:26:10.814 +03:00 [INF] Executing OkObjectResult, writing value of type 'E_Commers.DtoModels.Responses.ApiResponse`1[[E_Commers.DtoModels.TokenDtos.TokensDto, E-Commerce, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2025-06-11 05:26:10.872 +03:00 [INF] Executed action E_Commers.Controllers.AccountController.LoginAsync (E-Commerce) in 759.7063ms
+2025-06-11 05:26:10.960 +03:00 [INF] Executed endpoint 'E_Commers.Controllers.AccountController.LoginAsync (E-Commerce)'
+2025-06-11 05:26:10.969 +03:00 [INF] Request finished HTTP/1.1 POST https://localhost:7288/api/Account/Login - 200 1654 application/json; charset=utf-8 982.1992ms
+2025-06-11 05:29:34.571 +03:00 [INF] Request starting HTTP/1.1 GET https://localhost:7288/api/Product - null null
+2025-06-11 05:29:34.668 +03:00 [INF] Executing UserAuthenticationMiddleware
+2025-06-11 05:29:34.815 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__userId_0='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`SecurityStamp`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`Id` = @__userId_0)
+LIMIT 1
+2025-06-11 05:29:34.826 +03:00 [INF] Executing endpoint 'E_Commers.Controllers.ProductController.GetAllProducts (E-Commerce)'
+2025-06-11 05:29:34.837 +03:00 [INF] Route matched with {action = "GetAllProducts", controller = "Product"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[E_Commers.DtoModels.Responses.ApiResponse`1[System.Collections.Generic.List`1[E_Commers.DtoModels.ProductDtos.ProductDto]]]] GetAllProducts() on controller E_Commers.Controllers.ProductController (E-Commerce).
+2025-06-11 05:29:34.849 +03:00 [INF] Executing GetAllProducts
+2025-06-11 05:29:34.857 +03:00 [INF] Execute GetAllAsync for entity Product
+2025-06-11 05:29:34.867 +03:00 [INF] Data retrieved from Database
+2025-06-11 05:29:34.947 +03:00 [INF] Executed DbCommand (18ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT `p`.`Id`, `p`.`CategoryId`, `p`.`CreatedAt`, `p`.`DeletedAt`, `p`.`Description`, `p`.`DiscountId`, `p`.`ImagesUrl`, `p`.`ModifiedAt`, `p`.`Name`, `p`.`Price`, `p`.`Quantity`
+FROM `Products` AS `p`
+WHERE `p`.`DeletedAt` IS NULL
+2025-06-11 05:29:34.992 +03:00 [INF] Executing OkObjectResult, writing value of type 'E_Commers.DtoModels.Responses.ApiResponse`1[[System.Collections.Generic.List`1[[E_Commers.DtoModels.ProductDtos.ProductDto, E-Commerce, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2025-06-11 05:29:35.026 +03:00 [INF] Executed action E_Commers.Controllers.ProductController.GetAllProducts (E-Commerce) in 184.3682ms
+2025-06-11 05:29:35.032 +03:00 [INF] Executed endpoint 'E_Commers.Controllers.ProductController.GetAllProducts (E-Commerce)'
+2025-06-11 05:29:35.035 +03:00 [INF] Request finished HTTP/1.1 GET https://localhost:7288/api/Product - 200 580 application/json; charset=utf-8 463.3832ms

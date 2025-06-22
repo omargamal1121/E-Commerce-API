@@ -51,8 +51,8 @@ namespace E_Commers.Controllers
 					Name = p.Name,
 					AvailabeQuantity = p.Quantity,
 					Description = p.Description,
-					FinalPrice =discountresult.Data.IsActive ? p.Price : p.Price - discountresult.Data.DiscountPercent * p.Price,
-					Category = new CategoryDto(p.Category.Id, p.Category.Name, p.Category.Description, p.Category.CreatedAt),
+					//FinalPrice =discountresult.Data.IsActive ? p.Price : p.Price - discountresult.Data.DiscountPercent * p.Price,
+					//Category = new CategoryDto(p.Category.Id, p.Category.Name, p.Category.Description, p.Category.CreatedAt),
 					CreatedAt = p.CreatedAt,
 				}
 				).ToList()
@@ -70,7 +70,7 @@ namespace E_Commers.Controllers
 			_logger.LogInformation($"Executing {nameof(GetAll)} in DiscountController");
 
 
-			var discountresult = await _unitOfWork.Repository<Discount>().GetAllAsync(filter: c => c.DeletedAt == null, include: d => d.Include(d => d.products).ThenInclude(p => p.Category));
+			var discountresult = await _unitOfWork.Repository<Discount>().GetAllAsync(filter: c => c.DeletedAt == null, include: d => d.Include(d => d.products).ThenInclude(p => p.SubCategory));
 			if (!discountresult.Success||  discountresult.Data is null)
 			{
 				return Ok(new ResponseDto { Message = discountresult.Message, });
@@ -90,7 +90,7 @@ namespace E_Commers.Controllers
 					Name = p.Name,
 					AvailabeQuantity = p.Quantity,
 					Description = p.Description,
-					FinalPrice = c.IsActive ? p.Price : p.Price - c.DiscountPercent * p.Price,
+				//	FinalPrice = c.IsActive ? p.Price : p.Price - c.DiscountPercent * p.Price,
 					//Category = new CategoryDto(p.Category.Id, p.Category.Name, p.Category.Description, p.Category.CreatedAt),
 					CreatedAt = p.CreatedAt,
 				}).ToList()

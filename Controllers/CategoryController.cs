@@ -62,7 +62,7 @@ namespace E_Commers.Controllers
 				_logger.LogWarning($"ModelState errors: {errors}");
 				return BadRequest(
 					ApiResponse<string>.CreateErrorResponse(
-						new ErrorResponse("Invalid Data", $"errors:{errors}")
+						new ErrorResponse("Invalid Data", new List<string> { $"errors:{errors}" })
 					)
 				);
 			}
@@ -102,7 +102,7 @@ namespace E_Commers.Controllers
                 _logger.LogWarning($"ModelState errors: {errors}");
                 return BadRequest(
                     ApiResponse<CategoryDto>.CreateErrorResponse(
-                        new ErrorResponse("Invalid Data", $"errors:{errors}")
+                        new ErrorResponse("Invalid Data", new List<string> { $"errors:{errors}" })
                     )
                 );
             }
@@ -110,7 +110,7 @@ namespace E_Commers.Controllers
 			if (userid == null)
 			{
 				_logger.LogError("Can't Get Userid From token");
-				return ApiResponse<CategoryDto>.CreateErrorResponse(new ErrorResponse("Auth", "UnAuthorized"), 401);
+				return ApiResponse<CategoryDto>.CreateErrorResponse(new ErrorResponse("Auth", new List<string> { "UnAuthorized" }), 401);
 			}
 			var response = await _categoryServices.CreateAsync(categoryDto, userid);
             return HandleResponse(response, nameof(CreateAsync),response.ResponseBody?.Data?.Id);
@@ -129,7 +129,7 @@ namespace E_Commers.Controllers
                 _logger.LogWarning($"ModelState errors: {errors}");
                 return BadRequest(
                     ApiResponse<string>.CreateErrorResponse(
-                        new ErrorResponse("Invalid Data", $"errors:{errors}")
+                        new ErrorResponse("Invalid Data", new List<string> { $"errors:{errors}" })
                     )
                 );
             }
@@ -140,7 +140,7 @@ namespace E_Commers.Controllers
             if (userid == null)
             {
                 _logger.LogError("Can't Get Userid From token");
-                return ApiResponse<string>.CreateErrorResponse(new ErrorResponse("Auth", "UnAuthorized"), 401);
+                return ApiResponse<string>.CreateErrorResponse(new ErrorResponse("Auth", new List<string> { "UnAuthorized" }), 401);
             }
             var response = await _categoryServices.DeleteAsync(id,userid);
             return HandleResponse(response, nameof(DeleteAsync));
@@ -159,7 +159,7 @@ namespace E_Commers.Controllers
 				_logger.LogWarning($"ModelState errors: {errors}");
 				return BadRequest(
 					ApiResponse<string>.CreateErrorResponse(
-						new ErrorResponse("Invalid Data", $"errors:{errors}")
+						new ErrorResponse("Invalid Data", new List<string> { $"errors:{errors}" })
 					)
 				);
 			}
@@ -169,7 +169,7 @@ namespace E_Commers.Controllers
 			if (userid == null)
 			{
 				_logger.LogError("Can't Get Userid From token");
-				return ApiResponse<CategoryDto>.CreateErrorResponse(new ErrorResponse("Auth", "UnAuthorized"), 401);
+				return ApiResponse<CategoryDto>.CreateErrorResponse(new ErrorResponse("Auth", new List<string> { "UnAuthorized" }), 401);
 			}
 
 			var response=  await _categoryServices.ReturnRemovedCategoryAsync(id, userid);
@@ -199,7 +199,7 @@ namespace E_Commers.Controllers
 			if (userid == null)
 			{
 				_logger.LogError("Can't Get Userid From token");
-				return ApiResponse<CategoryDto>.CreateErrorResponse(new ErrorResponse("Auth", "UnAuthorized"), 401);
+				return ApiResponse<CategoryDto>.CreateErrorResponse(new ErrorResponse("Auth", new List<string> { "UnAuthorized" }), 401);
 			}
 			var response = await _categoryServices.UpdateAsync(id, categoryDto,userid);
             return HandleResponse(response,nameof(UpdateAsync),id);
@@ -219,7 +219,7 @@ namespace E_Commers.Controllers
 				_logger.LogWarning($"ModelState errors: {errors}");
 				return BadRequest(
 					ApiResponse<string>.CreateErrorResponse(
-						new ErrorResponse("Invalid Data", $"errors:{errors}")
+						new ErrorResponse("Invalid Data", new List<string> { $"errors:{errors}" })
 					)
 				);
 			}

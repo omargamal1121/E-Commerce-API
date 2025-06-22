@@ -19,6 +19,9 @@ namespace E_Commers.Models
 		public bool IsActive { get; set; } = false;
 		[JsonIgnore]
 		public List<Product> products { get; set; } = new List<Product>();
+		public int? CategoryId { get; set; }
+		[JsonIgnore]
+		public Category? Category { get; set; }
 
 
 	}

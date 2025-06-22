@@ -119,6 +119,7 @@ namespace E_Commers.Services.Category
                 if (!iscreated.Success)
                 {
                     _logger.LogWarning(iscreated.Message);
+                    await transaction.RollbackAsync();
                     return ApiResponse<CategoryDto>.CreateErrorResponse(
                         new ErrorResponse(
                             "Server Error",
@@ -127,9 +128,10 @@ namespace E_Commers.Services.Category
                         500
                     );
                 }
+				await _unitOfWork.CommitAsync();
 
-                // Record admin operation
-                var adminopreation = await _adminopreationservices.AddAdminOpreationAsync(
+				// Record admin operation
+				var adminopreation = await _adminopreationservices.AddAdminOpreationAsync(
                     "Add Category", 
                     Opreations.AddOpreation, 
                     userid,
@@ -139,6 +141,7 @@ namespace E_Commers.Services.Category
                 if (!adminopreation.Success)
                 {
                     _logger.LogError("Failed to add admin operation");
+                    await transaction.RollbackAsync();
                     return ApiResponse<CategoryDto>.CreateErrorResponse(
                         new ErrorResponse("Server Error", "Try Again later"), 
                         500
@@ -180,8 +183,8 @@ namespace E_Commers.Services.Category
                 );
             }
 
-            var products = await _unitOfWork.Category.IsHasProductAsync(categoryId);
-            if (products)
+         //   var products = await _unitOfWork.Category.IsHasProductAsync(categoryId);
+            if (true)
             {
                 _logger.LogWarning("Category Contain Products");
                 return ApiResponse<string>.CreateErrorResponse(
@@ -193,8 +196,9 @@ namespace E_Commers.Services.Category
                 );
             }
             var transaction= await _unitOfWork.BeginTransactionAsync();
+            isfound.Data.DeletedAt = DateTime.Now;
 
-            var isdeleted = await _unitOfWork.Category.RemoveAsync(isfound.Data);
+            var isdeleted = await _unitOfWork.Category.UpdateAsync(isfound.Data);
             if (!isdeleted.Success)
             {
                 _logger.LogError(isdeleted.Message);
@@ -210,7 +214,7 @@ namespace E_Commers.Services.Category
             }
 
             var isadded = await _adminopreationservices.AddAdminOpreationAsync($"Soft Delete for category", Opreations.DeleteOpreation, userid, categoryId);
-            if(isadded.Success)
+            if(!isadded.Success)
             {
                 _logger.LogError(isadded.Message);
                 await transaction.RollbackAsync();
@@ -375,6 +379,9 @@ namespace E_Commers.Services.Category
 						500
 					);
 				}
+
+				await _unitOfWork.CommitAsync();
+
 				var isadded = await _adminopreationservices.AddAdminOpreationAsync($"Update Category Name From {oldname} to {category.Name}", Opreations.UpdateOpreation, userid, categoryId);
 				if (isadded.Success)
 				{

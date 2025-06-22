@@ -1,0 +1,80 @@
+2025-06-22 14:47:23.242 +03:00 [INF] DB tables already exist. Exit install
+2025-06-22 14:47:25.857 +03:00 [INF] Executed DbCommand (5ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='E-Commerce' AND TABLE_NAME='__EFMigrationsHistory';
+2025-06-22 14:47:25.877 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='E-Commerce' AND TABLE_NAME='__EFMigrationsHistory';
+2025-06-22 14:47:25.948 +03:00 [INF] Executed DbCommand (45ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT `MigrationId`, `ProductVersion`
+FROM `__EFMigrationsHistory`
+ORDER BY `MigrationId`;
+2025-06-22 14:47:25.969 +03:00 [INF] No migrations were applied. The database is already up to date.
+2025-06-22 14:47:26.005 +03:00 [INF] User profile is available. Using 'C:\Users\DELL\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2025-06-22 14:47:26.442 +03:00 [INF] Executed DbCommand (72ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-06-22 14:47:26.534 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-06-22 14:47:26.562 +03:00 [INF] Executed DbCommand (4ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`, `a`.`ProfilePicture`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-06-22 14:47:27.736 +03:00 [INF] Now listening on: http://localhost:5069
+2025-06-22 14:47:27.828 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-06-22 14:47:27.832 +03:00 [INF] Hosting environment: Development
+2025-06-22 14:47:27.866 +03:00 [INF] Content root path: D:\fashion\Projcet\E-Commers\E-Commers
+2025-06-22 14:47:28.950 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/swagger/index.html - null null
+2025-06-22 14:47:29.394 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/swagger/index.html - 200 null text/html;charset=utf-8 450.473ms
+2025-06-22 14:47:29.446 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/swagger/index.js - null null
+2025-06-22 14:47:29.452 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/swagger/index.js - 200 null application/javascript;charset=utf-8 5.8057ms
+2025-06-22 14:47:29.481 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/_framework/aspnetcore-browser-refresh.js - null null
+2025-06-22 14:47:29.482 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/_vs/browserLink - null null
+2025-06-22 14:47:29.488 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/_framework/aspnetcore-browser-refresh.js - 200 16505 application/javascript; charset=utf-8 6.9405ms
+2025-06-22 14:47:29.551 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/_vs/browserLink - 200 null text/javascript; charset=UTF-8 68.9604ms
+2025-06-22 14:47:29.823 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/swagger/v1/swagger.json - null null
+2025-06-22 14:47:29.908 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 84.4912ms
+2025-06-22 14:51:48.360 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/swagger/index.html - null null
+2025-06-22 14:51:48.385 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/swagger/index.html - 200 null text/html;charset=utf-8 25.1242ms
+2025-06-22 14:51:50.110 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/swagger/index.js - null null
+2025-06-22 14:51:50.132 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/swagger/index.js - 200 null application/javascript;charset=utf-8 21.7215ms
+2025-06-22 14:51:50.143 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/_vs/browserLink - null null
+2025-06-22 14:51:50.143 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/_framework/aspnetcore-browser-refresh.js - null null
+2025-06-22 14:51:50.149 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/_framework/aspnetcore-browser-refresh.js - 200 16505 application/javascript; charset=utf-8 6.204ms
+2025-06-22 14:51:50.163 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/_vs/browserLink - 200 null text/javascript; charset=UTF-8 20.2354ms
+2025-06-22 14:52:21.156 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/swagger/v1/swagger.json - null null
+2025-06-22 14:52:21.580 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 423.9914ms
+2025-06-22 14:54:15.606 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/swagger/index.html - null null
+2025-06-22 14:54:15.620 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/swagger/index.html - 200 null text/html;charset=utf-8 14.1937ms
+2025-06-22 14:54:15.641 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/swagger/index.js - null null
+2025-06-22 14:54:15.641 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/_vs/browserLink - null null
+2025-06-22 14:54:15.644 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/swagger/index.js - 200 null application/javascript;charset=utf-8 3.5532ms
+2025-06-22 14:54:15.645 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/_framework/aspnetcore-browser-refresh.js - null null
+2025-06-22 14:54:15.650 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/_vs/browserLink - 200 null text/javascript; charset=UTF-8 9.637ms
+2025-06-22 14:54:15.652 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/_framework/aspnetcore-browser-refresh.js - 200 16505 application/javascript; charset=utf-8 6.7738ms
+2025-06-22 14:54:16.325 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/swagger/v1/swagger.json - null null
+2025-06-22 14:54:16.426 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 101.3053ms
+2025-06-22 14:57:25.054 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/swagger/index.html - null null
+2025-06-22 14:57:25.067 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/swagger/index.html - 200 null text/html;charset=utf-8 12.9001ms
+2025-06-22 14:57:25.159 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/swagger/index.js - null null
+2025-06-22 14:57:25.161 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/_vs/browserLink - null null
+2025-06-22 14:57:25.164 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/swagger/index.js - 200 null application/javascript;charset=utf-8 5.8283ms
+2025-06-22 14:57:25.172 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/_vs/browserLink - 200 null text/javascript; charset=UTF-8 10.3864ms
+2025-06-22 14:57:25.181 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/_framework/aspnetcore-browser-refresh.js - null null
+2025-06-22 14:57:25.191 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/_framework/aspnetcore-browser-refresh.js - 200 16505 application/javascript; charset=utf-8 10.0016ms
+2025-06-22 14:57:25.457 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/swagger/v1/swagger.json - null null
+2025-06-22 14:57:25.517 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 59.189ms
+2025-06-22 15:09:55.467 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/swagger/index.html - null null
+2025-06-22 15:09:55.487 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/swagger/index.html - 200 null text/html;charset=utf-8 19.5326ms
+2025-06-22 15:09:55.513 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/swagger/index.js - null null
+2025-06-22 15:09:55.516 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/_vs/browserLink - null null
+2025-06-22 15:09:55.516 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/swagger/index.js - 200 null application/javascript;charset=utf-8 3.5104ms
+2025-06-22 15:09:55.523 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/_vs/browserLink - 200 null text/javascript; charset=UTF-8 6.9158ms
+2025-06-22 15:09:55.531 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/_framework/aspnetcore-browser-refresh.js - null null
+2025-06-22 15:09:55.534 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/_framework/aspnetcore-browser-refresh.js - 200 16505 application/javascript; charset=utf-8 2.6206ms
+2025-06-22 15:09:55.938 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5069/swagger/v1/swagger.json - null null
+2025-06-22 15:09:55.987 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5069/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 48.6813ms

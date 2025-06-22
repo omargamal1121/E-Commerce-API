@@ -1,24 +1,28 @@
-﻿namespace E_Commers.ErrorHnadling
+﻿using System.Collections.Generic;
+
+namespace E_Commers.ErrorHnadling
 {
 	public class ErrorResponse
 	{
-		
 		public string Title { get; set; }
-		public string Message { get; set; }
+		public List<string> Messages { get; set; }
 		public string Detail { get; set; }
 		public string Instance { get; set; }
 
-		public ErrorResponse( string title, string message, string detail = null, string instance = null)
+		public ErrorResponse(string title, string message, string detail = null, string instance = null)
 		{
 			Title = title;
-			Message = message;
+			Messages = new List<string> { message };
 			Detail = detail;
 			Instance = instance;
 		}
 
-		// يمكنك أيضًا إضافة أي خصائص إضافية تحتاجها مثل:
-		// - Timestamp (تاريخ ووقت حدوث الخطأ)
-		// - DeveloperMessage (رسالة للمطور فقط، يمكن استخدامها أثناء التطوير)
+		public ErrorResponse(string title, List<string> messages, string detail = null, string instance = null)
+		{
+			Title = title;
+			Messages = messages;
+			Detail = detail;
+			Instance = instance;
+		}
 	}
-
 }

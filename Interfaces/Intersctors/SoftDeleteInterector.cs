@@ -8,7 +8,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace E_Commers.Interceptors
+namespace E_Commers.Interfaces.Intersctors
 {
     public class SoftDeleteInterceptor : SaveChangesInterceptor
     {

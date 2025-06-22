@@ -1,4 +1,2 @@
-wwwroot\CustomerPhotos\110e3054-7efd-4ca5-91ff-fd4617a8736b.jpg
-wwwroot\CustomerPhotos\5d66d8c7-3efc-4bb4-9c61-c308a80ac6be.jpg
-wwwroot\CustomerPhotos\98c333a7-bac5-47e1-9913-0c1283047518.jpg
-wwwroot\CustomerPhotos\d92136ec-bfde-4cfc-b8ba-9e6f9b0ae4a8.jpg
+wwwroot\CustomerPhotos\05a8d206-3108-4343-966e-1fb20e643f84.jpg
+wwwroot\CustomerPhotos\80476f83-dc98-4d15-b033-284b76e9ab20.jpg

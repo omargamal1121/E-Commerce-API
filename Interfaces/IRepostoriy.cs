@@ -9,10 +9,12 @@ namespace E_Commers.Interfaces
 	{
 	
 		Task<Result<T>> CreateAsync(T model);
+		public Task<Result<bool>> IsDeletedAsync(int id);
 		public Task<Result<T>> GetByQuery(Expression<Func<T, bool>> predicate);
 		Task<Result<T>> UpdateAsync(T model);
 		Task<Result<bool>> RemoveAsync(T model);
-		Task<Result<T>> GetByIdAsync(int id); 
+		Task<Result<bool>> IsExsistAsync(int id);
+		 Task<Result<T>> GetByIdAsync(int id); 
 		Task<Result< IQueryable<T>>> GetAllAsync(Func<IQueryable<T>, IQueryable<T>>? include = null, Expression<Func<T, bool>>? filter = null);
 	}
 }

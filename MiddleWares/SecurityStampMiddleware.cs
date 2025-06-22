@@ -1,8 +1,11 @@
 ﻿using E_Commers.Context;
+using E_Commers.DtoModels.Responses;
+using E_Commers.ErrorHnadling;
 using E_Commers.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
@@ -23,8 +26,8 @@ public class SecurityStampMiddleware
 		if (!string.IsNullOrEmpty(authHeader) && authHeader.StartsWith("Bearer "))
 		{
 			string token = authHeader.Replace("Bearer ", "");
-
 			var handler = new JwtSecurityTokenHandler();
+
 			if (handler.CanReadToken(token))
 			{
 				var jwtToken = handler.ReadJwtToken(token);
@@ -33,38 +36,43 @@ public class SecurityStampMiddleware
 				if (string.IsNullOrEmpty(userId))
 				{
 					context.Response.StatusCode = 401;
-					await context.Response.WriteAsync("{\"message\": \"Invalid Token - User ID missing\"}");
-					await context.Response.WriteAsync("{\"statusCode\": 401}");
+					context.Response.ContentType = "application/json";
+					var response = ApiResponse<string>.CreateErrorResponse(new ErrorResponse("Authentication", "Invalid Token - User ID missing"));
+					await context.Response.WriteAsync(JsonConvert.SerializeObject(response));
 					return;
 				}
 
-				using (var scope = _serviceScopeFactory.CreateScope())
+				using var scope = _serviceScopeFactory.CreateScope();
+				var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+				var customer = await dbContext.customers
+					.Where(x => x.Id == userId)
+					.Select(x => new Customer { Id = x.Id, SecurityStamp = x.SecurityStamp })
+					.FirstOrDefaultAsync();
+
+				if (customer is null)
 				{
-					var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-					Customer? customer = await dbContext.customers.Select(x => new Customer { Id = x.Id,SecurityStamp=x.SecurityStamp }).FirstOrDefaultAsync(x=>x.Id==userId);
+					context.Response.StatusCode = 401;
+					context.Response.ContentType = "application/json";
+					var response = ApiResponse<string>.CreateErrorResponse(new ErrorResponse("Authentication", "Invalid Token - User not found"));
+					await context.Response.WriteAsync(JsonConvert.SerializeObject(response));
+					return;
+				}
 
-					if (customer is null)
-					{
-						context.Response.StatusCode = 401;
-						await context.Response.WriteAsync("{\n \"statusCode\": 401\n");
-						await context.Response.WriteAsync(" \"message\": \"Invalid Token - User not found\"\n}");
-						return;
-					}
+				string tokenSecurityStamp = jwtToken.Claims.FirstOrDefault(c => c.Type == "SecurityStamp")?.Value ?? string.Empty;
 
-					string customerSecurityStamp = customer.SecurityStamp ?? string.Empty;
-					string tokenSecurityStamp = jwtToken.Claims.FirstOrDefault(c => c.Type == "SecurityStamp")?.Value ?? string.Empty;
-
-					if (customerSecurityStamp.IsNullOrEmpty()|| string.IsNullOrEmpty(tokenSecurityStamp) || !tokenSecurityStamp.Equals(customerSecurityStamp))
-					{
-						context.Response.StatusCode = 401;
-						await context.Response.WriteAsync("{\n \"statusCode\": 401\n");
-						await context.Response.WriteAsync("    \"message\": \"Invalid Token - Security Stamp mismatch\"\n}");
-						return;
-					}
+				if (string.IsNullOrEmpty(customer.SecurityStamp) || tokenSecurityStamp != customer.SecurityStamp)
+				{
+					context.Response.StatusCode = 401;
+					context.Response.ContentType = "application/json";
+					var response = ApiResponse<string>.CreateErrorResponse(new ErrorResponse("Authentication", "Invalid Token - SecurityStamp mismatch"));
+					await context.Response.WriteAsync(JsonConvert.SerializeObject(response));
+					return;
 				}
 			}
 		}
 
 		await _next(context);
 	}
+
 }

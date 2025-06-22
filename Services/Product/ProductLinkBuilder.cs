@@ -8,9 +8,15 @@ namespace E_Commers.Services.Product
     public class ProductLinkBuilder : BaseLinkBuilder,IProductLinkBuilder
     {
         protected override string ControllerName => "Products";
+      
 
-        public ProductLinkBuilder(IHttpContextAccessor context, LinkGenerator generator)
-            : base(context, generator) { }
+
+		public ProductLinkBuilder(IHttpContextAccessor context, LinkGenerator generator)
+            : base(context, generator) 
+        {
+    
+
+        }
 
         public override List<LinkDto> GenerateLinks(int? id = null)
         {
@@ -36,7 +42,7 @@ namespace E_Commers.Services.Product
                 links.Add(
                     new LinkDto(
                         GetUriByAction(nameof(ProductController.GetProduct), new { id }) ?? "",
-                        "self",
+                        "get-by-id",
                         "GET"
                     )
                 );

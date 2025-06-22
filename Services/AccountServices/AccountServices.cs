@@ -8,24 +8,35 @@ using E_Commers.ErrorHnadling;
 using E_Commers.Interfaces;
 using E_Commers.Models;
 using E_Commers.Services.AccountServices;
+using E_Commers.Services.EmailServices;
 using E_Commers.UOW;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.JsonPatch.Operations;
+using Microsoft.AspNetCore.WebUtilities;
+using System.Diagnostics;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace E_Commers.Services.AccountServices
 {
     public class AccountServices : IAccountServices
     {
-        private readonly ILogger<AccountServices> _logger;
+        private const string DefaultRole = "User";
+		private readonly ILogger<AccountServices> _logger;
         private readonly UserManager<Customer> _userManager;
         private readonly IRefreshTokenService _refrehtokenService;
         private readonly IImagesServices _imagesService;
         private readonly ITokenService _tokenService;
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IEmailSender  _emailSender;
+        private readonly IErrorNotificationService _errorNotificationService;
+		private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public AccountServices(
-            IRefreshTokenService refrehtokenService,
+		public AccountServices(
+            IErrorNotificationService errorNotificationService,
+			IEmailSender emailSender,
+			IRefreshTokenService refrehtokenService,
             IMapper mapper,
             IImagesServices imagesService,
             UserManager<Customer> userManager,
@@ -33,8 +44,10 @@ namespace E_Commers.Services.AccountServices
             IUnitOfWork unitOfWork,
             ILogger<AccountServices> logger
         )
-        {
-            _refrehtokenService = refrehtokenService;
+        { 
+            _errorNotificationService = errorNotificationService;
+			_emailSender = emailSender;
+			_refrehtokenService = refrehtokenService;
             _imagesService = imagesService;
             _userManager = userManager;
             _tokenService = tokenService;
@@ -84,6 +97,7 @@ namespace E_Commers.Services.AccountServices
             catch (Exception ex)
             {
                 await Tran.RollbackAsync();
+                await _errorNotificationService.SendErrorNotificationAsync(ex.Message, ex.StackTrace);
                 _logger.LogError($"Error:{ex.Message}");
                 return ApiResponse<string>.CreateErrorResponse(
                     new ErrorResponse("Server Error", $"Error:{ex.Message}"),
@@ -96,12 +110,13 @@ namespace E_Commers.Services.AccountServices
         {
             _logger.LogInformation($"Execute:{nameof(LogoutAsync)} in services");
             var result = await _refrehtokenService.RemoveRefreshTokenAsync(userid);
-            //if(!result.Success)
-            //{
-            //	//Must send email to me
-            //}
+            if (!result.Success)
+            {
+				await _errorNotificationService.SendErrorNotificationAsync(result.Message);
 
-            Customer? customer = await _userManager.FindByIdAsync(userid);
+			}
+
+			Customer? customer = await _userManager.FindByIdAsync(userid);
             if (customer is null)
             {
                 _logger.LogError($"No user with this id:{userid}");
@@ -112,20 +127,26 @@ namespace E_Commers.Services.AccountServices
             }
             var isupdate = await _userManager.UpdateSecurityStampAsync(customer);
             await _refrehtokenService.RemoveRefreshTokenAsync(userid);
-            //if (!isupdate.Succeeded)
-            //{
-            //		//Must send email to me
-            //}
-            return ApiResponse<string>.CreateSuccessResponse("Logout Secssuced", statusCode: 200);
+            if (!isupdate.Succeeded)
+            {
+                string errors = string.Join(", ", isupdate.Errors.Select(e => e.Description));
+				await _errorNotificationService.SendErrorNotificationAsync(errors, $"{nameof(AccountServices)}/{nameof(LogoutAsync)}");
+
+			}
+			return ApiResponse<string>.CreateSuccessResponse("Logout Secssuced", statusCode: 200);
         }
 
         public async Task<ApiResponse<RegisterResponse>> RegisterAsync(RegisterDto model)
         {
-            using var tran = await _unitOfWork.BeginTransactionAsync();
-            try
+            _logger.LogInformation($"Executing {nameof(RegisterAsync)} for email: {model.Email}");
+           
+			using var tran = await _unitOfWork.BeginTransactionAsync();
+       
+			try
             {
                 var existingUser = await _userManager.FindByEmailAsync(model.Email);
-                if (existingUser != null)
+		
+				if (existingUser != null)
                 {
                     _logger.LogWarning("Registration attempt with existing email.");
                     return ApiResponse<RegisterResponse>.CreateErrorResponse(
@@ -133,10 +154,9 @@ namespace E_Commers.Services.AccountServices
                         409
                     );
                 }
-
-                Customer customer = _mapper.Map<Customer>(model);
-                customer.SecurityStamp = Guid.NewGuid().ToString();
-                customer.ConcurrencyStamp = Guid.NewGuid().ToString();
+               
+				Customer customer = _mapper.Map<Customer>(model);
+				customer.EmailConfirmed=false; ;
 
                 var result = await _userManager.CreateAsync(customer, model.Password);
 
@@ -145,12 +165,12 @@ namespace E_Commers.Services.AccountServices
                     var errorMessages = string.Join("; ", result.Errors.Select(e => e.Description));
                     _logger.LogError($"Failed to register user: {errorMessages}");
                     return ApiResponse<RegisterResponse>.CreateErrorResponse(
-                        new ErrorResponse($"Registration failed", $"Errors : {errorMessages}"),
+                        new ErrorResponse($"Registration failed", result.Errors.Select(e => e.Description).ToList()),
                         400
                     );
                 }
 
-                IdentityResult result1 = await _userManager.AddToRoleAsync(customer, "User");
+                IdentityResult result1 = await _userManager.AddToRoleAsync(customer, DefaultRole);
                 if (!result1.Succeeded)
                 {
                     await tran.RollbackAsync();
@@ -163,8 +183,10 @@ namespace E_Commers.Services.AccountServices
 
                 await tran.CommitAsync();
                 _logger.LogInformation("User registered successfully.");
-                RegisterResponse response = _mapper.Map<RegisterResponse>(model);
-                return ApiResponse<RegisterResponse>.CreateSuccessResponse(
+                RegisterResponse response = _mapper.Map<RegisterResponse>(customer);
+
+                _ = SendValidationEmailAsync(customer);
+				return ApiResponse<RegisterResponse>.CreateSuccessResponse(
                     "Created",
                     response,
                     201
@@ -174,14 +196,36 @@ namespace E_Commers.Services.AccountServices
             {
                 await tran.RollbackAsync();
                 _logger.LogError($"Exception in RegisterAsync: {ex}");
+                await _errorNotificationService.SendErrorNotificationAsync(ex.Message, ex.StackTrace);
                 return ApiResponse<RegisterResponse>.CreateErrorResponse(
                     new ErrorResponse("Server Error", "An unexpected error occurred."),
                     500
                 );
             }
         }
+        private async Task SendValidationEmailAsync(Customer user)
+        {
+            var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+			var encodedToken = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
+			string subject = "Email Confirmation";
+            string message = $@"
+                <html>
+                    <body>
+                        <h1>Welcome to Our Service</h1>
+                        <p>Thank you for registering. Please use the following token to confirm your email:</p>
+                        <div style='background-color: #f5f5f5; padding: 15px; border-radius: 5px; margin: 20px 0;'>
+                            <p style='font-size: 18px; font-weight: bold; color: #333;'>{encodedToken}</p>
+                        </div>
+                        <p>Please enter this token in the confirmation page to verify your email address.</p>
+                        <p>If you did not request this email, please ignore it.</p>
+                        <p>This token will expire in 24 hours.</p>
+                        <p>Best regards,<br>Your Service Team</p>
+                    </body>
+                </html>";
+            await _emailSender.SendEmailAsync(user.Email, subject, message);
+        }
 
-        public async Task<ApiResponse<TokensDto>> LoginAsync(string email, string password)
+		public async Task<ApiResponse<TokensDto>> LoginAsync(string email, string password)
         {
             try
             {
@@ -204,6 +248,8 @@ namespace E_Commers.Services.AccountServices
                         401
                     );
                 }
+
+               
 
                 var token = await _tokenService.GenerateTokenAsync(user.Id);
                 if (!token.Success || token.Data is null)
@@ -234,11 +280,32 @@ namespace E_Commers.Services.AccountServices
             catch (Exception ex)
             {
                 _logger.LogError($"Exception in LoginAsync: {ex}");
+                await _errorNotificationService.SendErrorNotificationAsync(ex.Message, ex.StackTrace);
                 return ApiResponse<TokensDto>.CreateErrorResponse(
                     new ErrorResponse("Login Failed", "An unexpected error occurred."),
                     500
                 );
             }
+        }
+
+        private async Task<ApiResponse<TokensDto>> CheckEmailConfirmationAsync(Customer user)
+        {
+            if (!user.EmailConfirmed)
+            {
+                _logger.LogWarning($"Login failed: Email not confirmed for user {user.Email}");
+                return ApiResponse<TokensDto>.CreateErrorResponse(
+                    new ErrorResponse(
+                        "Email Not Confirmed", 
+                        new List<string> { 
+                            "Please confirm your email before logging in.",
+                            "Check your email for the confirmation link.",
+                            "If you haven't received the email, you can request a new one."
+                        }
+                    ),
+                    403
+                );
+            }
+            return ApiResponse<TokensDto>.CreateSuccessResponse("Email confirmed", null, 200);
         }
 
         public async Task<ApiResponse<string>> ChangePasswordAsync(
@@ -249,6 +316,7 @@ namespace E_Commers.Services.AccountServices
         {
             try
             {
+          
                 var user = await _userManager.FindByIdAsync(userid);
                 if (user == null)
                 {
@@ -284,7 +352,7 @@ namespace E_Commers.Services.AccountServices
                 if (!isreomved.Success)
                 {
                     _logger.LogError(isreomved.Message);
-                    //send email
+                  await   _errorNotificationService.SendErrorNotificationAsync(isreomved.Message);
                 }
                 _logger.LogInformation("Password changed successfully.");
                 return ApiResponse<string>.CreateSuccessResponse(
@@ -295,12 +363,15 @@ namespace E_Commers.Services.AccountServices
             catch (Exception ex)
             {
                 _logger.LogError($"Exception in ChangePasswordAsync: {ex}");
+                await _errorNotificationService.SendErrorNotificationAsync(ex.Message, ex.StackTrace);
                 return ApiResponse<string>.CreateErrorResponse(
                     new ErrorResponse("Server Error", "An unexpected error occurred."),
                     500
                 );
             }
         }
+
+
 
         public async Task<ApiResponse<ChangeEmailResultDto>> ChangeEmailAsync(
             string newEmail,
@@ -339,7 +410,7 @@ namespace E_Commers.Services.AccountServices
                             "This email already exists and can't be used again."
                         ),
                         409
-                    ); // 409 Conflict
+                    );
                 }
 
                 var user = await _userManager.FindByEmailAsync(oldEmail);
@@ -360,13 +431,15 @@ namespace E_Commers.Services.AccountServices
                     return ApiResponse<ChangeEmailResultDto>.CreateErrorResponse(
                         new ErrorResponse(
                             "Email Updateing",
-                            $"Email change failed: {errorMessages}"
+                            $"Email change failed: {result.Errors}"
                         ),
                         400
                     );
                 }
-                await _userManager.SetUserNameAsync(user, newEmail);
+               
                 await transaction.CommitAsync();
+
+                await SendValidationEmailAsync(user);
 
                 _logger.LogInformation("Email changed successfully.");
                 return ApiResponse<ChangeEmailResultDto>.CreateSuccessResponse(
@@ -379,6 +452,7 @@ namespace E_Commers.Services.AccountServices
             {
                 await transaction.RollbackAsync();
                 _logger.LogError($"Exception in ChangeEmailAsync: {ex}");
+                await _errorNotificationService.SendErrorNotificationAsync(ex.Message, ex.StackTrace);
                 return ApiResponse<ChangeEmailResultDto>.CreateErrorResponse(
                     new ErrorResponse("Error", "An unexpected error occurred."),
                     500
@@ -396,7 +470,7 @@ namespace E_Commers.Services.AccountServices
 
             try
             {
-                // Validate input
+       
                 if (image == null || image.Length == 0)
                 {
                     _logger.LogWarning("No image file provided for user ID: {UserId}", id);
@@ -406,7 +480,7 @@ namespace E_Commers.Services.AccountServices
                     );
                 }
 
-                // Save the image
+           
                 var pathResult = await _imagesService.SaveImageAsync(image, "CustomerPhotos");
                 if (!pathResult.Success || pathResult.Data == null)
                 {
@@ -416,8 +490,6 @@ namespace E_Commers.Services.AccountServices
                         500
                     );
                 }
-
-                // Begin transaction
                 await using var transaction = await _unitOfWork.BeginTransactionAsync();
 
                 var customer = await _userManager.FindByIdAsync(id);
@@ -455,7 +527,7 @@ namespace E_Commers.Services.AccountServices
                 _logger.LogInformation("Successfully uploaded photo for user ID: {UserId}", id);
                 return ApiResponse<UploadPhotoResponseDto>.CreateSuccessResponse(
                     "Photo uploaded successfully.",
-                    new UploadPhotoResponseDto { ImageUrl = pathResult.Data },
+                    new UploadPhotoResponseDto { ImageUrl = pathResult.Data.Url },
                     200
                 );
             }
@@ -467,6 +539,7 @@ namespace E_Commers.Services.AccountServices
                     loggerAction,
                     id
                 );
+                await _errorNotificationService.SendErrorNotificationAsync(ex.Message, ex.StackTrace);
                 return ApiResponse<UploadPhotoResponseDto>.CreateErrorResponse(
                     new ErrorResponse("Error", "An unexpected error occurred.  Try Again Later"),
                     500
@@ -474,14 +547,14 @@ namespace E_Commers.Services.AccountServices
             }
         }
 
-        private async Task ReplaceCustomerImageAsync(Customer customer, string newImagePath)
+        private async Task ReplaceCustomerImageAsync(Customer customer, Image newImage)
         {
-            if (customer.ImageUrl is not null)
+            if (customer.Image is not null)
             {
-                _imagesService.DeleteImage("CustomerPhotos", customer.ImageUrl);
+                _imagesService.DeleteImage("CustomerPhotos", customer.Image.Url);
             }
 
-            customer.ImageUrl = newImagePath;
+            customer.Image =newImage;
             await AddOperationAsync(customer.Id, "Change Photo", Opreations.UpdateOpreation);
             await _unitOfWork.CommitAsync();
         }
@@ -534,6 +607,179 @@ namespace E_Commers.Services.AccountServices
                 //send email to me
             }
             return ApiResponse<string>.CreateSuccessResponse("Token Generate", token.Data, 200);
+        }
+
+        public async Task<ApiResponse<string>> ConfirmEmailAsync(string userId, string token)
+        {
+            _logger.LogInformation($"Executing {nameof(ConfirmEmailAsync)} for user ID: {userId}");
+            try
+            {
+                var user = await _userManager.FindByIdAsync(userId);
+                if (user == null)
+                {
+                    _logger.LogWarning($"User not found with ID: {userId}");
+                    return ApiResponse<string>.CreateErrorResponse(
+                        new ErrorResponse("User", "User not found."),
+                        404
+                    );
+                }
+
+                if (user.EmailConfirmed)
+                {
+                    _logger.LogWarning($"Email already confirmed for user ID: {userId}");
+                    return ApiResponse<string>.CreateErrorResponse(
+                        new ErrorResponse("Email", "Email is already confirmed."),
+                        400
+                    );
+                }
+				var decodedToken = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(token));
+				var result = await _userManager.ConfirmEmailAsync(user, decodedToken);
+                if (!result.Succeeded)
+                {
+                    var errors = string.Join(", ", result.Errors.Select(e => e.Description));
+                    _logger.LogError($"Failed to confirm email for user ID: {userId}. Errors: {errors}");
+                    return ApiResponse<string>.CreateErrorResponse(
+                        new ErrorResponse("Email Confirmation", $"Failed to confirm email: {errors}"),
+                        400
+                    );
+                }
+
+                await AddOperationAsync(userId, "Email Confirmation", Opreations.UpdateOpreation);
+                _logger.LogInformation($"Email confirmed successfully for user ID: {userId}");
+                return ApiResponse<string>.CreateSuccessResponse(
+                    "Email confirmed successfully.",
+                    statusCode: 200
+                );
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error in {nameof(ConfirmEmailAsync)}: {ex.Message}");
+                await _errorNotificationService.SendErrorNotificationAsync(ex.Message, ex.StackTrace);
+                return ApiResponse<string>.CreateErrorResponse(
+                    new ErrorResponse("Server Error", "An unexpected error occurred."),
+                    500
+                );
+            }
+        }
+
+        public async Task<ApiResponse<string>> ResendConfirmationEmailAsync(string email)
+        {
+            _logger.LogInformation($"Executing {nameof(ResendConfirmationEmailAsync)} for email: {email}");
+            try
+            {
+                var user = await _userManager.FindByEmailAsync(email);
+                if (user == null)
+                {
+                    _logger.LogWarning($"User not found with email: {email}");
+                    return ApiResponse<string>.CreateErrorResponse(
+                        new ErrorResponse("User", "User not found."),
+                        404
+                    );
+                }
+
+                if (user.EmailConfirmed)
+                {
+                    _logger.LogWarning($"Email already confirmed for user: {email}");
+                    return ApiResponse<string>.CreateErrorResponse(
+                        new ErrorResponse("Email", "Email is already confirmed."),
+                        400
+                    );
+                }
+
+                await SendValidationEmailAsync(user);
+                _logger.LogInformation($"Confirmation email resent successfully to: {email}");
+                return ApiResponse<string>.CreateSuccessResponse(
+                    "Confirmation email has been resent. Please check your inbox.",
+                    statusCode: 200
+                );
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error in {nameof(ResendConfirmationEmailAsync)}: {ex.Message}");
+                await _errorNotificationService.SendErrorNotificationAsync(ex.Message, ex.StackTrace);
+                return ApiResponse<string>.CreateErrorResponse(
+                    new ErrorResponse("Server Error", "An unexpected error occurred."),
+                    500
+                );
+            }
+        }
+
+        private async Task SendPasswordResetEmailAsync(string email, string token)
+        {
+            if (!string.IsNullOrEmpty(token))
+            {
+                string subject = "Password Reset Request";
+                string message = $@"
+                    <p>You requested a password reset. Click the link below to reset your password. This link is valid for 1 hour.</p>
+                    <p><a href='{token}'>Reset Password</a></p>
+                    <p>If you did not request this, you can ignore this email.</p>";
+                await _emailSender.SendEmailAsync(email, subject, message);
+            }
+            else
+            {
+                string subject = "Your password has been changed";
+                string message = $@"
+                    <p>Your password was recently changed.</p>
+                    <p>If you did not perform this action, please reset your password immediately or contact support.</p>";
+                await _emailSender.SendEmailAsync(email, subject, message);
+            }
+        }
+
+        public async Task<ApiResponse<string>> RequestPasswordResetAsync(string email)
+        {
+            try
+            {
+                var user = await _userManager.FindByEmailAsync(email);
+                if (user == null)
+                {
+                    _logger.LogWarning($"Password reset requested for non-existent email: {email}");
+                    // Do not reveal that the email does not exist
+                    return ApiResponse<string>.CreateSuccessResponse("If the email exists, a reset link has been sent.");
+                }
+
+                var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+                var encodedToken = System.Net.WebUtility.UrlEncode(token);
+                await SendPasswordResetEmailAsync(email, encodedToken);
+                return ApiResponse<string>.CreateSuccessResponse("If the email exists, a reset link has been sent.");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error in RequestPasswordResetAsync");
+                await _errorNotificationService.SendErrorNotificationAsync(ex.Message, ex.StackTrace);
+                return ApiResponse<string>.CreateErrorResponse(new ErrorResponse("Server Error", "An error occurred while requesting password reset."), 500);
+            }
+        }
+
+        public async Task<ApiResponse<string>> ResetPasswordAsync(string email, string token, string newPassword)
+        {
+            try
+            {
+                var user = await _userManager.FindByEmailAsync(email);
+                if (user == null)
+                {
+                    _logger.LogWarning($"Password reset attempted for non-existent email: {email}");
+                    // Do not reveal that the email does not exist
+                    return ApiResponse<string>.CreateErrorResponse(new ErrorResponse("Reset Failed", "Invalid token or email."), 400);
+                }
+
+                var result = await _userManager.ResetPasswordAsync(user, token, newPassword);
+                if (!result.Succeeded)
+                {
+                    var errors = string.Join(", ", result.Errors.Select(e => e.Description));
+                    _logger.LogWarning($"Password reset failed for {email}: {errors}");
+                    return ApiResponse<string>.CreateErrorResponse(new ErrorResponse("Reset Failed", result.Errors.Select(e=>e.Description).ToList()), 400);
+                }
+
+                // Send notification email
+                await SendPasswordResetEmailAsync(email, null); // null token means notification only
+                return ApiResponse<string>.CreateSuccessResponse("Password has been reset successfully.");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error in ResetPasswordAsync");
+                await _errorNotificationService.SendErrorNotificationAsync(ex.Message, ex.StackTrace);
+                return ApiResponse<string>.CreateErrorResponse(new ErrorResponse("Server Error", "An error occurred while resetting password."), 500);
+            }
         }
     }
 }

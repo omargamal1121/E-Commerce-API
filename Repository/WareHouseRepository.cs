@@ -15,7 +15,7 @@ namespace E_Commers.Repository
 		private readonly ILogger<MainRepository<Warehouse>> _logger;
 	
 
-		public WareHouseRepository(IConnectionMultiplexer redis, AppDbContext context, ILogger<MainRepository<Warehouse>> logger) : base(redis, context, logger)
+		public WareHouseRepository(AppDbContext context, ILogger<MainRepository<Warehouse>> logger) : base( context, logger)
 		{
 			_context = context;
 			_logger = logger;
@@ -26,15 +26,7 @@ namespace E_Commers.Repository
 		{
 			_logger.LogInformation($"Executing {nameof(GetByNameAsync)} for Name: {Name}");
 
-			string cacheKey = $"Category:Name:{Name}";
-			string? cachedData = await redisdb.StringGetAsync(cacheKey);
-
-			if (!string.IsNullOrEmpty(cachedData))
-			{
-				_logger.LogInformation("Category Found in cache");
-				return Result<Warehouse?>.Ok(JsonConvert.DeserializeObject<Warehouse>(cachedData));
-
-			}
+		
 
 			Warehouse? warehouse = await _warehouses.SingleOrDefaultAsync(c => c.Name.Equals(Name));
 
@@ -43,8 +35,6 @@ namespace E_Commers.Repository
 				_logger.LogWarning($"No Category with this Name:{Name}");
 				return Result<Warehouse?>.Fail($"No Category with this Name:{Name}");
 			}
-			await redisdb.StringSetAsync(cacheKey, JsonConvert.SerializeObject(warehouse), TimeSpan.FromMinutes(5));
-			await redisdb.SetAddAsync(typeof(Category).Name, cacheKey);
 
 			_logger.LogWarning("category found in database");
 			return Result<Warehouse?>.Ok(warehouse, "From database");

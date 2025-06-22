@@ -9,11 +9,10 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace E_Commers.Services
 {
-
 	public class ImagesServices : IImagesServices
 	{
 		private readonly ILogger<ImagesServices> _logger;
-
+		private const int MaxFileSize = 5 * 1024 * 1024; // 5MB
 		public ImagesServices(ILogger<ImagesServices> logger)
 		{
 			_logger = logger;
@@ -23,6 +22,13 @@ namespace E_Commers.Services
 		{
 			string[] allowedExtensions = { ".jpg", ".jpeg", ".png", ".gif", ".bmp", ".webp" };
 			return allowedExtensions.Contains(extension.ToLower());
+		}
+
+		
+
+		public bool IsValidFileSize(long fileSize)
+		{
+			return fileSize > 0 && fileSize <= MaxFileSize;
 		}
 
 		public string GetFolderPath(params string[] folders)
@@ -36,26 +42,39 @@ namespace E_Commers.Services
 			return folderPath;
 		}
 
-		public async Task<Result<string>> SaveImageAsync(IFormFile image, string folderName)
+		public async Task<Result<Image>> SaveImageAsync(IFormFile image, string folderName)
 		{
 			_logger.LogInformation($"📥 Saving image to {folderName}");
 
 			if (image is null)
-				return Result<string>.Fail("Image is null");
+				return Result<Image>.Fail("Image is null");
+
+			// Validate file size
+			if (!IsValidFileSize(image.Length))
+			{
+				_logger.LogWarning($"File size exceeds limit: {image.Length} bytes");
+				return Result<Image>.Fail($"File size must be between 1 and {MaxFileSize / (1024 * 1024)}MB");
+			}
+
+			
 
 			string extension = Path.GetExtension(image.FileName);
 			if (!IsValidExtension(extension))
-				return Result<string>.Fail($"Invalid file extension: {extension}");
+			{
+				_logger.LogWarning($"Invalid file extension: {extension}");
+				return Result<Image>.Fail($"Invalid file extension. Allowed extensions: .jpg, .jpeg, .png, .gif, .webp");
+			}
 
 			try
 			{
 				string folderPath = GetFolderPath("wwwroot", folderName);
 				if (folderPath.IsNullOrEmpty())
 				{
-					_logger.LogError("Path doesn't exsist");
-					return Result<string>.Fail("Path doesn't exsist");
+					_logger.LogError("Path doesn't exist");
+					return Result<Image>.Fail("Path doesn't exist");
 				}
-				string uniqueName = Guid.NewGuid().ToString() + extension;
+
+				string uniqueName = $"{Guid.NewGuid()}{extension}";
 				string filePath = Path.Combine(folderPath, uniqueName);
 
 				using (var stream = new FileStream(filePath, FileMode.Create))
@@ -65,32 +84,43 @@ namespace E_Commers.Services
 
 				string relativePath = $"/{folderName}/{uniqueName}";
 				_logger.LogInformation($"✅ Image saved: {relativePath}");
-				return Result<string>.Ok(relativePath);
+
+				Image savedImage = new Image 
+				{ 
+					UploadDate = DateTime.Now,
+					Folder = folderName,
+					Url = relativePath,
+					FileSize = image.Length,
+					FileType = image.ContentType
+				};
+
+				return Result<Image>.Ok(savedImage);
 			}
 			catch (Exception ex)
 			{
 				_logger.LogError($"❌ Error saving image: {ex.Message}");
-				return Result<string>.Fail($"Error saving image: {ex.Message}");
+				return Result<Image>.Fail($"Error saving image: {ex.Message}");
 			}
 		}
 
-		public async Task<Result<List<string>>> SaveImagesAsync(IFormFileCollection images, string folderName)
+		public async Task<Result<List<Image>>> SaveImagesAsync(IFormFileCollection images, string folderName)
 		{
 			_logger.LogInformation($"📥 Saving {images?.Count} images to {folderName}");
 
 			if (images == null || images.Count == 0)
-				return Result<List<string>>.Fail("Images are null or empty");
+				return Result<List<Image>>.Fail("Images are null or empty");
 
-			var pathsResult = new Result<List<string>>();
+			var pathsResult = new Result<List<Image>>();
+			pathsResult.Data = new List<Image>();
 
 			int counter = 1;
 			foreach (var image in images)
 			{
 				var result = await SaveImageAsync(image, folderName);
-				if (!result.Success || string.IsNullOrEmpty(result.Data))
+				if (!result.Success || (result.Data) == null)
 				{
 					_logger.LogError($"❌ Error with image #{counter}: {result.Message}");
-					return Result<List<string>>.Fail($"Error with image #{counter}: {result.Message}");
+					return Result<List<Image>>.Fail($"Error with image #{counter}: {result.Message}");
 				}
 
 				pathsResult.Data.Add(result.Data);
@@ -100,29 +130,26 @@ namespace E_Commers.Services
 			return pathsResult;
 		}
 
-		public  Result<string> DeleteImage(string folderName, string imagename)
+		public Result<string> DeleteImage(string folderName, string imagename)
 		{
 			_logger.LogInformation($"Execute {nameof(DeleteImage)}");
-			string fullpath= GetFolderPath("wwwroot", folderName, imagename);
+			string fullpath = GetFolderPath("wwwroot", folderName, imagename);
 			if (fullpath.IsNullOrEmpty())
 			{
-				_logger.LogError("Path doesn't exsist");
-				return Result<string>.Fail("Path doesn't exsist");
+				_logger.LogError("Path doesn't exist");
+				return Result<string>.Fail("Path doesn't exist");
 			}
 			try
 			{
 				File.Delete(fullpath);
 				_logger.LogInformation("Deleted");
 				return Result<string>.Ok("Deleted");
-
 			}
 			catch (Exception ex)
 			{
-
 				_logger.LogError(ex.Message);
 				return Result<string>.Fail(ex.Message);
 			}
-		
 		}
 	}
 }

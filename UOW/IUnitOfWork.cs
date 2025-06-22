@@ -10,6 +10,7 @@ namespace E_Commers.UOW
 		IProductRepository Product { get;  }
 		 
 		IWareHouseRepository WareHouse { get; }
+		IProductInventoryRepository ProductInventory { get; }
 		public Task<IDbContextTransaction> BeginTransactionAsync();
 		IRepository<T> Repository<T>() where T : BaseEntity;
 		public Task<int> CommitAsync();
