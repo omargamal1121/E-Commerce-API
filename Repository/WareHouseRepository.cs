@@ -19,25 +19,24 @@ namespace E_Commers.Repository
 		{
 			_context = context;
 			_logger = logger;
-			_warehouses = context.warehouses;
+			_warehouses = context.Warehouses;
 		}
 
-		public async Task<Result<Warehouse?>> GetByNameAsync(string Name)
+		public async Task<Warehouse?> GetByNameAsync(string Name)
 		{
 			_logger.LogInformation($"Executing {nameof(GetByNameAsync)} for Name: {Name}");
-
-		
-
-			Warehouse? warehouse = await _warehouses.SingleOrDefaultAsync(c => c.Name.Equals(Name));
-
+			Warehouse? warehouse = await _warehouses
+				.Where(w => w.Name.Equals(Name) && w.DeletedAt == null)
+				.Include(w => w.ProductInventories.Where(pi => pi.DeletedAt == null))
+				.ThenInclude(pi => pi.Product)
+				.SingleOrDefaultAsync();
 			if (warehouse is null)
 			{
-				_logger.LogWarning($"No Category with this Name:{Name}");
-				return Result<Warehouse?>.Fail($"No Category with this Name:{Name}");
+				_logger.LogWarning($"No Warehouse with this Name:{Name}");
+				return null;
 			}
-
-			_logger.LogWarning("category found in database");
-			return Result<Warehouse?>.Ok(warehouse, "From database");
+			_logger.LogInformation("Warehouse found in database");
+			return warehouse;
 		}
 
 

@@ -22,7 +22,7 @@ namespace E_Commers.Services.WareHouseServices
 			var list = new List<LinkDto>
 			{
 					new LinkDto(GetUriByAction(nameof(WareHousesController.CreateWareHouseAsync))??"","Create-WareHouse","POST"),
-				new LinkDto(GetUriByAction(nameof(WareHousesController.GetAllAsync))??"","get-all-WareHouse","GET"),
+				new LinkDto(GetUriByAction(nameof(WareHousesController.GetAll))??"","get-all-WareHouse","GET"),
 			
 			};
 			if (id != null)

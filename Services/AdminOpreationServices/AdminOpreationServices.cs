@@ -23,16 +23,14 @@ namespace E_Commers.Services.AdminOpreationServices
 				AdminId = userid,
 				ItemId = itemid,
 				OperationType = opreation,
-
-
 			};
-			var iscreated = await _unitOfWork.Repository<AdminOperationsLog>().CreateAsync(adminopreation);
-			if (!iscreated.Success||iscreated.Data is null)
+			var created = await _unitOfWork.Repository<AdminOperationsLog>().CreateAsync(adminopreation);
+			if (created == null)
 			{
-				_logger.LogError(iscreated.Message);
-				return Result<AdminOperationsLog>.Fail(iscreated.Message);
+				_logger.LogError("Failed to create AdminOperationsLog");
+				return Result<AdminOperationsLog>.Fail("Failed to create AdminOperationsLog");
 			}
-			return Result<AdminOperationsLog>.Ok(iscreated.Data);
+			return Result<AdminOperationsLog>.Ok(created);
 		}
 
 		public Task<Result<bool>> DeleteAdminOpreationAsync(int id)

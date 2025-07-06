@@ -15,26 +15,44 @@ public class UnitOfWork : IUnitOfWork
 	private readonly ILoggerFactory _loggerFactory;
 	private readonly IConnectionMultiplexer _redis;
 	public ICategoryRepository Category { get; }
+	public ISubCategoryRepository SubCategory { get;  }
+	public ICartRepository Cart { get; }
+	public IOrderRepository Order { get; }
+	public ICollectionRepository Collection { get; }
 	public IWareHouseRepository  WareHouse { get; }
 	public IProductRepository Product { get; }
 	public IProductInventoryRepository ProductInventory { get; }
+	public IImageRepository Image { get; }
+	public ICustomerAddressRepository CustomerAddress { get; }
 
 	public UnitOfWork(
+		ISubCategoryRepository subCategory,
 		IProductRepository product,
+		ICartRepository cart,
+		IOrderRepository order,
+		ICollectionRepository collection,
 		IWareHouseRepository wareHouse,
 		IProductInventoryRepository productInventory,
 		IConnectionMultiplexer redis,
 		AppDbContext context,
 		ICategoryRepository category,
-		ILoggerFactory loggerFactory)
-	{
+		ILoggerFactory loggerFactory,
+		IImageRepository imageRepository,
+		ICustomerAddressRepository customerAddressRepository)
+	{ 
+		 SubCategory = subCategory;
 		Product = product;
+		Cart = cart;
+		Order = order;
+		Collection = collection;
 		WareHouse = wareHouse;
 		ProductInventory = productInventory;
 		_redis = redis;
 		_context = context;
 		Category = category;
 		_loggerFactory = loggerFactory;
+		Image = imageRepository;
+		CustomerAddress = customerAddressRepository;
 	}
 
 	public async Task<int> CommitAsync()

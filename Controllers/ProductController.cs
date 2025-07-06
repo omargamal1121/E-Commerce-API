@@ -31,79 +31,60 @@ namespace E_Commers.Controllers
 		private readonly IProductLinkBuilder _productLinkBuilder;
 		private readonly IProductsServices _productsServices;
 		private readonly ILogger<ProductController> _logger;
-		public ProductController(IProductLinkBuilder productLinkBuilder, IUnitOfWork unitOfWork,IProductsServices productsServices,ILogger<ProductController> logger )
+		public ProductController(IProductLinkBuilder productLinkBuilder, IUnitOfWork unitOfWork, IProductsServices productsServices, ILogger<ProductController> logger)
 		{
 			_productLinkBuilder = productLinkBuilder;
 			_productsServices = productsServices;
 			_logger = logger;
-			_unitOfWork = unitOfWork;	
+			_unitOfWork = unitOfWork;
+		}
+
+		private ActionResult<ApiResponse<T>> HandleResult<T>(Result<T> result, string actionName = null, int? id = null) where T : class
+		{
+			var apiResponse = result.Success
+				? ApiResponse<T>.CreateSuccessResponse(result.Message, result.Data, result.StatusCode, warnings: result.Warnings)
+				: ApiResponse<T>.CreateErrorResponse(result.Message, new ErrorResponse("Error", result.Message), result.StatusCode, warnings: result.Warnings);
+
+			switch (result.StatusCode)
+			{
+				case 200:
+					return Ok(apiResponse);
+				case 201:
+					return actionName != null && id.HasValue ? CreatedAtAction(actionName, new { id }, apiResponse) : StatusCode(201, apiResponse);
+				case 400:
+					return BadRequest(apiResponse);
+				case 401:
+					return Unauthorized(apiResponse);
+				case 404:
+					return NotFound(apiResponse);
+				case 409:
+					return Conflict(apiResponse);
+				default:
+					return StatusCode(result.StatusCode, apiResponse);
+			}
 		}
 
 		[HttpGet]
-		[ResponseCache(Duration =120)]
+		[ResponseCache(Duration = 120)]
 		public async Task<ActionResult<ApiResponse<List<ProductDto>>>> GetAllProducts()
 		{
 			_logger.LogInformation($"Executing {nameof(GetAllProducts)}");
 			var response = await _productsServices.GetAllAsync();
-			return HandleResponse(response, nameof(GetAllProducts));
+			return HandleResult<List<ProductDto>>(response, nameof(GetAllProducts));
 		}
 		[HttpGet("{id}")]
-		[ResponseCache(Duration =60,VaryByQueryKeys =new string[] {"id"})]
+		[ResponseCache(Duration = 60, VaryByQueryKeys = new string[] { "id" })]
 		public async Task<ActionResult<ApiResponse<ProductDto>>> GetProduct(int id)
 		{
 			_logger.LogInformation($"Executing {nameof(GetProduct)} for ID: {id}");
 			var response = await _productsServices.GetProductByIdAsync(id);
-			return HandleResponse(response, nameof(GetProduct), id);
-		}
-		private ActionResult<ApiResponse<T>> HandleResponse<T>(
-	 ApiResponse<T> response,
-	 string actionName,
-	 int? id = null)
-			where T : class
-		{
-			
-			
-				response.ResponseBody.Links = _productLinkBuilder.MakeRelSelf(
-					_productLinkBuilder.GenerateLinks(id),
-					actionName
-				);
-			
-			return response.Statuscode switch
-			{
-				200 => Ok(response),
-				201 => CreatedAtAction(actionName, new { id }, response),
-				400 => BadRequest(response),
-				401 => Unauthorized(response),
-				404 => NotFound(response),
-				409 => Conflict(response),
-				_ => StatusCode(response.Statuscode, response),
-			};
+			return HandleResult<ProductDto>(response, nameof(GetProduct), id);
 		}
 
 		[HttpPost]
 		public async Task<ActionResult<ApiResponse<ProductDto>>> CreateProduct(CreateProductDto model)
 		{
 			_logger.LogInformation($"Executing {nameof(CreateProduct)}");
-
-			if (!ModelState.IsValid)
-			{
-				var errors = string.Join(", ", ModelState.Values
-					.SelectMany(v => v.Errors)
-					.Select(e => e.ErrorMessage)
-					.ToList());
-				_logger.LogError($"Validation Errors: { errors}");
-				return BadRequest(ApiResponse<Product>.CreateErrorResponse(new ErrorResponse("Invalid data",errors)));
-			}
-
-			var userId = HttpContext.Items["UserId"]?.ToString();
-			var response = await _productsServices.CreateProductAsync(model, userId);
-			return HandleResponse(response, nameof(GetProduct),response.ResponseBody?.Data?.Id);
-		}
-		[HttpPut("{id}")]
-		public async Task<ActionResult<ApiResponse<ProductDto>>> UpdateProduct(int id, UpdateProductDto model)
-		{
-			_logger.LogInformation($"Executing {nameof(UpdateProduct)} for ID: {id}");
-
 			if (!ModelState.IsValid)
 			{
 				var errors = string.Join(", ", ModelState.Values
@@ -111,12 +92,28 @@ namespace E_Commers.Controllers
 					.Select(e => e.ErrorMessage)
 					.ToList());
 				_logger.LogError($"Validation Errors: {errors}");
-				return BadRequest(ApiResponse<Product>.CreateErrorResponse(new ErrorResponse("Invalid data", errors)));
+				return BadRequest(ApiResponse<ProductDto>.CreateErrorResponse("Check on data", new ErrorResponse("Invalid data", errors)));
 			}
-
+			var userId = HttpContext.Items["UserId"]?.ToString();
+			var response = await _productsServices.CreateProductAsync(model, userId);
+			return HandleResult<ProductDto>(response, nameof(GetProduct), response.Data?.Id);
+		}
+		[HttpPut("{id}")]
+		public async Task<ActionResult<ApiResponse<ProductDto>>> UpdateProduct(int id, UpdateProductDto model)
+		{
+			_logger.LogInformation($"Executing {nameof(UpdateProduct)} for ID: {id}");
+			if (!ModelState.IsValid)
+			{
+				var errors = string.Join(", ", ModelState.Values
+					.SelectMany(v => v.Errors)
+					.Select(e => e.ErrorMessage)
+					.ToList());
+				_logger.LogError($"Validation Errors: {errors}");
+				return BadRequest(ApiResponse<ProductDto>.CreateErrorResponse("", new ErrorResponse("Invalid data", errors)));
+			}
 			var userId = HttpContext.Items["UserId"]?.ToString();
 			var response = await _productsServices.UpdateProductAsync(id, model, userId);
-			return HandleResponse(response, nameof(GetProduct), id);
+			return HandleResult<ProductDto>(response, nameof(GetProduct), id);
 		}
 
 		[HttpDelete("{id}")]
@@ -125,7 +122,7 @@ namespace E_Commers.Controllers
 			_logger.LogInformation($"Executing {nameof(DeleteProduct)} for ID: {id}");
 			var userId = HttpContext.Items["UserId"]?.ToString();
 			var response = await _productsServices.DeleteProductAsync(id, userId);
-			return HandleResponse(response, nameof(GetProduct), id);
+			return HandleResult<string>(response, nameof(GetProduct), id);
 		}
 
 		[HttpGet("category/{categoryId}")]
@@ -133,41 +130,38 @@ namespace E_Commers.Controllers
 		{
 			_logger.LogInformation($"Executing {nameof(GetProductsByCategory)} for category ID: {categoryId}");
 			var response = await _productsServices.GetProductsByCategoryId(categoryId);
-			return HandleResponse(response, nameof(GetProductsByCategory), categoryId);
+			return HandleResult<List<ProductDto>>(response, nameof(GetProductsByCategory), categoryId);
 		}
 
-		[HttpGet("{productId}/inventory")]
-		public async Task<ActionResult<ApiResponse<List<InventoryDto>>>> GetProductInventory(int productId)
-		{
-			_logger.LogInformation($"Executing {nameof(GetProductInventory)} for product ID: {productId}");
-			var response = await _productsServices.GetProductInventoryAsync(productId);
-			return HandleResponse(response, nameof(GetProductInventory), productId);
-		}
+		//[HttpGet("{productId}/inventory")]
+		//public async Task<ActionResult<ApiResponse<List<InventoryDto>>>> GetProductInventory(int productId)
+		//{
+		//	_logger.LogInformation($"Executing {nameof(GetProductInventory)} for product ID: {productId}");
+		//	var response = await _productsServices.GetProductInventoryAsync(productId);
+		//	return HandleResult<List<InventoryDto>>(response, nameof(GetProductInventory), productId);
+		//}
 
-		[HttpPatch("{productId}/quantity")]
-		public async Task<ActionResult<ApiResponse<ProductDto>>> UpdateProductQuantity(int productId, [FromBody] int quantity)
-		{
-			_logger.LogInformation($"Executing {nameof(UpdateProductQuantity)} for product ID: {productId}");
-			var userId = HttpContext.Items["UserId"]?.ToString();
-			var response = await _productsServices.UpdateProductQuantityAsync(productId, quantity, userId);
-			return HandleResponse(response, nameof(GetProduct), productId);
-		}
+		//[HttpPatch("{productId}/quantity")]
+		//public async Task<ActionResult<ApiResponse<ProductDto>>> UpdateProductQuantity(int productId, [FromBody] int quantity)
+		//{
+		//	_logger.LogInformation($"Executing {nameof(UpdateProductQuantity)} for product ID: {productId}");
+		//	var userId = HttpContext.Items["UserId"]?.ToString();
+		////	var response = await _productsServices.UpdateProductQuantityAsync(productId, quantity, userId);
+		//	return HandleResult<ProductDto>(response, nameof(GetProduct), productId);
+		//}
 
 		[HttpGet("deleted-Products")]
-		[ResponseCache(Duration =60)]
+		[ResponseCache(Duration = 60)]
 		public async Task<ActionResult<ResponseDto>> GetDeletedProductsAsync()
 		{
 			_logger.LogInformation($"Executing {nameof(GetDeletedProductsAsync)}");
-
-			var resultlist = await _unitOfWork.Product.GetAllAsync(p=>p.Include(c=>c.SubCategory).Include(c => c.Discount), filter: c => c.DeletedAt.HasValue);
-
-			if (!resultlist.Success|| !resultlist.Data.Any())
+			var resultlist = _unitOfWork.Product.GetAll();
+			if (resultlist == null || !resultlist.Any())
 			{
 				_logger.LogInformation("No Deleted Products found");
 				return Ok(new ResponseDto { Message = "No Deleted Products found" });
 			}
-
-			var ProductsDtos = resultlist.Data.Select(c => new ProductDto
+			var ProductsDtos = resultlist.Select(c => new ProductDto
 			{
 				Name = c.Name,
 				CreatedAt = c.CreatedAt,
@@ -175,63 +169,51 @@ namespace E_Commers.Controllers
 				Description = c.Description,
 				Id = c.Id,
 				ModifiedAt = c.ModifiedAt,
-				AvailabeQuantity=c.Quantity,
-			
-			
+				
 			}).ToList();
-
 			_logger.LogInformation($"Deleted Prducts found: {ProductsDtos.Count()}");
-			return Ok(new ResponseDto { Message = resultlist.Message,Data= ProductsDtos });
+			return Ok(new ResponseDto { Message = "Success", Data = ProductsDtos });
 		}
 		[HttpPatch("return-Deleted-Product")]
-		[ResponseCache(Duration =120,VaryByQueryKeys =new string[] { "id"})]
+		[ResponseCache(Duration = 120, VaryByQueryKeys = new string[] { "id" })]
 		public async Task<ActionResult<ResponseDto>> ReturnRemovedCategoryAsync(int id)
 		{
 			_logger.LogInformation($"Executing {nameof(ReturnRemovedCategoryAsync)}");
-
 			string userid = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-
-
-			Result<Product> resultProduct = await _unitOfWork.Product.GetByIdAsync(id);
-			if (!resultProduct.Success)
+			var resultProduct = await _unitOfWork.Product.GetByIdAsync(id);
+			if (resultProduct == null)
 			{
 				_logger.LogWarning($"Product not found with ID: {id}");
-				return BadRequest(new ResponseDto {Message = $"Product not found with ID: {id}" });
+				return BadRequest(new ResponseDto { Message = $"Product not found with ID: {id}" });
 			}
-
 			using var tran = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
-
-			resultProduct.Data.DeletedAt = null;
-			Result<Product> updateResult = await _unitOfWork.Product.UpdateAsync(resultProduct.Data);
-			if (!updateResult.Success)
+			resultProduct.DeletedAt = null;
+			var updateResult = _unitOfWork.Product.Update(resultProduct);
+			if (!updateResult)
 			{
-				_logger.LogError(updateResult.Message);
-				return StatusCode(500, new ResponseDto { Message = updateResult.Message });
+				_logger.LogError("Failed to update product");
+				return StatusCode(500, new ResponseDto { Message = "Failed to update product" });
 			}
-
-			Result<AdminOperationsLog> logResult = await _unitOfWork.Repository<AdminOperationsLog>().CreateAsync(new AdminOperationsLog
+			var logResult = await _unitOfWork.Repository<AdminOperationsLog>().CreateAsync(new AdminOperationsLog
 			{
 				AdminId = userid,
-				ItemId = resultProduct.Data.Id,
+				ItemId = resultProduct.Id,
 				OperationType = Opreations.UndoDeleteOpreation,
-				Description = $"Undo Delete of Product: {resultProduct.Data.Id}"
+				Description = $"Undo Delete of Product: {resultProduct.Id}"
 			});
-
-			if (!logResult.Success)
+			if (logResult == null)
 			{
-				_logger.LogError(logResult.Message);
-				return StatusCode(500, new ResponseDto { Message = logResult.Message });
+				_logger.LogError("Failed to log admin operation");
+				return StatusCode(500, new ResponseDto { Message = "Failed to log admin operation" });
 			}
-
 			int saveResult = await _unitOfWork.CommitAsync();
 			if (saveResult == 0)
 			{
 				_logger.LogError("Database update failed, no changes were committed.");
 				return StatusCode(500, new ResponseDto { Message = "Database update failed, no changes were committed." });
 			}
-
 			tran.Complete();
-			return Ok(new ResponseDto { Message = $"Product restored: {resultProduct.Data.Id}" });
+			return Ok(new ResponseDto { Message = $"Product restored: {resultProduct.Id}" });
 		}
 
 		[HttpDelete()]
@@ -239,57 +221,45 @@ namespace E_Commers.Controllers
 		public async Task<ActionResult<ResponseDto>> DeleteProductAsync(int id)
 		{
 			_logger.LogInformation($"Executing {nameof(DeleteProductAsync)}");
-
 			using var transaction = await _unitOfWork.BeginTransactionAsync();
-
 			try
 			{
-				Result<Product> resultProduct = await _unitOfWork.Product.GetByIdAsync(id);
-				if (resultProduct.Data is null || resultProduct.Data.DeletedAt.HasValue)
+				var resultProduct = await _unitOfWork.Product.GetByIdAsync(id);
+				if (resultProduct == null || resultProduct.DeletedAt.HasValue)
 				{
 					_logger.LogWarning($"No Category with this id: {id}");
-					return BadRequest(new ResponseDto {Message = $"No Category with this id: {id}" });
+					return BadRequest(new ResponseDto { Message = $"No Category with this id: {id}" });
 				}
-
 				string adminId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-
-				
-				resultProduct.Data.DeletedAt = DateTime.UtcNow;
-
-				Result<Product> result = await _unitOfWork.Product.UpdateAsync(resultProduct.Data);
-				if (!result.Success)
+				resultProduct.DeletedAt = DateTime.UtcNow;
+				var result = _unitOfWork.Product.Update(resultProduct);
+				if (!result)
 				{
-					_logger.LogError(result.Message);
-					return StatusCode(500, new ResponseDto { Message = result.Message });
+					_logger.LogError("Failed to update product");
+					return StatusCode(500, new ResponseDto { Message = "Failed to update product" });
 				}
-
 				if (await _unitOfWork.CommitAsync() == 0)
 				{
 					_logger.LogError("Can't delete category.");
 					return StatusCode(500, new ResponseDto { Message = "Can't delete category." });
 				}
-
-				_logger.LogInformation($"Category Deleted successfully, ID: {resultProduct.Data.Id}");
-
+				_logger.LogInformation($"Category Deleted successfully, ID: {resultProduct.Id}");
 				AdminOperationsLog adminOperations = new()
 				{
 					OperationType = Opreations.DeleteOpreation,
 					AdminId = adminId,
-					Description = $"Deleted category: {resultProduct.Data.Id}",
+					Description = $"Deleted category: {resultProduct.Id}",
 					Timestamp = DateTime.UtcNow
 				};
-
-				Result<AdminOperationsLog> logResult = await _unitOfWork.Repository<AdminOperationsLog>().CreateAsync(adminOperations);
-				if (!logResult.Success)
+				var logResult = await _unitOfWork.Repository<AdminOperationsLog>().CreateAsync(adminOperations);
+				if (logResult == null)
 				{
 					await transaction.RollbackAsync();
-					return StatusCode(500, new ResponseDto { Message = logResult.Message });
+					return StatusCode(500, new ResponseDto { Message = "Failed to log admin operation" });
 				}
-
 				await _unitOfWork.CommitAsync();
 				await transaction.CommitAsync();
-
-				return Ok(new ResponseDto { Message = $"Deleted successfully, ID: {resultProduct.Data.Id}", });
+				return Ok(new ResponseDto { Message = $"Deleted successfully, ID: {resultProduct.Id}", });
 			}
 			catch (Exception ex)
 			{
@@ -302,58 +272,46 @@ namespace E_Commers.Controllers
 		public async Task<ActionResult<ResponseDto>> ProductsByCategoryId(int id)
 		{
 			_logger.LogInformation($"Execute {nameof(ProductsByCategoryId)} ");
-			  Result< Category > category = await _unitOfWork.Category.GetByIdAsync(id);
-			if(!category.Success|| category.Data is null)
+			var category = await _unitOfWork.Category.GetByIdAsync(id);
+			if (category == null)
 			{
-				return NotFound(new ResponseDto { Message = category.Message });
-
+				return NotFound(new ResponseDto { Message = "Category not found" });
 			}
-			//if(category.Data.products.Count==0)
-			//{
-			//	_logger.LogWarning("No Products in this Category");
-			//	return NotFound(new ResponseDto { Message = "No Products in this Category" });
-			//}
-			//var productsdto = category.Data.subCategories.Select(p => new ProductDto
-			//{
-			//	Id = p.Id,
-			//	Name = p.Name,
-			//	AvailabeQuantity = p.Quantity,
-			//	Description = p.Description,
-			//	Discount = p.Discount == null ? null : new DiscountDto(p.Discount.Id, p.Discount.Name, p.Discount.DiscountPercent, p.Discount.Description, p.Discount.IsActive),
-			//	FinalPrice = p.Discount == null || !p.Discount.IsActive ? p.Price : p.Price - p.Discount.DiscountPercent * p.Price,
-			//	Category = new CategoryDto(p.Category.Id, p.Category.Name, p.Category.Description, p.Category.CreatedAt),
-			//	CreatedAt = p.CreatedAt,
-			//});
-			return Ok(new ResponseDto { Message = category.Message, Data = new object() });
+			return Ok(new ResponseDto { Message = "Success", Data = new object() });
 		}
 
 		[HttpGet("wareHouse")]
 		public async Task<ActionResult<ResponseDto>> ProductsByWareHouse(int id)
 		{
 			_logger.LogInformation($"Execute {nameof(ProductsByWareHouse)} ");
-			Result<Warehouse> category = await _unitOfWork.WareHouse.GetByIdAsync(id);
-			if (!category.Success || category.Data is null)
+			var category = await _unitOfWork.WareHouse.GetByIdAsync(id);
+			if (category == null)
 			{
-				return NotFound(new ResponseDto { Message = category.Message });
-
+				return NotFound(new ResponseDto { Message = "Warehouse not found" });
 			}
-			if (category.Data.ProductInventories.Count == 0)
+			if (category.ProductInventories.Count == 0)
 			{
 				_logger.LogWarning("No Products in this WareHouse");
 				return NotFound(new ResponseDto { Message = "No Products in this WareHouse" });
 			}
-			var productsdto = category.Data.ProductInventories.Select(p => new ProductDto
+			var productsdto = category.ProductInventories.Select(p => new ProductDto
 			{
 				Id = p.Product.Id,
 				Name = p.Product.Name,
-				AvailabeQuantity = p.Quantity,
+			
 				Description = p.Product.Description,
 				Discount = p.Product.Discount == null ? null : new DiscountDto(p.Product.Discount.Id, p.Product.Discount.Name, p.Product.Discount.DiscountPercent, p.Product.Discount.Description, p.Product.Discount.IsActive),
-				//FinalPrice = p.Product.Discount == null || !p.Product.Discount.IsActive ? p.Product.Price : p.Product.Price - p.Product.Discount.DiscountPercent * p.Product.Price,
-				//Category = new CategoryDto(p.Product.Category.Id, p.Product.Category.Name, p.Product.Category.Description, p.Product.Category.CreatedAt),
 				CreatedAt = p.CreatedAt,
 			});
-			return Ok(new ResponseDto { Message = category.Message , Data= productsdto });
+			return Ok(new ResponseDto { Message = "Success", Data = productsdto });
+		}
+
+		[HttpPatch("{id}/restore")]
+		public async Task<ActionResult<ApiResponse<ProductDto>>> RestoreProductAsync(int id)
+		{
+			var userId = HttpContext.Items["UserId"]?.ToString();
+			var result = await _productsServices.RestoreProductAsync(id, userId);
+			return HandleResult(result, nameof(RestoreProductAsync), id);
 		}
 	}
 }

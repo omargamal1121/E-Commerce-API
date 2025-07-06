@@ -2,11 +2,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace E_Commers.Models
 {
-    public class Image
+    public class Image : BaseEntity
     {
-        [Key]
-        public int Id { get; set; }
-
         [Required]
         public string Url { get; set; }
 
@@ -27,6 +24,15 @@ namespace E_Commers.Models
 		public string? FileType { get; set; }
 		public ICollection<Product>? Products { get; set; }
         public ICollection<Category>? Categories { get; set; }
+        public ICollection<SubCategory>? subCategories { get; set; }
 		public ICollection<Customer>? Customers { get; set; }
+        public int? CategoryId { get; set; }
+        public Category? Category { get; set; }
+        public int? SubCategoryId { get; set; }
+        public SubCategory? SubCategory { get; set; }
+        public int? ProductId { get; set; }
+        public Product? Product { get; set; }
+        public int? CollectionId { get; set; }
+        public Collection? Collection { get; set; }
 	}
 } 

@@ -37,7 +37,7 @@ public class SecurityStampMiddleware
 				{
 					context.Response.StatusCode = 401;
 					context.Response.ContentType = "application/json";
-					var response = ApiResponse<string>.CreateErrorResponse(new ErrorResponse("Authentication", "Invalid Token - User ID missing"));
+					var response = ApiResponse<string>.CreateErrorResponse("Error", new ErrorResponse("Authentication", "Invalid Token - User ID missing"));
 					await context.Response.WriteAsync(JsonConvert.SerializeObject(response));
 					return;
 				}
@@ -54,7 +54,7 @@ public class SecurityStampMiddleware
 				{
 					context.Response.StatusCode = 401;
 					context.Response.ContentType = "application/json";
-					var response = ApiResponse<string>.CreateErrorResponse(new ErrorResponse("Authentication", "Invalid Token - User not found"));
+					var response = ApiResponse<string>.CreateErrorResponse("Error", new ErrorResponse("Authentication", "Invalid Token - User not found"));
 					await context.Response.WriteAsync(JsonConvert.SerializeObject(response));
 					return;
 				}
@@ -65,7 +65,7 @@ public class SecurityStampMiddleware
 				{
 					context.Response.StatusCode = 401;
 					context.Response.ContentType = "application/json";
-					var response = ApiResponse<string>.CreateErrorResponse(new ErrorResponse("Authentication", "Invalid Token - SecurityStamp mismatch"));
+					var response = ApiResponse<string>.CreateErrorResponse("Error", new ErrorResponse("Authentication", "Invalid Token - SecurityStamp mismatch"));
 					await context.Response.WriteAsync(JsonConvert.SerializeObject(response));
 					return;
 				}

@@ -81,4 +81,90 @@
 {
   "userId": "string",
   "refreshToken": "string"
-} 
+}
+
+
+# Category Endpoints
+
+## 1. Get Category by ID
+- **Endpoint:** GET /api/Categories/{id}
+
+## 2. Get All Categories (with filters)
+- **Endpoint:** GET /api/Categories
+- **Query:** search, isActive, includeDeleted, page, pageSize
+
+## 3. Create Category
+- **Endpoint:** POST /api/Categories
+- **Body:** multipart/form-data (CreateCategotyDto)
+
+## 4. Update Category
+- **Endpoint:** PUT /api/Categories/{id}
+- **Body:** multipart/form-data (UpdateCategoryDto)
+
+## 5. Delete Category (Soft Delete)
+- **Endpoint:** DELETE /api/Categories/{id}
+
+## 6. Restore Category
+- **Endpoint:** PATCH /api/Categories/{id}/Restore
+
+## 7. Add Main Image
+- **Endpoint:** POST /api/Categories/{id}/AddMainImage
+- **Body:** multipart/form-data (AddMainImageDto)
+
+## 8. Add Extra Images
+- **Endpoint:** POST /api/Categories/{id}/AddExtraImages
+- **Body:** multipart/form-data (AddImagesDto)
+
+## 9. Remove Image
+- **Endpoint:** DELETE /api/Categories/{categoryId}/RemoveImage/{imageId}
+
+## 10. Change Active Status
+- **Endpoint:** PATCH /api/Categories/{categoryId}/ChangeActiveStatus
+
+
+# SubCategory Endpoints
+
+## 1. Get SubCategory by ID
+- **Endpoint:** GET /api/SubCategory/{id}
+
+## 2. Get All SubCategories (with filters)
+- **Endpoint:** GET /api/SubCategory
+- **Query:** search, isActive, includeDeleted, page, pageSize
+
+## 3. Create SubCategory
+- **Endpoint:** POST /api/SubCategory
+- **Body:** multipart/form-data (CreateSubCategoryDto)
+
+## 4. Update SubCategory
+- **Endpoint:** PUT /api/SubCategory/{id}
+- **Body:** multipart/form-data (UpdateSubCategoryDto)
+
+## 5. Delete SubCategory (Soft Delete)
+- **Endpoint:** DELETE /api/SubCategory/{id}
+
+## 6. Restore SubCategory
+- **Endpoint:** PATCH /api/SubCategory/{id}/Restore
+
+## 7. Add Main Image
+- **Endpoint:** POST /api/SubCategory/{id}/AddMainImage
+- **Body:** multipart/form-data (AddMainImageDto)
+
+## 8. Add Extra Images
+- **Endpoint:** POST /api/SubCategory/{id}/AddExtraImages
+- **Body:** multipart/form-data (AddImagesDto)
+
+## 9. Remove Image
+- **Endpoint:** DELETE /api/SubCategory/{subCategoryId}/RemoveImage/{imageId}
+
+
+# Product Endpoints (Image/Restore Only)
+
+## 1. Add Images to Product
+- **Endpoint:** POST /api/Product/{id}/AddImage
+- **Body:** multipart/form-data (List<IFormFile> images)
+
+## 2. Remove Image from Product
+- **Endpoint:** DELETE /api/Product/{id}/RemoveImage/{imageId}
+
+## 3. Restore Product
+- **Endpoint:** PATCH /api/Product/{id}/restore 

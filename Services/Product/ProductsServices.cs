@@ -1,183 +1,295 @@
 ﻿using AutoMapper;
+using E_Commers.DtoModels.CategoryDtos;
+using E_Commers.DtoModels.DiscoutDtos;
+using E_Commers.DtoModels.ImagesDtos;
+using E_Commers.DtoModels.InventoryDtos;
 using E_Commers.DtoModels.ProductDtos;
 using E_Commers.DtoModels.Responses;
-using E_Commers.Interfaces;
-using E_Commers.UOW;
-using Microsoft.EntityFrameworkCore;
-using E_Commers.DtoModels.InventoryDtos;
-using E_Commers.Models;
-using E_Commers.ErrorHnadling;
-using Microsoft.Extensions.Logging;
-using E_Commers.Services.WareHouseServices;
 using E_Commers.DtoModels.WareHouseDtos;
+using E_Commers.Enums;
+using E_Commers.ErrorHnadling;
+using E_Commers.Interfaces;
+using E_Commers.Models;
+using E_Commers.Services.AdminOpreationServices;
+using E_Commers.Services.EmailServices;
+using E_Commers.Services.WareHouseServices;
+using E_Commers.UOW;
+using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using System.IO;
 
 namespace E_Commers.Services.Product
 {
 	public interface IProductsServices
 	{
-		public Task<ApiResponse<List<ProductDto>>> GetAllAsync();
-		public Task<ApiResponse<List<ProductDto>>> GetProductsByCategoryId(int categoryid);
-		public Task<ApiResponse<ProductDto>> CreateProductAsync(CreateProductDto dto, string userId);
-		public Task<ApiResponse<ProductDto>> UpdateProductAsync(int id, UpdateProductDto dto, string userId);
-		public Task<ApiResponse<string>> DeleteProductAsync(int id, string userId);
-		public Task<ApiResponse<ProductDto>> GetProductByIdAsync(int id);
-		public Task<ApiResponse<List<InventoryDto>>> GetProductInventoryAsync(int productId);
-		public Task<ApiResponse<ProductDto>> UpdateProductQuantityAsync(int productId, int quantity, string userId);
+		// Core product operations (delegated to ProductCatalogService)
+		Task<Result<List<ProductDto>>> GetAllAsync();
+		Task<Result<ProductDto>> GetProductByIdAsync(int id);
+		Task<Result<ProductDto>> CreateProductAsync(CreateProductDto dto, string userId);
+		Task<Result<ProductDto>> UpdateProductAsync(int id, UpdateProductDto dto, string userId);
+		Task<Result<string>> DeleteProductAsync(int id, string userId);
+		Task<Result<ProductDto>> RestoreProductAsync(int id, string userId);
+		Task<Result<List<ProductDto>>> GetProductsByCategoryId(int categoryId);
+		Task<Result<List<ProductDto>>> FilterAsync(string? search, bool? isActive, bool includeDeleted, int page, int pageSize, string role);
+
+		// Search operations (delegated to ProductSearchService)
+		Task<Result<List<ProductDto>>> SearchProductsAsync(string searchTerm, int page, int pageSize);
+		Task<Result<List<ProductDto>>> FilterByPriceRangeAsync(decimal minPrice, decimal maxPrice, int page, int pageSize);
+		Task<Result<List<ProductDto>>> FilterByGenderAsync(Gender gender, int page, int pageSize);
+		Task<Result<List<ProductDto>>> GetProductsOnSaleAsync(int page, int pageSize);
+		Task<Result<List<ProductDto>>> GetNewArrivalsAsync(int page, int pageSize);
+		Task<Result<List<ProductDto>>> GetBestSellersAsync(int page, int pageSize);
+		Task<Result<List<ProductDto>>> AdvancedSearchAsync(AdvancedSearchDto searchCriteria, int page, int pageSize);
+
+		// Image operations (delegated to ProductImageService)
+		Task<Result<List<ImageDto>>> GetProductImagesAsync(int productId);
+		Task<Result<ImageDto>> AddProductImageAsync(int productId, CreateImageDto dto, string userId);
+		Task<Result<string>> RemoveProductImageAsync(int productId, int imageId, string userId);
+		Task<Result<string>> SetMainImageAsync(int productId, int imageId, string userId);
+
+		// Variant operations (delegated to ProductVariantService)
+		Task<Result<List<ProductVariantDto>>> GetProductVariantsAsync(int productId);
+		Task<Result<ProductVariantDto>> AddVariantAsync(int productId, CreateProductVariantDto dto, string userId);
+		Task<Result<ProductVariantDto>> UpdateVariantAsync(int variantId, UpdateProductVariantDto dto, string userId);
+		Task<Result<string>> DeleteVariantAsync(int variantId, string userId);
+		Task<Result<string>> UpdateVariantPriceAsync(int variantId, decimal newPrice, string userId);
+		Task<Result<string>> UpdateVariantQuantityAsync(int variantId, int newQuantity, string userId);
+
+		// Discount operations (delegated to ProductDiscountService)
+		Task<Result<DiscountDto>> GetProductDiscountAsync(int productId);
+		Task<Result<DiscountDto>> AddDiscountToProductAsync(int productId, CreateDiscountDto dto, string userId);
+		Task<Result<DiscountDto>> UpdateProductDiscountAsync(int productId, UpdateDiscountDto dto, string userId);
+		Task<Result<string>> RemoveDiscountFromProductAsync(int productId, string userId);
+		Task<Result<decimal>> CalculateDiscountedPriceAsync(int productId, int variantId);
+
+		// Inventory operations (delegated to ProductInventoryService)
+		Task<Result<InventoryDto>> CreateInventoryAsync(CreateInvetoryDto dto, string userId);
+		Task<Result<InventoryDto>> UpdateInventoryQuantityAsync(UpdateInventoryQuantityDto dto, string userId);
+		Task<Result<List<InventoryDto>>> GetInventoryByProductIdAsync(int productId);
+		Task<Result<List<InventoryDto>>> GetLowStockAlertsAsync(int threshold = 10);
 	}
+
 	public class ProductsServices : IProductsServices
 	{
-		private readonly IUnitOfWork _unitOfWork;
-		private readonly IMapper _mapper;
-		private readonly ICategoryServices _categoryServices;
-		private readonly IWareHouseServices _warehouseServices;
-		private readonly IProductInventoryService _inventoryService;
+		private readonly IProductCatalogService _productCatalogService;
+		private readonly IProductSearchService _productSearchService;
+		private readonly IProductImageService _productImageService;
+		private readonly IProductVariantService _productVariantService;
+		private readonly IProductDiscountService _productDiscountService;
+		private readonly IProductInventoryService _productInventoryService;
 		private readonly ILogger<ProductsServices> _logger;
-		public ProductsServices(IUnitOfWork unitOfWork, IMapper mapper, IWareHouseServices warehouseServices, ICategoryServices categoryServices, IProductInventoryService inventoryService, ILogger<ProductsServices> logger)
+
+		public ProductsServices(
+			IProductCatalogService productCatalogService,
+			IProductSearchService productSearchService,
+			IProductImageService productImageService,
+			IProductVariantService productVariantService,
+			IProductDiscountService productDiscountService,
+			IProductInventoryService productInventoryService,
+			ILogger<ProductsServices> logger)
 		{
-			_warehouseServices=warehouseServices;
-			_categoryServices = categoryServices;
-			_mapper = mapper;
-			_unitOfWork = unitOfWork;
-			_inventoryService = inventoryService;
+			_productCatalogService = productCatalogService;
+			_productSearchService = productSearchService;
+			_productImageService = productImageService;
+			_productVariantService = productVariantService;
+			_productDiscountService = productDiscountService;
+			_productInventoryService = productInventoryService;
 			_logger = logger;
 		}
-		public async Task<ApiResponse<List<ProductDto>>> GetAllAsync()
+
+		#region Core Product Operations (Delegated to ProductCatalogService)
+
+		public async Task<Result<List<ProductDto>>> GetAllAsync()
 		{
-			var products = await _unitOfWork.Product.GetAllAsync();
-			if (products.Data is null)
-				return ApiResponse<List<ProductDto>>.CreateSuccessResponse("No Products Found", new List<ProductDto>());
-
-			var productsdto = await products.Data.Where(p => p.DeletedAt == null).Select(p => _mapper.Map<ProductDto>(p)).ToListAsync();
-			return ApiResponse<List<ProductDto>>.CreateSuccessResponse("All Products", productsdto);
+			return await _productCatalogService.GetAllAsync();
 		}
-		public async Task<ApiResponse<List<ProductDto>>> GetProductsByCategoryId(int categoryid)
+
+		public async Task<Result<ProductDto>> GetProductByIdAsync(int id)
 		{
-			var isfound = await _categoryServices.IsExsistAsync(categoryid);
-			if (isfound.Statuscode == 404)
-				return ApiResponse<List<ProductDto>>.CreateErrorResponse(new ErrorResponse("Category Id", $"No Category with this id:{categoryid}"), 404);
-
-			var products = await _unitOfWork.Product.GetAllAsync();
-			if (products.Data is null || products.Data.Any())
-				return ApiResponse<List<ProductDto>>.CreateSuccessResponse("No Products Found", new List<ProductDto>());
-
-			var productsdto = await products.Data.Include(p => p.Discount).Where(p => p.DeletedAt == null && p.SubCategoryId == categoryid).Select(p => _mapper.Map<ProductDto>(p)).ToListAsync();
-			return ApiResponse<List<ProductDto>>.CreateSuccessResponse("All Products", productsdto);
+			return await _productCatalogService.GetProductByIdAsync(id);
 		}
-		public async Task<ApiResponse<ProductDto>> CreateProductAsync(CreateProductDto dto, string userId)
+
+		public async Task<Result<ProductDto>> CreateProductAsync(CreateProductDto dto, string userId)
 		{
-			_logger.LogInformation($"Creating new product: {dto.Name}");
-	
-			var categoryExists = await _categoryServices.IsExsistAsync(dto.CategoryId);
-			if (categoryExists.Statuscode == 404)
-				return ApiResponse<ProductDto>.CreateErrorResponse(
-					new ErrorResponse("Category", "Category not found"), 404);
-
-
-			var warehouseExists = await _warehouseServices.IsExsistAsync(dto.WarehouseId);
-			if (warehouseExists.Statuscode == 404)
-				return ApiResponse<ProductDto>.CreateErrorResponse(
-					new ErrorResponse("Warehouse", "Warehouse not found"), 404);
-
-			var transaction = await _unitOfWork.BeginTransactionAsync();
-			var product = _mapper.Map<Models.Product>(dto);
-			var result = await _unitOfWork.Product.CreateAsync(product);
-			if (!result.Success){
-				await transaction.RollbackAsync();
-				return ApiResponse<ProductDto>.CreateErrorResponse(
-					new ErrorResponse("Product", result.Message), 400);
-			}
-
-		
-				var inventoryDto = new CreateInvetoryDto
-				{
-					ProductId = product.Id,
-					WareHouseId = dto.WarehouseId,
-					Quantity = dto.Quantity
-				};
-
-				var inventoryResult = await _inventoryService.CreateInventoryAsync(inventoryDto, userId);
-				if (inventoryResult.Statuscode!=201)
-				{
-
-				await transaction.RollbackAsync();
-
-				return ApiResponse<ProductDto>.CreateErrorResponse(
-						new ErrorResponse("Inventory", inventoryResult.ResponseBody.Message??"Error While Create inverntory"), 400);
-				}
-			
-
-			await _unitOfWork.CommitAsync();
-			var productDto = _mapper.Map<ProductDto>(product);
-			return ApiResponse<ProductDto>.CreateSuccessResponse("Product created successfully", productDto);
+			return await _productCatalogService.CreateProductAsync(dto, userId);
 		}
-		public async Task<ApiResponse<ProductDto>> UpdateProductAsync(int id, UpdateProductDto dto, string userId)
+
+		public async Task<Result<ProductDto>> UpdateProductAsync(int id, UpdateProductDto dto, string userId)
 		{
-			_logger.LogInformation($"Updating product: {id}");
-
-			var product = await _unitOfWork.Product.GetByIdAsync(id);
-			if (!product.Success || product.Data == null)
-				return ApiResponse<ProductDto>.CreateErrorResponse(
-					new ErrorResponse("Product", "Product not found"), 404);
-
-			_mapper.Map(dto, product.Data);
-			var result = await _unitOfWork.Product.UpdateAsync(product.Data);
-			if (!result.Success)
-				return ApiResponse<ProductDto>.CreateErrorResponse(
-					new ErrorResponse("Product", result.Message), 400);
-
-			await _unitOfWork.CommitAsync();
-			var productDto = _mapper.Map<ProductDto>(product.Data);
-			return ApiResponse<ProductDto>.CreateSuccessResponse("Product updated successfully", productDto);
+			return await _productCatalogService.UpdateProductAsync(id, dto, userId);
 		}
-		public async Task<ApiResponse<string>> DeleteProductAsync(int id, string userId)
+
+		public async Task<Result<string>> DeleteProductAsync(int id, string userId)
 		{
-			_logger.LogInformation($"Deleting product: {id}");
-
-			var product = await _unitOfWork.Product.GetByIdAsync(id);
-			if (!product.Success || product.Data == null)
-				return ApiResponse<string>.CreateErrorResponse(
-					new ErrorResponse("Product", "Product not found"), 404);
-
-		
-			var result = await _unitOfWork.Product.RemoveAsync(product.Data);
-			if (!result.Success)
-				return ApiResponse<string>.CreateErrorResponse(
-					new ErrorResponse("Product", result.Message), 400);
-
-			await _unitOfWork.CommitAsync();
-			return ApiResponse<string>.CreateSuccessResponse("Product deleted successfully", "Product deleted");
+			return await _productCatalogService.DeleteProductAsync(id, userId);
 		}
-		public async Task<ApiResponse<ProductDto>> GetProductByIdAsync(int id)
+
+		public async Task<Result<ProductDto>> RestoreProductAsync(int id, string userId)
 		{
-			var product = await _unitOfWork.Product.GetByIdAsync(id);
-			if (!product.Success || product.Data == null)
-				return ApiResponse<ProductDto>.CreateErrorResponse(
-					new ErrorResponse("Product", "Product not found"), 404);
-
-			var productDto = _mapper.Map<ProductDto>(product.Data);
-			return ApiResponse<ProductDto>.CreateSuccessResponse("Product retrieved successfully", productDto);
+			return await _productCatalogService.RestoreProductAsync(id, userId);
 		}
-		public async Task<ApiResponse<List<InventoryDto>>> GetProductInventoryAsync(int productId)
+
+		public async Task<Result<List<ProductDto>>> GetProductsByCategoryId(int categoryId)
 		{
-			return await _inventoryService.GetInventoryByProductIdAsync(productId);
+			return await _productCatalogService.GetProductsByCategoryId(categoryId);
 		}
-		public async Task<ApiResponse<ProductDto>> UpdateProductQuantityAsync(int productId, int quantity, string userId)
+
+		public async Task<Result<List<ProductDto>>> FilterAsync(string? search, bool? isActive, bool includeDeleted, int page, int pageSize, string role)
 		{
-			_logger.LogInformation($"Updating product quantity: {productId}");
-
-			var product = await _unitOfWork.Product.GetByIdAsync(productId);
-			if (!product.Success || product.Data == null)
-				return ApiResponse<ProductDto>.CreateErrorResponse(
-					new ErrorResponse("Product", "Product not found"), 404);
-
-			var result = await _unitOfWork.Product.UpdateQuantityAsync(productId, quantity);
-			if (!result.Success)
-				return ApiResponse<ProductDto>.CreateErrorResponse(
-					new ErrorResponse("Product", result.Message), 400);
-
-			await _unitOfWork.CommitAsync();
-			var productDto = _mapper.Map<ProductDto>(product.Data);
-			return ApiResponse<ProductDto>.CreateSuccessResponse("Product quantity updated successfully", productDto);
+			return await _productCatalogService.FilterAsync(search, isActive, includeDeleted, page, pageSize, role);
 		}
+
+		#endregion
+
+		#region Search Operations (Delegated to ProductSearchService)
+
+		public async Task<Result<List<ProductDto>>> SearchProductsAsync(string searchTerm, int page, int pageSize)
+		{
+			return await _productSearchService.SearchProductsAsync(searchTerm, page, pageSize);
+		}
+
+		public async Task<Result<List<ProductDto>>> FilterByPriceRangeAsync(decimal minPrice, decimal maxPrice, int page, int pageSize)
+		{
+			return await _productSearchService.FilterByPriceRangeAsync(minPrice, maxPrice, page, pageSize);
+		}
+
+		public async Task<Result<List<ProductDto>>> FilterByGenderAsync(Gender gender, int page, int pageSize)
+		{
+			return await _productSearchService.FilterByGenderAsync(gender, page, pageSize);
+		}
+
+		public async Task<Result<List<ProductDto>>> GetProductsOnSaleAsync(int page, int pageSize)
+		{
+			return await _productSearchService.GetProductsOnSaleAsync(page, pageSize);
+		}
+
+		public async Task<Result<List<ProductDto>>> GetNewArrivalsAsync(int page, int pageSize)
+		{
+			return await _productSearchService.GetNewArrivalsAsync(page, pageSize);
+		}
+
+		public async Task<Result<List<ProductDto>>> GetBestSellersAsync(int page, int pageSize)
+		{
+			return await _productSearchService.GetBestSellersAsync(page, pageSize);
+		}
+
+		public async Task<Result<List<ProductDto>>> AdvancedSearchAsync(AdvancedSearchDto searchCriteria, int page, int pageSize)
+		{
+			return await _productSearchService.AdvancedSearchAsync(searchCriteria, page, pageSize);
+		}
+
+		#endregion
+
+		#region Image Operations (Delegated to ProductImageService)
+
+		public async Task<Result<List<ImageDto>>> GetProductImagesAsync(int productId)
+		{
+			return await _productImageService.GetProductImagesAsync(productId);
+		}
+
+		public async Task<Result<ImageDto>> AddProductImageAsync(int productId, CreateImageDto dto, string userId)
+		{
+			return await _productImageService.AddProductImageAsync(productId, dto, userId);
+		}
+
+		public async Task<Result<string>> RemoveProductImageAsync(int productId, int imageId, string userId)
+		{
+			return await _productImageService.RemoveProductImageAsync(productId, imageId, userId);
+		}
+
+		public async Task<Result<string>> SetMainImageAsync(int productId, int imageId, string userId)
+		{
+			return await _productImageService.SetMainImageAsync(productId, imageId, userId);
+		}
+
+		#endregion
+
+		#region Variant Operations (Delegated to ProductVariantService)
+
+		public async Task<Result<List<ProductVariantDto>>> GetProductVariantsAsync(int productId)
+		{
+			return await _productVariantService.GetProductVariantsAsync(productId);
+		}
+
+		public async Task<Result<ProductVariantDto>> AddVariantAsync(int productId, CreateProductVariantDto dto, string userId)
+		{
+			return await _productVariantService.AddVariantAsync(productId, dto, userId);
+		}
+
+		public async Task<Result<ProductVariantDto>> UpdateVariantAsync(int variantId, UpdateProductVariantDto dto, string userId)
+		{
+			return await _productVariantService.UpdateVariantAsync(variantId, dto, userId);
+		}
+
+		public async Task<Result<string>> DeleteVariantAsync(int variantId, string userId)
+		{
+			return await _productVariantService.DeleteVariantAsync(variantId, userId);
+		}
+
+		public async Task<Result<string>> UpdateVariantPriceAsync(int variantId, decimal newPrice, string userId)
+		{
+			return await _productVariantService.UpdateVariantPriceAsync(variantId, newPrice, userId);
+		}
+
+		public async Task<Result<string>> UpdateVariantQuantityAsync(int variantId, int newQuantity, string userId)
+		{
+			return await _productVariantService.UpdateVariantQuantityAsync(variantId, newQuantity, userId);
+		}
+
+		#endregion
+
+		#region Discount Operations (Delegated to ProductDiscountService)
+
+		public async Task<Result<DiscountDto>> GetProductDiscountAsync(int productId)
+		{
+			return await _productDiscountService.GetProductDiscountAsync(productId);
+		}
+
+		public async Task<Result<DiscountDto>> AddDiscountToProductAsync(int productId, CreateDiscountDto dto, string userId)
+		{
+			return await _productDiscountService.AddDiscountToProductAsync(productId, dto, userId);
+		}
+
+		public async Task<Result<DiscountDto>> UpdateProductDiscountAsync(int productId, UpdateDiscountDto dto, string userId)
+		{
+			return await _productDiscountService.UpdateProductDiscountAsync(productId, dto, userId);
+		}
+
+		public async Task<Result<string>> RemoveDiscountFromProductAsync(int productId, string userId)
+		{
+			return await _productDiscountService.RemoveDiscountFromProductAsync(productId, userId);
+		}
+
+		public async Task<Result<decimal>> CalculateDiscountedPriceAsync(int productId, int variantId)
+		{
+			return await _productDiscountService.CalculateDiscountedPriceAsync(productId, variantId);
+		}
+
+		#endregion
+
+		#region Inventory Operations (Delegated to ProductInventoryService)
+
+		public async Task<Result<InventoryDto>> CreateInventoryAsync(CreateInvetoryDto dto, string userId)
+		{
+			return await _productInventoryService.CreateInventoryAsync(dto, userId);
+		}
+
+		public async Task<Result<InventoryDto>> UpdateInventoryQuantityAsync(UpdateInventoryQuantityDto dto, string userId)
+		{
+			return await _productInventoryService.UpdateInventoryQuantityAsync(dto, userId);
+		}
+
+		public async Task<Result<List<InventoryDto>>> GetInventoryByProductIdAsync(int productId)
+		{
+			return await _productInventoryService.GetInventoryByProductIdAsync(productId);
+		}
+
+		public async Task<Result<List<InventoryDto>>> GetLowStockAlertsAsync(int threshold = 10)
+		{
+			return await _productInventoryService.GetLowStockAlertsAsync(threshold);
+		}
+
+		#endregion
 	}
 }

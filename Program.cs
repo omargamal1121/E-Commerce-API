@@ -10,6 +10,7 @@ using E_Commers.Models;
 using E_Commers.Repository;
 using E_Commers.Services;
 using E_Commers.Services.AccountServices;
+using E_Commers.Services.AccountServices.Shared;
 using E_Commers.Services.AdminOpreationServices;
 using E_Commers.Services.Cache;
 using E_Commers.Services.Category;
@@ -17,6 +18,10 @@ using E_Commers.Services.EmailServices;
 using E_Commers.Services.Product;
 using E_Commers.Services.ProductInventoryServices;
 using E_Commers.Services.WareHouseServices;
+using E_Commers.Services.CustomerAddress;
+using E_Commers.Services.Cart;
+using E_Commers.Services.Order;
+using E_Commers.Services.Collection;
 using E_Commers.UOW;
 using Hangfire;
 using Hangfire.MySql;
@@ -39,6 +44,8 @@ using StackExchange.Redis;
 using System.Reflection;
 using System.Text;
 using System.Threading.RateLimiting;
+using Microsoft.AspNetCore.Routing;
+using E_Commers.Services.Discount;
 namespace E_Commers
 {
     public class Program
@@ -52,7 +59,6 @@ namespace E_Commers
                 {
                     options.SerializerSettings.ReferenceLoopHandling =
                         ReferenceLoopHandling.Serialize;
-                    options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
                 })
                 .ConfigureApiBehaviorOptions(options =>
                     options.SuppressModelStateInvalidFilter = true
@@ -63,41 +69,97 @@ namespace E_Commers
 			 .CreateLogger();
 
 			builder.Host.UseSerilog();
+			builder.Services.AddHttpContextAccessor();
+
 			builder.Services.AddTransient<ICategoryLinkBuilder, CategoryLinkBuilder>();
             builder.Services.AddTransient<IProductLinkBuilder, ProductLinkBuilder>();
-            builder.Services.AddTransient<IProductInventoryLinkBuilder, ProductInventoryLinkBuilder>();
 			builder.Services.AddTransient<IAccountLinkBuilder, AccountLinkBuilder>();
 			builder.Services.AddTransient<IWareHouseLinkBuilder, WareHouseLinkBuilder>();
             builder
-                .Services.AddIdentity<Customer, IdentityRole>()
+                .Services.AddIdentity<Customer, IdentityRole>(options =>
+                {
+                    var passwordPolicy = builder.Configuration.GetSection("Security:PasswordPolicy");
+                    options.Password.RequireDigit = passwordPolicy.GetValue<bool>("RequireDigit", true);
+                    options.Password.RequireLowercase = passwordPolicy.GetValue<bool>("RequireLowercase", true);
+                    options.Password.RequireUppercase = passwordPolicy.GetValue<bool>("RequireUppercase", true);
+                    options.Password.RequireNonAlphanumeric = passwordPolicy.GetValue<bool>("RequireNonAlphanumeric", true);
+                    options.Password.RequiredLength = passwordPolicy.GetValue<int>("RequiredLength", 8);
+                    options.Password.RequiredUniqueChars = passwordPolicy.GetValue<int>("RequiredUniqueChars", 4);
+                    var lockoutPolicy = builder.Configuration.GetSection("Security:LockoutPolicy");
+                    
+                    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(
+                        lockoutPolicy.GetValue<int>("LockoutDurationMinutes", 15)
+                    );
+                    options.Lockout.MaxFailedAccessAttempts = lockoutPolicy.GetValue<int>("MaxFailedAttempts", 5);
+                    options.Lockout.AllowedForNewUsers = true;
+                    options.User.RequireUniqueEmail = true;
+                    options.SignIn.RequireConfirmedEmail = true;
+                })
                 .AddEntityFrameworkStores<AppDbContext>()
                 .AddDefaultTokenProviders();
             builder.Services.AddScoped<ITokenService, TokenService>();
             builder.Services.AddScoped<IRefreshTokenService, RefreshTokenService>();
-            builder.Services.AddTransient<IImagesServices, ImagesServices>();
+            builder.Services.AddScoped<IImagesServices, ImagesServices>();
             builder.Services.AddTransient<IErrorNotificationService, ErrorNotificationService>();
             builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+            builder.Services.AddScoped<IImageRepository, ImageRepository>();
             builder.Services.AddScoped<ICategoryServices, CategoryServices>();
-            builder.Services.AddScoped<IWareHouseRepository, WareHouseRepository>();
+            			builder.Services.AddScoped<IWareHouseRepository, WareHouseRepository>();
             builder.Services.AddScoped<IProductRepository, ProductRepository>();
+            builder.Services.AddScoped<IProductVariantRepository, ProductVariantRepository>();
             builder.Services.AddScoped<IProductInventoryRepository, ProductInventoryRepository>();
             builder.Services.AddScoped<IAdminOpreationServices, AdminOpreationServices>();
             builder.Services.AddScoped<IWareHouseServices, WareHouseServices>();
+            
+            // Cart Services
+            builder.Services.AddScoped<ICartRepository, CartRepository>();
+            builder.Services.AddScoped<ICartServices, CartServices>();
+            
+            // Order Services
+            builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+            builder.Services.AddScoped<IOrderServices, OrderServices>();
+            
+            // Collection Services
+            builder.Services.AddScoped<ICollectionRepository, CollectionRepository>();
+            builder.Services.AddScoped<ICollectionServices, CollectionServices>();
+            
+            // CustomerAddress Services
+            builder.Services.AddScoped<ICustomerAddressRepository, CustomerAddressRepository>();
+            builder.Services.AddScoped<ICustomerAddressServices, CustomerAddressServices>();
+            
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-            builder.Services.AddHttpContextAccessor();
             builder.Services.AddScoped(typeof(IRepository<>), typeof(MainRepository<>));
             builder.Services.AddScoped<IAccountServices, AccountServices>();
-            builder.Services.AddScoped<IProductsServices, ProductsServices>();
+            
+            // Account Services Registration (SOLID Architecture)
+            builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
+            builder.Services.AddScoped<IRegistrationService, RegistrationService>();
+            builder.Services.AddScoped<IPasswordService, PasswordService>();
+            builder.Services.AddScoped<IProfileService, ProfileService>();
+            builder.Services.AddScoped<IAccountManagementService, AccountManagementService>();
+            
+            // Product Services Registration
+            builder.Services.AddScoped<IProductCatalogService, ProductCatalogService>();
+            builder.Services.AddScoped<IProductSearchService, ProductSearchService>();
+            builder.Services.AddScoped<IProductImageService, ProductImageService>();
+            builder.Services.AddScoped<IProductVariantService, ProductVariantService>();
+            builder.Services.AddScoped<IProductDiscountService, ProductDiscountService>();
             builder.Services.AddScoped<IProductInventoryService, Services.ProductInventoryServices.ProductInventoryService>();
+            builder.Services.AddScoped<IProductsServices, ProductsServices>();
+            builder.Services.AddScoped<IDiscountService, DiscountService>();
             builder.Services.AddAutoMapper(typeof(MappingProfile));
 			builder.Services.AddTransient<IEmailSender, EmailSender>();
+			builder.Services.AddScoped<IAccountEmailService, AccountEmailService>();
 			builder.Services.AddScoped<ErrorNotificationService>();
 			builder.Services.AddScoped<CategoryCleanupService>();
-            builder.Services.AddSingleton<IConnectionMultiplexer>(
+			builder.Services.AddScoped<ISubCategoryServices, SubCategoryServices>();
+			builder.Services.AddScoped<ISubCategoryRepository, SubCategoryRepository>();
+			builder.Services.AddScoped<IAdminOpreationServices, AdminOpreationServices>();
+			builder.Services.AddTransient<ISubCategoryLinkBuilder, SubCategoryLinkBuilder>();
+			builder.Services.AddSingleton<IConnectionMultiplexer>(
                 ConnectionMultiplexer.Connect("Localhost:6379")
             );
             builder.Services.AddSingleton<ICacheManager, CacheManager>();
-
             builder.Services.AddDbContext<AppDbContext>(
                 (provider, options) =>
                 {
@@ -119,7 +181,8 @@ namespace E_Commers
                     )
                 )
             );
-            builder.Services.AddCors(options =>
+			builder.Services.AddHangfireServer();
+			builder.Services.AddCors(options =>
             {
                 options.AddPolicy(
                     "MyPolicy",
@@ -147,7 +210,7 @@ namespace E_Commers
                         partitionKey: context.Connection.RemoteIpAddress?.ToString() ?? "unknown",
                         factory: _ => new SlidingWindowRateLimiterOptions
                         {
-                            PermitLimit = 6,
+                            PermitLimit = 15,
                             SegmentsPerWindow= 3,
                             Window = TimeSpan.FromMinutes(1),
                             AutoReplenishment = true
@@ -177,10 +240,10 @@ namespace E_Commers
                         }));
                 options.OnRejected= async (context,token) =>
                 {
-                    context.HttpContext.Response.StatusCode = 429; // Too Many Request
+                    context.HttpContext.Response.StatusCode = 429;
                     context.HttpContext.Response.ContentType = "application/json";
 
-                    var response = ApiResponse<string>.CreateErrorResponse(new ErrorResponse("Requests","Too many request"),429);
+                    var response = ApiResponse<string>.CreateErrorResponse("Error", new ErrorResponse("Requests","Too many request"),429);
                     await context.HttpContext.Response.WriteAsync(
                         JsonConvert.SerializeObject(response),
                         token
@@ -256,8 +319,9 @@ namespace E_Commers
             app.UseHttpsRedirection();
 
             app.UseHangfireDashboard("/hangfire");
+     
 
-            using (var scope = app.Services.CreateScope())
+			using (var scope = app.Services.CreateScope())
             {
                 var services = scope.ServiceProvider;
                 var dbContext = services.GetRequiredService<AppDbContext>();
@@ -275,12 +339,17 @@ namespace E_Commers
 
             app.UseAuthentication();
             app.UseUserAuthentication();
-            app.UseAuthorization();
-            app.UseMiddleware<SecurityStampMiddleware>();
+			app.UseMiddleware<SecurityStampMiddleware>();
             app.UseRateLimiter();
             app.UseResponseCaching();
-            app.MapControllers();
-            app.Run();
+            app.UseRouting();
+			app.UseAuthorization();
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+            });
+            app.UseStaticFiles();
+			app.Run();
         }
     }
 }

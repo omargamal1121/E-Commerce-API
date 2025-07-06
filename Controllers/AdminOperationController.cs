@@ -26,11 +26,11 @@ namespace E_Commers.Controllers
 		public async Task<ActionResult<ResponseDto>> GetAllOperation()
 		{
 			_Logger.LogInformation($"Execute:{nameof(GetAllOperation)}");
-			var opreations = (await _unitOfWork.Repository<AdminOperationsLog>().GetAllAsync());
-			if (!opreations.Success || opreations.Data is null)
-				return NotFound(new ResponseDto { Message = opreations.Message });
+			var opreations =  _unitOfWork.Repository<AdminOperationsLog>().GetAll();
+			if (opreations == null || !opreations.Any())
+				return NotFound(new ResponseDto { Message = "No operations found" });
 
-			var list = opreations.Data.Select(x => new
+			var list = opreations.Select(x => new
 			{
 				x.Id,
 				x.AdminId,
@@ -38,7 +38,7 @@ namespace E_Commers.Controllers
 				x.Description,
 				x.CreatedAt
 			});
-			return Ok(new ResponseDto { Data=list});	
+			return Ok(new ResponseDto { Data = list });	
 		}
 	}
 }

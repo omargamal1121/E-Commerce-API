@@ -22,21 +22,6 @@ namespace E_Commers.Migrations
 
             MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
 
-            modelBuilder.Entity("CategoryImage", b =>
-                {
-                    b.Property<int>("CategoriesId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ImagesId")
-                        .HasColumnType("int");
-
-                    b.HasKey("CategoriesId", "ImagesId");
-
-                    b.HasIndex("ImagesId");
-
-                    b.ToTable("CategoryImages", (string)null);
-                });
-
             modelBuilder.Entity("E_Commers.Models.AdminOperationsLog", b =>
                 {
                     b.Property<int>("Id")
@@ -128,6 +113,15 @@ namespace E_Commers.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)");
 
+                    b.Property<int>("DisplayOrder")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ImageId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("tinyint(1)");
+
                     b.Property<DateTime?>("ModifiedAt")
                         .HasColumnType("datetime(6)");
 
@@ -138,10 +132,47 @@ namespace E_Commers.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ImageId");
+
                     b.HasIndex("Name")
                         .IsUnique();
 
                     b.ToTable("Categories");
+                });
+
+            modelBuilder.Entity("E_Commers.Models.Collection", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("DisplayOrder")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<DateTime?>("ModifiedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Collections");
                 });
 
             modelBuilder.Entity("E_Commers.Models.CustomerAddress", b =>
@@ -213,6 +244,9 @@ namespace E_Commers.Migrations
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<bool>("IsActive")
                         .HasColumnType("tinyint(1)");
 
@@ -223,6 +257,9 @@ namespace E_Commers.Migrations
                         .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("varchar(20)");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime(6)");
 
                     b.HasKey("Id");
 
@@ -245,6 +282,18 @@ namespace E_Commers.Migrations
                     b.Property<string>("AltText")
                         .HasColumnType("longtext");
 
+                    b.Property<int?>("CategoryId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("CollectionId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<long?>("FileSize")
                         .HasColumnType("bigint");
 
@@ -259,6 +308,12 @@ namespace E_Commers.Migrations
 
                     b.Property<bool>("IsMain")
                         .HasColumnType("tinyint(1)");
+
+                    b.Property<DateTime?>("ModifiedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int?>("ProductId")
+                        .HasColumnType("int");
 
                     b.Property<int?>("SubCategoryId")
                         .HasColumnType("int");
@@ -277,6 +332,12 @@ namespace E_Commers.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CategoryId");
+
+                    b.HasIndex("CollectionId");
+
+                    b.HasIndex("ProductId");
 
                     b.HasIndex("SubCategoryId");
 
@@ -475,6 +536,12 @@ namespace E_Commers.Migrations
                     b.Property<int?>("DiscountId")
                         .HasColumnType("int");
 
+                    b.Property<int>("Gender")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ImageId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime?>("ModifiedAt")
                         .HasColumnType("datetime(6)");
 
@@ -493,12 +560,29 @@ namespace E_Commers.Migrations
 
                     b.HasIndex("DiscountId");
 
+                    b.HasIndex("ImageId");
+
                     b.HasIndex("Name")
                         .IsUnique();
 
                     b.HasIndex("SubCategoryId");
 
                     b.ToTable("Products");
+                });
+
+            modelBuilder.Entity("E_Commers.Models.ProductCollection", b =>
+                {
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CollectionId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ProductId", "CollectionId");
+
+                    b.HasIndex("CollectionId");
+
+                    b.ToTable("ProductCollections");
                 });
 
             modelBuilder.Entity("E_Commers.Models.ProductInventory", b =>
@@ -554,11 +638,11 @@ namespace E_Commers.Migrations
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<string>("FitType")
-                        .HasColumnType("longtext");
+                    b.Property<int?>("FitType")
+                        .HasColumnType("int");
 
-                    b.Property<string>("Length")
-                        .HasColumnType("longtext");
+                    b.Property<int?>("Length")
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("ModifiedAt")
                         .HasColumnType("datetime(6)");
@@ -576,14 +660,105 @@ namespace E_Commers.Migrations
                     b.Property<string>("Size")
                         .HasColumnType("longtext");
 
-                    b.Property<string>("Waist")
-                        .HasColumnType("longtext");
+                    b.Property<int?>("Waist")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ProductId");
 
                     b.ToTable("ProductVariants");
+                });
+
+            modelBuilder.Entity("E_Commers.Models.ReturnRequest", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("AdminComment")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("CustomerId")
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<int>("OrderId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Reason")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime>("RequestDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CustomerId");
+
+                    b.HasIndex("OrderId");
+
+                    b.ToTable("ReturnRequests");
+                });
+
+            modelBuilder.Entity("E_Commers.Models.ReturnRequestProduct", b =>
+                {
+                    b.Property<int>("ReturnRequestId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.HasKey("ReturnRequestId", "ProductId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("ReturnRequestProducts");
+                });
+
+            modelBuilder.Entity("E_Commers.Models.Review", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Comment")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("varchar(1000)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("CustomerId")
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Rating")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CustomerId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("Reviews");
                 });
 
             modelBuilder.Entity("E_Commers.Models.SubCategory", b =>
@@ -597,15 +772,40 @@ namespace E_Commers.Migrations
                     b.Property<int>("CategoryId")
                         .HasColumnType("int");
 
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
+
+                    b.Property<int?>("ImageId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<DateTime?>("ModifiedAt")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasColumnType("varchar(255)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("SubCategory");
+                    b.HasIndex("ImageId");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("SubCategories");
                 });
 
             modelBuilder.Entity("E_Commers.Models.UserOperationsLog", b =>
@@ -688,19 +888,28 @@ namespace E_Commers.Migrations
                     b.ToTable("warehouses");
                 });
 
-            modelBuilder.Entity("ImageProduct", b =>
+            modelBuilder.Entity("E_Commers.Models.WishlistItem", b =>
                 {
-                    b.Property<int>("ImagesId")
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int>("ProductsId")
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("CustomerId")
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<int>("ProductId")
                         .HasColumnType("int");
 
-                    b.HasKey("ImagesId", "ProductsId");
+                    b.HasKey("Id");
 
-                    b.HasIndex("ProductsId");
+                    b.HasIndex("CustomerId");
 
-                    b.ToTable("ProductImages", (string)null);
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("WishlistItems");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -939,21 +1148,6 @@ namespace E_Commers.Migrations
                     b.HasDiscriminator().HasValue("Customer");
                 });
 
-            modelBuilder.Entity("CategoryImage", b =>
-                {
-                    b.HasOne("E_Commers.Models.Category", null)
-                        .WithMany()
-                        .HasForeignKey("CategoriesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("E_Commers.Models.Image", null)
-                        .WithMany()
-                        .HasForeignKey("ImagesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("E_Commers.Models.AdminOperationsLog", b =>
                 {
                     b.HasOne("E_Commers.Models.Customer", "Admin")
@@ -972,6 +1166,13 @@ namespace E_Commers.Migrations
                         .HasForeignKey("customerId");
 
                     b.Navigation("customer");
+                });
+
+            modelBuilder.Entity("E_Commers.Models.Category", b =>
+                {
+                    b.HasOne("E_Commers.Models.Image", null)
+                        .WithMany("Categories")
+                        .HasForeignKey("ImageId");
                 });
 
             modelBuilder.Entity("E_Commers.Models.CustomerAddress", b =>
@@ -996,9 +1197,33 @@ namespace E_Commers.Migrations
 
             modelBuilder.Entity("E_Commers.Models.Image", b =>
                 {
-                    b.HasOne("E_Commers.Models.SubCategory", null)
+                    b.HasOne("E_Commers.Models.Category", "Category")
                         .WithMany("Images")
-                        .HasForeignKey("SubCategoryId");
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("E_Commers.Models.Collection", "Collection")
+                        .WithMany("Images")
+                        .HasForeignKey("CollectionId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("E_Commers.Models.Product", "Product")
+                        .WithMany("Images")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("E_Commers.Models.SubCategory", "SubCategory")
+                        .WithMany("Images")
+                        .HasForeignKey("SubCategoryId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.Navigation("Category");
+
+                    b.Navigation("Collection");
+
+                    b.Navigation("Product");
+
+                    b.Navigation("SubCategory");
                 });
 
             modelBuilder.Entity("E_Commers.Models.Item", b =>
@@ -1088,6 +1313,10 @@ namespace E_Commers.Migrations
                         .HasForeignKey("DiscountId")
                         .OnDelete(DeleteBehavior.Restrict);
 
+                    b.HasOne("E_Commers.Models.Image", null)
+                        .WithMany("Products")
+                        .HasForeignKey("ImageId");
+
                     b.HasOne("E_Commers.Models.SubCategory", "SubCategory")
                         .WithMany("Products")
                         .HasForeignKey("SubCategoryId")
@@ -1097,6 +1326,25 @@ namespace E_Commers.Migrations
                     b.Navigation("Discount");
 
                     b.Navigation("SubCategory");
+                });
+
+            modelBuilder.Entity("E_Commers.Models.ProductCollection", b =>
+                {
+                    b.HasOne("E_Commers.Models.Collection", "Collection")
+                        .WithMany("ProductCollections")
+                        .HasForeignKey("CollectionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("E_Commers.Models.Product", "Product")
+                        .WithMany("ProductCollections")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Collection");
+
+                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("E_Commers.Models.ProductInventory", b =>
@@ -1129,13 +1377,74 @@ namespace E_Commers.Migrations
                     b.Navigation("Product");
                 });
 
+            modelBuilder.Entity("E_Commers.Models.ReturnRequest", b =>
+                {
+                    b.HasOne("E_Commers.Models.Customer", "Customer")
+                        .WithMany("ReturnRequests")
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("E_Commers.Models.Order", "Order")
+                        .WithMany("ReturnRequests")
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Customer");
+
+                    b.Navigation("Order");
+                });
+
+            modelBuilder.Entity("E_Commers.Models.ReturnRequestProduct", b =>
+                {
+                    b.HasOne("E_Commers.Models.Product", "Product")
+                        .WithMany("ReturnRequestProducts")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("E_Commers.Models.ReturnRequest", "ReturnRequest")
+                        .WithMany("ReturnRequestProducts")
+                        .HasForeignKey("ReturnRequestId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+
+                    b.Navigation("ReturnRequest");
+                });
+
+            modelBuilder.Entity("E_Commers.Models.Review", b =>
+                {
+                    b.HasOne("E_Commers.Models.Customer", "Customer")
+                        .WithMany("Reviews")
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("E_Commers.Models.Product", "Product")
+                        .WithMany("Reviews")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Customer");
+
+                    b.Navigation("Product");
+                });
+
             modelBuilder.Entity("E_Commers.Models.SubCategory", b =>
                 {
                     b.HasOne("E_Commers.Models.Category", "Category")
-                        .WithMany("subCategories")
+                        .WithMany("SubCategories")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.HasOne("E_Commers.Models.Image", null)
+                        .WithMany("subCategories")
+                        .HasForeignKey("ImageId");
 
                     b.Navigation("Category");
                 });
@@ -1151,19 +1460,23 @@ namespace E_Commers.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("ImageProduct", b =>
+            modelBuilder.Entity("E_Commers.Models.WishlistItem", b =>
                 {
-                    b.HasOne("E_Commers.Models.Image", null)
-                        .WithMany()
-                        .HasForeignKey("ImagesId")
+                    b.HasOne("E_Commers.Models.Customer", "Customer")
+                        .WithMany("WishlistItems")
+                        .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("E_Commers.Models.Product", null)
-                        .WithMany()
-                        .HasForeignKey("ProductsId")
+                    b.HasOne("E_Commers.Models.Product", "Product")
+                        .WithMany("WishlistItems")
+                        .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Customer");
+
+                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -1234,7 +1547,16 @@ namespace E_Commers.Migrations
 
             modelBuilder.Entity("E_Commers.Models.Category", b =>
                 {
-                    b.Navigation("subCategories");
+                    b.Navigation("Images");
+
+                    b.Navigation("SubCategories");
+                });
+
+            modelBuilder.Entity("E_Commers.Models.Collection", b =>
+                {
+                    b.Navigation("Images");
+
+                    b.Navigation("ProductCollections");
                 });
 
             modelBuilder.Entity("E_Commers.Models.Discount", b =>
@@ -1244,7 +1566,13 @@ namespace E_Commers.Migrations
 
             modelBuilder.Entity("E_Commers.Models.Image", b =>
                 {
+                    b.Navigation("Categories");
+
                     b.Navigation("Customers");
+
+                    b.Navigation("Products");
+
+                    b.Navigation("subCategories");
                 });
 
             modelBuilder.Entity("E_Commers.Models.Order", b =>
@@ -1253,13 +1581,30 @@ namespace E_Commers.Migrations
 
                     b.Navigation("Payment")
                         .IsRequired();
+
+                    b.Navigation("ReturnRequests");
                 });
 
             modelBuilder.Entity("E_Commers.Models.Product", b =>
                 {
+                    b.Navigation("Images");
+
                     b.Navigation("InventoryEntries");
 
+                    b.Navigation("ProductCollections");
+
                     b.Navigation("ProductVariants");
+
+                    b.Navigation("ReturnRequestProducts");
+
+                    b.Navigation("Reviews");
+
+                    b.Navigation("WishlistItems");
+                });
+
+            modelBuilder.Entity("E_Commers.Models.ReturnRequest", b =>
+                {
+                    b.Navigation("ReturnRequestProducts");
                 });
 
             modelBuilder.Entity("E_Commers.Models.SubCategory", b =>
@@ -1279,6 +1624,12 @@ namespace E_Commers.Migrations
                     b.Navigation("Addresses");
 
                     b.Navigation("Orders");
+
+                    b.Navigation("ReturnRequests");
+
+                    b.Navigation("Reviews");
+
+                    b.Navigation("WishlistItems");
 
                     b.Navigation("adminOperationsLogs");
 

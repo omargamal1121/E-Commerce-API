@@ -38,45 +38,28 @@ namespace E_Commers.Services.ProductInventoryServices
             _cacheManager = cacheManager;
         }
 
-        public async Task<ApiResponse<InventoryDto>> CreateInventoryAsync(CreateInvetoryDto dto, string userId)
+        public async Task<Result<InventoryDto>> CreateInventoryAsync(CreateInvetoryDto dto, string userId)
         {
             _logger.LogInformation($"Executing {nameof(CreateInventoryAsync)}");
-
-            // Validate product exists
             var product = await _unitOfWork.Product.GetByIdAsync(dto.ProductId);
-            if (!product.Success || product.Data == null)
+            if (product == null)
             {
-                return ApiResponse<InventoryDto>.CreateErrorResponse(
-                    new ErrorResponse("Product", "Product not found"),
-                    404
-                );
+                return Result<InventoryDto>.Fail("Product not found", 404);
             }
-
-            // Validate warehouse exists
             var warehouse = await _unitOfWork.WareHouse.GetByIdAsync(dto.WareHouseId);
-            if (!warehouse.Success || warehouse.Data == null)
+            if (warehouse == null)
             {
-                return ApiResponse<InventoryDto>.CreateErrorResponse(
-                    new ErrorResponse("Warehouse", "Warehouse not found"),
-                    404
-                );
+                return Result<InventoryDto>.Fail("Warehouse not found", 404);
             }
-
-            // Check if inventory entry already exists
             var existingInventory = await _unitOfWork.Repository<ProductInventory>()
                 .GetByQuery(i => i.ProductId == dto.ProductId && i.WarehouseId == dto.WareHouseId);
-            if (existingInventory.Success)
+            if (existingInventory != null)
             {
-                return ApiResponse<InventoryDto>.CreateErrorResponse(
-                    new ErrorResponse("Inventory", "Product already exists in this warehouse"),
-                    409
-                );
+                return Result<InventoryDto>.Fail("Product already exists in this warehouse", 409);
             }
-
             using var transaction = await _unitOfWork.BeginTransactionAsync();
             try
             {
-                // Create inventory entry
                 var inventory = new ProductInventory
                 {
                     ProductId = dto.ProductId,
@@ -84,520 +67,351 @@ namespace E_Commers.Services.ProductInventoryServices
                     Quantity = dto.Quantity,
                     CreatedAt = DateTime.UtcNow,
                 };
-
                 var result = await _unitOfWork.Repository<ProductInventory>().CreateAsync(inventory);
-                if (!result.Success)
+                if (result == null)
                 {
                     await transaction.RollbackAsync();
-                    return ApiResponse<InventoryDto>.CreateErrorResponse(
-                        new ErrorResponse("Server", "Failed to create inventory entry"),
-                        500
-                    );
+                    return Result<InventoryDto>.Fail("Failed to create inventory entry", 500);
                 }
-
-                // Log admin operation
                 var adminLog = await _adminOpreationServices.AddAdminOpreationAsync(
                     $"Created inventory for product {dto.ProductId} in warehouse {dto.WareHouseId} with quantity {dto.Quantity}",
                     Opreations.AddOpreation,
                     userId,
                     dto.ProductId
                 );
-
-                if (!adminLog.Success)
+                if (adminLog == null)
                 {
                     await transaction.RollbackAsync();
-                    return ApiResponse<InventoryDto>.CreateErrorResponse(
-                        new ErrorResponse("Server", "Failed to log operation"),
-                        500
-                    );
+                    return Result<InventoryDto>.Fail("Failed to log operation", 500);
                 }
-
                 await _unitOfWork.CommitAsync();
                 await transaction.CommitAsync();
                 await _cacheManager.RemoveByTagAsync(CACHE_TAG_INVENTORY);
                 await _cacheManager.RemoveByTagAsync(CACHE_TAG_PRODUCT);
-
                 var inventoryDto = _mapper.Map<InventoryDto>(inventory);
-                return ApiResponse<InventoryDto>.CreateSuccessResponse("Inventory created successfully", inventoryDto, 201);
+                return Result<InventoryDto>.Ok(inventoryDto, "Inventory created successfully", 201);
             }
             catch (Exception ex)
             {
                 await transaction.RollbackAsync();
                 _logger.LogError($"Error in {nameof(CreateInventoryAsync)}: {ex.Message}");
-                return ApiResponse<InventoryDto>.CreateErrorResponse(
-                    new ErrorResponse("Server", "An error occurred while processing your request"),
-                    500
-                );
+                return Result<InventoryDto>.Fail("An error occurred while processing your request", 500);
             }
         }
 
-        public async Task<ApiResponse<InventoryDto>> UpdateInventoryQuantityAsync(UpdateInventoryQuantityDto dto, string userId)
+        public async Task<Result<InventoryDto>> UpdateInventoryQuantityAsync(UpdateInventoryQuantityDto dto, string userId)
         {
             _logger.LogInformation($"Executing {nameof(UpdateInventoryQuantityAsync)}");
-
-            // Validate inventory exists
             var inventory = await _unitOfWork.Repository<ProductInventory>()
                 .GetByQuery(i => i.ProductId == dto.ProductId && i.WarehouseId == dto.WarehouseId);
-            
-            if (!inventory.Success || inventory.Data == null)
+            if (inventory == null)
             {
-                return ApiResponse<InventoryDto>.CreateErrorResponse(
-                    new ErrorResponse("Inventory", "Inventory not found"),
-                    404
-                );
+                return Result<InventoryDto>.Fail("Inventory not found", 404);
             }
-
-            // Validate product exists
             var product = await _unitOfWork.Product.GetByIdAsync(dto.ProductId);
-            if (!product.Success || product.Data == null)
+            if (product == null)
             {
-                return ApiResponse<InventoryDto>.CreateErrorResponse(
-                    new ErrorResponse("Product", "Product not found"),
-                    404
-                );
+                return Result<InventoryDto>.Fail("Product not found", 404);
             }
-
             using var transaction = await _unitOfWork.BeginTransactionAsync();
             try
             {
-                // Update inventory quantity
-                inventory.Data.Quantity = dto.NewQuantity;
-                inventory.Data.ModifiedAt = DateTime.UtcNow;
-
-                var updateResult = await _unitOfWork.Repository<ProductInventory>().UpdateAsync(inventory.Data);
-                if (!updateResult.Success)
+                inventory.Quantity = dto.NewQuantity;
+                inventory.ModifiedAt = DateTime.UtcNow;
+                var updateResult =  _unitOfWork.Repository<ProductInventory>().Update(inventory);
+                if (updateResult == null)
                 {
                     await transaction.RollbackAsync();
-                    return ApiResponse<InventoryDto>.CreateErrorResponse(
-                        new ErrorResponse("Server", "Failed to update inventory quantity"),
-                        500
-                    );
+                    return Result<InventoryDto>.Fail("Failed to update inventory quantity", 500);
                 }
-
-                // Log admin operation
                 var adminLog = await _adminOpreationServices.AddAdminOpreationAsync(
                     $"Updated inventory quantity for product {dto.ProductId} in warehouse {dto.WarehouseId} to {dto.NewQuantity}",
                     Opreations.UpdateOpreation,
                     userId,
                     dto.ProductId
                 );
-
-                if (!adminLog.Success)
+                if (adminLog == null)
                 {
                     await transaction.RollbackAsync();
-                    return ApiResponse<InventoryDto>.CreateErrorResponse(
-                        new ErrorResponse("Server", "Failed to log operation"),
-                        500
-                    );
+                    return Result<InventoryDto>.Fail("Failed to log operation", 500);
                 }
-
                 await _unitOfWork.CommitAsync();
                 await transaction.CommitAsync();
                 await _cacheManager.RemoveByTagAsync(CACHE_TAG_INVENTORY);
                 await _cacheManager.RemoveByTagAsync(CACHE_TAG_PRODUCT);
-
-                var inventoryDto = _mapper.Map<InventoryDto>(inventory.Data);
-                return ApiResponse<InventoryDto>.CreateSuccessResponse("Inventory quantity updated successfully", inventoryDto);
+                var inventoryDto = _mapper.Map<InventoryDto>(inventory);
+                return Result<InventoryDto>.Ok(inventoryDto, "Inventory quantity updated successfully", 200);
             }
             catch (Exception ex)
             {
                 await transaction.RollbackAsync();
                 _logger.LogError($"Error in {nameof(UpdateInventoryQuantityAsync)}: {ex.Message}");
-                return ApiResponse<InventoryDto>.CreateErrorResponse(
-                    new ErrorResponse("Server", "An error occurred while processing your request"),
-                    500
-                );
+                return Result<InventoryDto>.Fail("An error occurred while processing your request", 500);
             }
         }
 
-        public async Task<ApiResponse<InventoryDto>> TransferQuantityAsync(TransfereQuantityInvetoryDto dto, string userId)
+        public async Task<Result<InventoryDto>> TransferQuantityAsync(TransfereQuantityInvetoryDto dto, string userId)
         {
             _logger.LogInformation($"Executing {nameof(TransferQuantityAsync)}");
-
-            // Validate source inventory
             var sourceInventory = await _unitOfWork.Repository<ProductInventory>()
                 .GetByIdAsync(dto.FromInventoryId);
-            if (!sourceInventory.Success || sourceInventory.Data == null)
+            if (sourceInventory == null)
             {
-                return ApiResponse<InventoryDto>.CreateErrorResponse(
-                    new ErrorResponse("Source Inventory", "Source inventory not found"),
-                    404
-                );
+                return Result<InventoryDto>.Fail("Source inventory not found", 404);
             }
-
-            // Validate target inventory
             var targetInventory = await _unitOfWork.Repository<ProductInventory>()
                 .GetByIdAsync(dto.ToInventoryId);
-            if (!targetInventory.Success || targetInventory.Data == null)
+            if (targetInventory == null)
             {
-                return ApiResponse<InventoryDto>.CreateErrorResponse(
-                    new ErrorResponse("Target Inventory", "Target inventory not found"),
-                    404
-                );
+                return Result<InventoryDto>.Fail("Target inventory not found", 404);
             }
-
-            // Validate product matches
-            if (sourceInventory.Data.ProductId != dto.ProductId || targetInventory.Data.ProductId != dto.ProductId)
+            if (sourceInventory.ProductId != dto.ProductId || targetInventory.ProductId != dto.ProductId)
             {
-                return ApiResponse<InventoryDto>.CreateErrorResponse(
-                    new ErrorResponse("Product", "Product mismatch between inventories"),
-                    400
-                );
+                return Result<InventoryDto>.Fail("Product mismatch between inventories", 400);
             }
-
-            // Validate quantity
-            if (sourceInventory.Data.Quantity < dto.Quantity)
+            if (sourceInventory.Quantity < dto.Quantity)
             {
-                return ApiResponse<InventoryDto>.CreateErrorResponse(
-                    new ErrorResponse("Quantity", "Insufficient quantity in source inventory"),
-                    400
-                );
+                return Result<InventoryDto>.Fail("Insufficient quantity in source inventory", 400);
             }
-
             using var transaction = await _unitOfWork.BeginTransactionAsync();
             try
             {
-                // Update quantities
-                sourceInventory.Data.Quantity -= dto.Quantity;
-                targetInventory.Data.Quantity += dto.Quantity;
-
-                var sourceUpdate = await _unitOfWork.Repository<ProductInventory>().UpdateAsync(sourceInventory.Data);
-                var targetUpdate = await _unitOfWork.Repository<ProductInventory>().UpdateAsync(targetInventory.Data);
-
-                if (!sourceUpdate.Success || !targetUpdate.Success)
+                sourceInventory.Quantity -= dto.Quantity;
+                targetInventory.Quantity += dto.Quantity;
+                var sourceUpdate =  _unitOfWork.Repository<ProductInventory>().Update(sourceInventory);
+                var targetUpdate =  _unitOfWork.Repository<ProductInventory>().Update(targetInventory);
+                if (sourceUpdate == null || targetUpdate == null)
                 {
                     await transaction.RollbackAsync();
-                    return ApiResponse<InventoryDto>.CreateErrorResponse(
-                        new ErrorResponse("Server", "Failed to update inventory quantities"),
-                        500
-                    );
+                    return Result<InventoryDto>.Fail("Failed to update inventory quantities", 500);
                 }
-
-                // Log admin operation
                 var adminLog = await _adminOpreationServices.AddAdminOpreationAsync(
                     $"Transferred {dto.Quantity} units of product {dto.ProductId} from inventory {dto.FromInventoryId} to {dto.ToInventoryId}",
                     Opreations.UpdateOpreation,
                     userId,
                     dto.ProductId
                 );
-
-                if (!adminLog.Success)
+                if (adminLog == null)
                 {
                     await transaction.RollbackAsync();
-                    return ApiResponse<InventoryDto>.CreateErrorResponse(
-                        new ErrorResponse("Server", "Failed to log operation"),
-                        500
-                    );
+                    return Result<InventoryDto>.Fail("Failed to log operation", 500);
                 }
-
                 await _unitOfWork.CommitAsync();
                 await transaction.CommitAsync();
                 await _cacheManager.RemoveByTagAsync(CACHE_TAG_INVENTORY);
-
-                var inventoryDto = _mapper.Map<InventoryDto>(targetInventory.Data);
-                return ApiResponse<InventoryDto>.CreateSuccessResponse("Transfer completed successfully", inventoryDto);
+                var inventoryDto = _mapper.Map<InventoryDto>(targetInventory);
+                return Result<InventoryDto>.Ok(inventoryDto, "Transfer completed successfully", 200);
             }
             catch (Exception ex)
             {
                 await transaction.RollbackAsync();
                 _logger.LogError($"Error in {nameof(TransferQuantityAsync)}: {ex.Message}");
-                return ApiResponse<InventoryDto>.CreateErrorResponse(
-                    new ErrorResponse("Server", "An error occurred while processing your request"),
-                    500
-                );
+                return Result<InventoryDto>.Fail("An error occurred while processing your request", 500);
             }
         }
 
-        public async Task<ApiResponse<List<InventoryDto>>> GetWarehouseInventoryAsync(int warehouseId)
+        public async Task<Result<List<InventoryDto>>> GetWarehouseInventoryAsync(int warehouseId)
         {
             _logger.LogInformation($"Executing {nameof(GetWarehouseInventoryAsync)}");
-
             var cacheKey = $"{CACHE_TAG_INVENTORY}warehouse:{warehouseId}";
             var cachedInventory = await _cacheManager.GetAsync<List<InventoryDto>>(cacheKey);
             if (cachedInventory != null)
             {
-                return ApiResponse<List<InventoryDto>>.CreateSuccessResponse("Inventory retrieved from cache", cachedInventory);
+                return Result<List<InventoryDto>>.Ok(cachedInventory, "Inventory retrieved from cache", 200);
             }
-
             var warehouse = await _unitOfWork.WareHouse.GetByIdAsync(warehouseId);
-            if (!warehouse.Success || warehouse.Data == null)
+            if (warehouse == null)
             {
-                return ApiResponse<List<InventoryDto>>.CreateErrorResponse(
-                    new ErrorResponse("Warehouse", "Warehouse not found"),
-                    404
-                );
+                return Result<List<InventoryDto>>.Fail("Warehouse not found", 404);
             }
-
-            var inventory = warehouse.Data.ProductInventories
+            var inventory = warehouse.ProductInventories
                 .Where(i => i.DeletedAt == null)
                 .Select(i => _mapper.Map<InventoryDto>(i))
                 .ToList();
-
             await _cacheManager.SetAsync(cacheKey, inventory, tags: new[] { CACHE_TAG_INVENTORY });
-
-            return ApiResponse<List<InventoryDto>>.CreateSuccessResponse("Inventory retrieved successfully", inventory);
+            return Result<List<InventoryDto>>.Ok(inventory, "Inventory retrieved successfully", 200);
         }
 
-        public async Task<ApiResponse<string>> DeleteInventoryAsync(int inventoryId, string userId)
+        public async Task<Result<string>> DeleteInventoryAsync(int inventoryId, string userId)
         {
             _logger.LogInformation($"Executing {nameof(DeleteInventoryAsync)}");
-
             var inventory = await _unitOfWork.Repository<ProductInventory>().GetByIdAsync(inventoryId);
-            if (!inventory.Success || inventory.Data == null)
+            if (inventory == null)
             {
-                return ApiResponse<string>.CreateErrorResponse(
-                    new ErrorResponse("Inventory", "Inventory not found"),
-                    404
-                );
+                return Result<string>.Fail("Inventory not found", 404);
             }
-
-            if (inventory.Data.Quantity > 0)
+            if (inventory.Quantity > 0)
             {
-                return ApiResponse<string>.CreateErrorResponse(
-                    new ErrorResponse("Inventory", "Cannot delete inventory with remaining quantity"),
-                    400
-                );
+                return Result<string>.Fail("Cannot delete inventory with remaining quantity", 400);
             }
-
             using var transaction = await _unitOfWork.BeginTransactionAsync();
             try
             {
-                inventory.Data.DeletedAt = DateTime.UtcNow;
-                var updateResult = await _unitOfWork.Repository<ProductInventory>().UpdateAsync(inventory.Data);
-                if (!updateResult.Success)
+                inventory.DeletedAt = DateTime.UtcNow;
+                var updateResult =   _unitOfWork.Repository<ProductInventory>().Update(inventory);
+                if (updateResult == null)
                 {
                     await transaction.RollbackAsync();
-                    return ApiResponse<string>.CreateErrorResponse(
-                        new ErrorResponse("Server", "Failed to delete inventory"),
-                        500
-                    );
+                    return Result<string>.Fail("Failed to delete inventory", 500);
                 }
-
                 var adminLog = await _adminOpreationServices.AddAdminOpreationAsync(
                     $"Deleted inventory {inventoryId}",
                     Opreations.DeleteOpreation,
                     userId,
-                    inventory.Data.ProductId
+                    inventory.ProductId
                 );
-
-                if (!adminLog.Success)
+                if (adminLog == null)
                 {
                     await transaction.RollbackAsync();
-                    return ApiResponse<string>.CreateErrorResponse(
-                        new ErrorResponse("Server", "Failed to log operation"),
-                        500
-                    );
+                    return Result<string>.Fail("Failed to log operation", 500);
                 }
-
                 await _unitOfWork.CommitAsync();
                 await transaction.CommitAsync();
                 await _cacheManager.RemoveByTagAsync(CACHE_TAG_INVENTORY);
-
-                return ApiResponse<string>.CreateSuccessResponse("Inventory deleted successfully");
+                return Result<string>.Ok("Inventory deleted successfully", "Inventory deleted successfully", 200);
             }
             catch (Exception ex)
             {
                 await transaction.RollbackAsync();
                 _logger.LogError($"Error in {nameof(DeleteInventoryAsync)}: {ex.Message}");
-                return ApiResponse<string>.CreateErrorResponse(
-                    new ErrorResponse("Server", "An error occurred while processing your request"),
-                    500
-                );
+                return Result<string>.Fail("An error occurred while processing your request", 500);
             }
         }
 
-        public async Task<ApiResponse<List<InventoryDto>>> GetInventoryByProductIdAsync(int productId)
+        public async Task<Result<List<InventoryDto>>> GetInventoryByProductIdAsync(int productId)
         {
             _logger.LogInformation($"Executing {nameof(GetInventoryByProductIdAsync)}");
-
             var cacheKey = $"{CACHE_TAG_INVENTORY}product:{productId}";
             var cachedInventory = await _cacheManager.GetAsync<List<InventoryDto>>(cacheKey);
             if (cachedInventory != null)
             {
-                return ApiResponse<List<InventoryDto>>.CreateSuccessResponse("Inventory retrieved from cache", cachedInventory);
+                return Result<List<InventoryDto>>.Ok(cachedInventory, "Inventory retrieved from cache", 200);
             }
-
             var product = await _unitOfWork.Product.GetByIdAsync(productId);
-            if (!product.Success || product.Data == null)
+            if (product == null)
             {
                 _logger.LogWarning($"Product not found with id: {productId}");
-                return ApiResponse<List<InventoryDto>>.CreateErrorResponse(
-                    new ErrorResponse("Product", new List<string> { "Product not found" })
-                );
+                return Result<List<InventoryDto>>.Fail("Product not found", 404);
             }
-
-            var inventory = product.Data.InventoryEntries
+            var inventory = product.InventoryEntries
                 .Where(i => i.DeletedAt == null)
                 .Select(i => _mapper.Map<InventoryDto>(i))
                 .ToList();
-
             await _cacheManager.SetAsync(cacheKey, inventory, tags: new[] { CACHE_TAG_INVENTORY });
-
-            return ApiResponse<List<InventoryDto>>.CreateSuccessResponse("Inventory retrieved successfully", inventory);
+            return Result<List<InventoryDto>>.Ok(inventory, "Inventory retrieved successfully", 200);
         }
 
-        public async Task<ApiResponse<List<InventoryDto>>> GetLowStockAlertsAsync(int threshold = 10)
+        public async Task<Result<List<InventoryDto>>> GetLowStockAlertsAsync(int threshold = 10)
         {
             _logger.LogInformation($"Executing {nameof(GetLowStockAlertsAsync)} with threshold: {threshold}");
-
             var cacheKey = $"{CACHE_TAG_INVENTORY}lowstock:{threshold}";
             var cachedAlerts = await _cacheManager.GetAsync<List<InventoryDto>>(cacheKey);
             if (cachedAlerts != null)
             {
-                return ApiResponse<List<InventoryDto>>.CreateSuccessResponse("Low stock alerts retrieved from cache", cachedAlerts);
+                return Result<List<InventoryDto>>.Ok(cachedAlerts, "Low stock alerts retrieved from cache", 200);
             }
-
-            var lowStockInventory = await _unitOfWork.Repository<ProductInventory>()
-                .GetAllAsync(filter: i => i.DeletedAt == null && i.Quantity <= threshold);
-
-            if (!lowStockInventory.Success)
+            var lowStockInventory =  _unitOfWork.Repository<ProductInventory>()
+                .GetAll();
+            if (lowStockInventory == null)
             {
-                return ApiResponse<List<InventoryDto>>.CreateErrorResponse(
-                    new ErrorResponse("Server", "Failed to retrieve low stock inventory"),
-                    500
-                );
+                return Result<List<InventoryDto>>.Fail("Failed to retrieve low stock inventory", 500);
             }
-
-            var alerts = lowStockInventory.Data
+            var alerts = lowStockInventory
                 .Select(i => _mapper.Map<InventoryDto>(i))
                 .ToList();
-
             await _cacheManager.SetAsync(cacheKey, alerts, tags: new[] { CACHE_TAG_INVENTORY });
-
-            return ApiResponse<List<InventoryDto>>.CreateSuccessResponse(
-                $"Found {alerts.Count} items with low stock",
-                alerts
-            );
+            return Result<List<InventoryDto>>.Ok(alerts, $"Found {alerts.Count} items with low stock", 200);
         }
 
-        public async Task<ApiResponse<string>> BulkUpdateInventoryAsync(List<AddQuantityInvetoryDto> updates, string userId)
+        public async Task<Result<string>> BulkUpdateInventoryAsync(List<AddQuantityInvetoryDto> updates, string userId)
         {
             _logger.LogInformation($"Executing {nameof(BulkUpdateInventoryAsync)} with {updates.Count} updates");
-
             using var transaction = await _unitOfWork.BeginTransactionAsync();
             try
             {
                 foreach (var update in updates)
                 {
                     var inventory = await _unitOfWork.Repository<ProductInventory>().GetByIdAsync(update.Id);
-                    if (!inventory.Success || inventory.Data == null)
+                    if (inventory == null)
                     {
                         await transaction.RollbackAsync();
-                        return ApiResponse<string>.CreateErrorResponse(
-                            new ErrorResponse("Inventory", $"Inventory not found for ID: {update.Id}"),
-                            404
-                        );
+                        return Result<string>.Fail($"Inventory not found for ID: {update.Id}", 404);
                     }
-
-                    inventory.Data.Quantity = update.Quantity;
-                    inventory.Data.ModifiedAt = DateTime.UtcNow;
-
-                    var updateResult = await _unitOfWork.Repository<ProductInventory>().UpdateAsync(inventory.Data);
-                    if (!updateResult.Success)
+                    inventory.Quantity = update.Quantity;
+                    inventory.ModifiedAt = DateTime.UtcNow;
+                    var updateResult =  _unitOfWork.Repository<ProductInventory>().Update(inventory);
+                    if (updateResult == null)
                     {
                         await transaction.RollbackAsync();
-                        return ApiResponse<string>.CreateErrorResponse(
-                            new ErrorResponse("Server", $"Failed to update inventory {update.Id}"),
-                            500
-                        );
+                        return Result<string>.Fail($"Failed to update inventory {update.Id}", 500);
                     }
                 }
-
-                // Log bulk operation
                 var adminLog = await _adminOpreationServices.AddAdminOpreationAsync(
                     $"Bulk updated {updates.Count} inventory items",
                     Opreations.UpdateOpreation,
                     userId,
-                    0 // No specific product ID for bulk operation
+                    0
                 );
-
-                if (!adminLog.Success)
+                if (adminLog == null)
                 {
                     await transaction.RollbackAsync();
-                    return ApiResponse<string>.CreateErrorResponse(
-                        new ErrorResponse("Server", "Failed to log operation"),
-                        500
-                    );
+                    return Result<string>.Fail("Failed to log operation", 500);
                 }
-
                 await _unitOfWork.CommitAsync();
                 await transaction.CommitAsync();
                 await _cacheManager.RemoveByTagAsync(CACHE_TAG_INVENTORY);
-
-                return ApiResponse<string>.CreateSuccessResponse(
-                    $"Successfully updated {updates.Count} inventory items"
-                );
+                return Result<string>.Ok($"Successfully updated {updates.Count} inventory items", $"Successfully updated {updates.Count} inventory items", 200);
             }
             catch (Exception ex)
             {
                 await transaction.RollbackAsync();
                 _logger.LogError($"Error in {nameof(BulkUpdateInventoryAsync)}: {ex.Message}");
-                return ApiResponse<string>.CreateErrorResponse(
-                    new ErrorResponse("Server", "An error occurred while performing bulk update"),
-                    500
-                );
+                return Result<string>.Fail("An error occurred while performing bulk update", 500);
             }
         }
 
-        public async Task<ApiResponse<List<InventoryDto>>> GetAllInventoryAsync(bool includeDeleted = false)
+        public async Task<Result<List<InventoryDto>>> GetAllInventoryAsync(bool includeDeleted = false)
         {
             _logger.LogInformation($"Executing {nameof(GetAllInventoryAsync)} with includeDeleted: {includeDeleted}");
-
             var cacheKey = $"{CACHE_TAG_INVENTORY}all:{includeDeleted}";
             var cachedInventory = await _cacheManager.GetAsync<List<InventoryDto>>(cacheKey);
             if (cachedInventory != null)
             {
-                return ApiResponse<List<InventoryDto>>.CreateSuccessResponse("Inventory retrieved from cache", cachedInventory);
+                return Result<List<InventoryDto>>.Ok(cachedInventory, "Inventory retrieved from cache", 200);
             }
-            var inventoryQuery = await _unitOfWork.Repository<ProductInventory>().GetAllAsync();
-            if(!inventoryQuery.Success||inventoryQuery.Data is null)
+            var inventoryQuery =    _unitOfWork.Repository<ProductInventory>().GetAll();
+            if(inventoryQuery == null)
             {
-                return ApiResponse<List<InventoryDto>>.CreateErrorResponse(new ErrorResponse("server error", "Try Again later"));
+                return Result<List<InventoryDto>>.Fail("Try Again later", 500);
             }
-
             if (!includeDeleted)
             {
-                inventoryQuery.Data = inventoryQuery.Data.Where(i => i.DeletedAt == null);
+                inventoryQuery = inventoryQuery.Where(i => i.DeletedAt == null);
             }
-
-            var inventory = await inventoryQuery.Data
+            var inventory = await inventoryQuery
                 .Select(i => _mapper.Map<InventoryDto>(i))
                 .ToListAsync();
-
             await _cacheManager.SetAsync(cacheKey, inventory, tags: new[] { CACHE_TAG_INVENTORY });
-
-            return ApiResponse<List<InventoryDto>>.CreateSuccessResponse(
-                $"Retrieved {inventory.Count} inventory items",
-                inventory
-            );
+            return Result<List<InventoryDto>>.Ok(inventory, $"Retrieved {inventory.Count} inventory items", 200);
         }
 
-        public async Task<ApiResponse<InventoryDto>> GetInventoryById(int id)
+        public async Task<Result<InventoryDto>> GetInventoryById(int id)
         {
             _logger.LogInformation($"Executing {nameof(GetInventoryById)} for ID: {id}");
-
             var cacheKey = $"{CACHE_TAG_INVENTORY}id:{id}";
             var cachedInventory = await _cacheManager.GetAsync<InventoryDto>(cacheKey);
             if (cachedInventory != null)
             {
-                return ApiResponse<InventoryDto>.CreateSuccessResponse("Inventory retrieved from cache", cachedInventory);
+                return Result<InventoryDto>.Ok(cachedInventory, "Inventory retrieved from cache", 200);
             }
-
             var inventory = await _unitOfWork.ProductInventory.GetByInvetoryIdWithProductAsync(id);
-            if (!inventory.Success || inventory.Data == null)
+            if (inventory == null)
             {
-                return ApiResponse<InventoryDto>.CreateErrorResponse(
-                    new ErrorResponse("Inventory", "Inventory not found"),
-                    404
-                );
+                return Result<InventoryDto>.Fail("Inventory not found", 404);
             }
-
-            var inventoryDto = _mapper.Map<InventoryDto>(inventory.Data);
+            var inventoryDto = _mapper.Map<InventoryDto>(inventory);
             await _cacheManager.SetAsync(cacheKey, inventoryDto, tags: new[] { CACHE_TAG_INVENTORY });
-
-            return ApiResponse<InventoryDto>.CreateSuccessResponse("Inventory retrieved successfully", inventoryDto);
+            return Result<InventoryDto>.Ok(inventoryDto, "Inventory retrieved successfully", 200);
         }
-
-	
-	}
+    }
 } 

@@ -135,7 +135,7 @@ LIMIT 1
 2025-06-11 05:29:34.826 +03:00 [INF] Executing endpoint 'E_Commers.Controllers.ProductController.GetAllProducts (E-Commerce)'
 2025-06-11 05:29:34.837 +03:00 [INF] Route matched with {action = "GetAllProducts", controller = "Product"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[E_Commers.DtoModels.Responses.ApiResponse`1[System.Collections.Generic.List`1[E_Commers.DtoModels.ProductDtos.ProductDto]]]] GetAllProducts() on controller E_Commers.Controllers.ProductController (E-Commerce).
 2025-06-11 05:29:34.849 +03:00 [INF] Executing GetAllProducts
-2025-06-11 05:29:34.857 +03:00 [INF] Execute GetAllAsync for entity Product
+2025-06-11 05:29:34.857 +03:00 [INF] Execute GetAll for entity Product
 2025-06-11 05:29:34.867 +03:00 [INF] Data retrieved from Database
 2025-06-11 05:29:34.947 +03:00 [INF] Executed DbCommand (18ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
 SELECT `p`.`Id`, `p`.`CategoryId`, `p`.`CreatedAt`, `p`.`DeletedAt`, `p`.`Description`, `p`.`DiscountId`, `p`.`ImagesUrl`, `p`.`ModifiedAt`, `p`.`Name`, `p`.`Price`, `p`.`Quantity`

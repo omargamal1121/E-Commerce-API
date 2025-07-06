@@ -1,0 +1,1766 @@
+2025-07-03 18:28:13.184 +03:00 [INF] DB tables already exist. Exit install
+2025-07-03 18:28:16.301 +03:00 [INF] Executed DbCommand (6ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='Fashion_Site' AND TABLE_NAME='__EFMigrationsHistory';
+2025-07-03 18:28:16.316 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='Fashion_Site' AND TABLE_NAME='__EFMigrationsHistory';
+2025-07-03 18:28:16.392 +03:00 [INF] Executed DbCommand (51ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT `MigrationId`, `ProductVersion`
+FROM `__EFMigrationsHistory`
+ORDER BY `MigrationId`;
+2025-07-03 18:28:16.412 +03:00 [INF] No migrations were applied. The database is already up to date.
+2025-07-03 18:28:16.456 +03:00 [INF] User profile is available. Using 'C:\Users\DELL\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2025-07-03 18:28:16.920 +03:00 [INF] Executed DbCommand (55ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-07-03 18:28:16.991 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-07-03 18:28:17.042 +03:00 [INF] Executed DbCommand (28ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`, `a`.`ProfilePicture`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-07-03 18:28:18.264 +03:00 [INF] Now listening on: https://localhost:7288
+2025-07-03 18:28:18.272 +03:00 [INF] Now listening on: http://localhost:5069
+2025-07-03 18:28:18.368 +03:00 [ERR] Index was outside the bounds of the array.
+System.IndexOutOfRangeException: Index was outside the bounds of the array.
+   at Hangfire.MySql.MySqlStorage.<>c.<ToString>b__14_1(String[] x)
+   at System.Linq.Enumerable.ArraySelectIterator`2.MoveNext()
+   at System.Linq.Enumerable.ToDictionary[TSource,TKey,TElement](IEnumerable`1 source, Func`2 keySelector, Func`2 elementSelector, IEqualityComparer`1 comparer)
+   at Hangfire.MySql.MySqlStorage.ToString()
+2025-07-03 18:28:18.426 +03:00 [INF] Starting Hangfire Server using job storage: '<Connection string can not be parsed>'
+2025-07-03 18:28:18.428 +03:00 [INF] Using the following options for SQL Server job storage:
+2025-07-03 18:28:18.431 +03:00 [INF]     Queue poll interval: 00:00:10.
+2025-07-03 18:28:18.432 +03:00 [INF] Using the following options for Hangfire Server:
+    Worker count: 20
+    Listening queues: 'default'
+    Shutdown timeout: 00:00:15
+    Schedule polling interval: 00:00:15
+2025-07-03 18:28:18.455 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-07-03 18:28:18.471 +03:00 [INF] Hosting environment: Development
+2025-07-03 18:28:18.474 +03:00 [INF] Content root path: D:\fashion\Projcet\E-Commers\E-Commers
+2025-07-03 18:28:18.502 +03:00 [INF] Server mrrobot:6368:ee3be454 successfully announced in 39.2908 ms
+2025-07-03 18:28:18.508 +03:00 [INF] Server mrrobot:6368:ee3be454 is starting the registered dispatchers: ServerWatchdog, ServerJobCancellationWatcher, ExpirationManager, CountersAggregator, Worker, DelayedJobScheduler, RecurringJobScheduler...
+2025-07-03 18:28:18.523 +03:00 [INF] 1 servers were removed due to timeout
+2025-07-03 18:28:18.630 +03:00 [INF] Server mrrobot:6368:ee3be454 all the dispatchers started
+2025-07-03 18:28:20.000 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/swagger/index.html - null null
+2025-07-03 18:28:20.324 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/swagger/index.html - 200 null text/html;charset=utf-8 324.4269ms
+2025-07-03 18:28:20.368 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/_framework/aspnetcore-browser-refresh.js - null null
+2025-07-03 18:28:20.368 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/swagger/index.js - null null
+2025-07-03 18:28:20.369 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/_vs/browserLink - null null
+2025-07-03 18:28:20.466 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/_framework/aspnetcore-browser-refresh.js - 200 16505 application/javascript; charset=utf-8 97.9373ms
+2025-07-03 18:28:20.472 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/swagger/index.js - 200 null application/javascript;charset=utf-8 103.5408ms
+2025-07-03 18:28:20.667 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/_vs/browserLink - 200 null text/javascript; charset=UTF-8 297.4974ms
+2025-07-03 18:28:20.742 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/swagger/v1/swagger.json - null null
+2025-07-03 18:28:21.189 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 447.7223ms
+2025-07-03 18:28:28.705 +03:00 [INF] Executed DbCommand (18ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT `c`.`Id`, `c`.`CreatedAt`, `c`.`DeletedAt`, `c`.`Description`, `c`.`DisplayOrder`, `c`.`ImageId`, `c`.`IsActive`, `c`.`ModifiedAt`, `c`.`Name`
+FROM `Categories` AS `c`
+WHERE `c`.`DeletedAt` IS NOT NULL
+2025-07-03 18:28:28.887 +03:00 [INF] Executed DbCommand (29ms) [Parameters=[@p0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SET AUTOCOMMIT = 1;
+DELETE FROM `Categories`
+WHERE `Id` = @p0;
+SELECT ROW_COUNT();
+2025-07-03 18:29:37.586 +03:00 [INF] Request starting HTTP/1.1 POST https://localhost:7288/api/Account/Login - application/json 75
+2025-07-03 18:29:39.417 +03:00 [INF] Executing UserAuthenticationMiddleware
+2025-07-03 18:29:39.473 +03:00 [INF] Executing endpoint 'E_Commers.Controllers.AccountController.LoginAsync (E-Commerce)'
+2025-07-03 18:29:39.502 +03:00 [INF] Route matched with {action = "LoginAsync", controller = "Account"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[E_Commers.DtoModels.Responses.ApiResponse`1[E_Commers.DtoModels.TokenDtos.TokensDto]]] LoginAsync(E_Commers.DtoModels.AccountDtos.LoginDTo) on controller E_Commers.Controllers.AccountController (E-Commerce).
+2025-07-03 18:29:39.809 +03:00 [INF] In LoginAsync Method 
+2025-07-03 18:29:39.824 +03:00 [INF] Executed DbCommand (2ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`, `a`.`ProfilePicture`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-07-03 18:29:39.949 +03:00 [INF] 🔐 Generating Access Token for User ID: 54f3c4dd-ad04-4f23-9523-b4ed366f6a75
+2025-07-03 18:29:40.027 +03:00 [INF] Executed DbCommand (4ms) [Parameters=[@__userId_0='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a0`.`Name`
+FROM `AspNetUserRoles` AS `a`
+INNER JOIN `AspNetRoles` AS `a0` ON `a`.`RoleId` = `a0`.`Id`
+WHERE `a`.`UserId` = @__userId_0
+2025-07-03 18:29:40.120 +03:00 [INF] ✅ Access Token generated successfully for User ID: 54f3c4dd-ad04-4f23-9523-b4ed366f6a75
+2025-07-03 18:29:40.125 +03:00 [INF] 🔑 Generating Refresh Token for User ID: 54f3c4dd-ad04-4f23-9523-b4ed366f6a75
+2025-07-03 18:29:40.137 +03:00 [INF] RefreshToken Generated
+2025-07-03 18:29:40.174 +03:00 [INF] Executing OkObjectResult, writing value of type 'E_Commers.DtoModels.Responses.ApiResponse`1[[E_Commers.DtoModels.TokenDtos.TokensDto, E-Commerce, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2025-07-03 18:29:40.204 +03:00 [INF] Executed action E_Commers.Controllers.AccountController.LoginAsync (E-Commerce) in 692.745ms
+2025-07-03 18:29:40.207 +03:00 [INF] Executed endpoint 'E_Commers.Controllers.AccountController.LoginAsync (E-Commerce)'
+2025-07-03 18:29:40.216 +03:00 [INF] Request finished HTTP/1.1 POST https://localhost:7288/api/Account/Login - 200 1408 application/json; charset=utf-8 2629.7608ms
+2025-07-03 18:30:29.367 +03:00 [INF] Request starting HTTP/1.1 POST https://localhost:7288/api/categories - multipart/form-data; boundary=--------------------------612940752608157696013553 760027
+2025-07-03 18:30:29.435 +03:00 [INF] Executing UserAuthenticationMiddleware
+2025-07-03 18:30:29.464 +03:00 [INF] Executed DbCommand (0ms) [Parameters=[@__userId_0='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`SecurityStamp`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`Id` = @__userId_0)
+LIMIT 1
+2025-07-03 18:30:29.475 +03:00 [INF] Executing endpoint 'E_Commers.Controllers.CategoriesController.CreateAsync (E-Commerce)'
+2025-07-03 18:30:29.490 +03:00 [INF] Route matched with {action = "CreateAsync", controller = "Categories"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[E_Commers.DtoModels.Responses.ApiResponse`1[E_Commers.DtoModels.CategoryDtos.CategoryDto]]] CreateAsync(E_Commers.DtoModels.CategoryDtos.CreateCategotyDto) on controller E_Commers.Controllers.CategoriesController (E-Commerce).
+2025-07-03 18:30:29.560 +03:00 [INF] Executing CreateAsync
+2025-07-03 18:30:29.570 +03:00 [INF] Execute CreateAsync
+2025-07-03 18:30:29.583 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__name_0='?' (Size = 20)], CommandType='"Text"', CommandTimeout='30']
+SELECT `c`.`Id`, `c`.`CreatedAt`, `c`.`DeletedAt`, `c`.`Description`, `c`.`DisplayOrder`, `c`.`ImageId`, `c`.`IsActive`, `c`.`ModifiedAt`, `c`.`Name`
+FROM `Categories` AS `c`
+WHERE (`c`.`Name` = @__name_0) AND `c`.`DeletedAt` IS NULL
+LIMIT 1
+2025-07-03 18:30:29.592 +03:00 [INF] Executing ConflictObjectResult, writing value of type 'E_Commers.DtoModels.Responses.ApiResponse`1[[E_Commers.DtoModels.CategoryDtos.CategoryDto, E-Commerce, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2025-07-03 18:30:29.600 +03:00 [INF] Executed action E_Commers.Controllers.CategoriesController.CreateAsync (E-Commerce) in 106.4206ms
+2025-07-03 18:30:29.602 +03:00 [INF] Executed endpoint 'E_Commers.Controllers.CategoriesController.CreateAsync (E-Commerce)'
+2025-07-03 18:30:29.611 +03:00 [INF] Request finished HTTP/1.1 POST https://localhost:7288/api/categories - 409 213 application/json; charset=utf-8 244.2185ms
+2025-07-03 18:33:06.913 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/swagger/index.html - null null
+2025-07-03 18:33:07.454 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/swagger/index.html - 200 null text/html;charset=utf-8 540.6648ms
+2025-07-03 18:33:07.733 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/swagger/index.js - null null
+2025-07-03 18:33:07.741 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/swagger/index.js - 200 null application/javascript;charset=utf-8 8.186ms
+2025-07-03 18:33:07.755 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/_vs/browserLink - null null
+2025-07-03 18:33:07.867 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/_framework/aspnetcore-browser-refresh.js - null null
+2025-07-03 18:33:07.876 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/_vs/browserLink - 200 null text/javascript; charset=UTF-8 121.5409ms
+2025-07-03 18:33:07.879 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/_framework/aspnetcore-browser-refresh.js - 200 16505 application/javascript; charset=utf-8 11.762ms
+2025-07-03 18:33:09.278 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/swagger/v1/swagger.json - null null
+2025-07-03 18:33:09.402 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 124.2541ms
+2025-07-03 18:33:17.495 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/swagger/index.html - null null
+2025-07-03 18:33:17.514 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/swagger/index.html - 200 null text/html;charset=utf-8 18.8967ms
+2025-07-03 18:33:17.628 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/swagger/index.js - null null
+2025-07-03 18:33:17.633 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/_vs/browserLink - null null
+2025-07-03 18:33:17.637 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/swagger/index.js - 200 null application/javascript;charset=utf-8 8.9496ms
+2025-07-03 18:33:17.654 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/_framework/aspnetcore-browser-refresh.js - null null
+2025-07-03 18:33:17.662 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/_vs/browserLink - 200 null text/javascript; charset=UTF-8 28.3216ms
+2025-07-03 18:33:17.680 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/_framework/aspnetcore-browser-refresh.js - 200 16505 application/javascript; charset=utf-8 27.3715ms
+2025-07-03 18:33:18.513 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/swagger/v1/swagger.json - null null
+2025-07-03 18:33:18.608 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 94.5644ms
+2025-07-03 18:34:15.158 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/swagger/index.html - null null
+2025-07-03 18:34:15.209 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/swagger/index.html - 200 null text/html;charset=utf-8 50.2648ms
+2025-07-03 18:34:15.328 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/swagger/index.js - null null
+2025-07-03 18:34:15.334 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/swagger/index.js - 200 null application/javascript;charset=utf-8 6.0977ms
+2025-07-03 18:34:15.342 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/_vs/browserLink - null null
+2025-07-03 18:34:15.348 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/_framework/aspnetcore-browser-refresh.js - null null
+2025-07-03 18:34:15.361 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/_framework/aspnetcore-browser-refresh.js - 200 16505 application/javascript; charset=utf-8 12.3067ms
+2025-07-03 18:34:15.361 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/_vs/browserLink - 200 null text/javascript; charset=UTF-8 18.443ms
+2025-07-03 18:34:15.879 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/swagger/v1/swagger.json - null null
+2025-07-03 18:34:16.016 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 137.6147ms
+2025-07-03 18:34:35.503 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/swagger/index.html - null null
+2025-07-03 18:34:35.513 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/swagger/index.html - 200 null text/html;charset=utf-8 10.0989ms
+2025-07-03 18:34:35.577 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/swagger/index.js - null null
+2025-07-03 18:34:35.581 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/_vs/browserLink - null null
+2025-07-03 18:34:35.584 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/_framework/aspnetcore-browser-refresh.js - null null
+2025-07-03 18:34:35.584 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/swagger/index.js - 200 null application/javascript;charset=utf-8 6.9218ms
+2025-07-03 18:34:35.599 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/_vs/browserLink - 200 null text/javascript; charset=UTF-8 18.0045ms
+2025-07-03 18:34:35.608 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/_framework/aspnetcore-browser-refresh.js - 200 16505 application/javascript; charset=utf-8 23.9026ms
+2025-07-03 18:34:35.864 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/swagger/v1/swagger.json - null null
+2025-07-03 18:34:35.928 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 63.7371ms
+2025-07-03 19:12:56.726 +03:00 [INF] DB tables already exist. Exit install
+2025-07-03 19:12:59.081 +03:00 [INF] Executed DbCommand (25ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='Fashion_Site' AND TABLE_NAME='__EFMigrationsHistory';
+2025-07-03 19:12:59.135 +03:00 [INF] Executed DbCommand (0ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='Fashion_Site' AND TABLE_NAME='__EFMigrationsHistory';
+2025-07-03 19:12:59.251 +03:00 [INF] Executed DbCommand (58ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT `MigrationId`, `ProductVersion`
+FROM `__EFMigrationsHistory`
+ORDER BY `MigrationId`;
+2025-07-03 19:12:59.441 +03:00 [INF] No migrations were applied. The database is already up to date.
+2025-07-03 19:12:59.488 +03:00 [INF] User profile is available. Using 'C:\Users\DELL\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2025-07-03 19:13:00.179 +03:00 [INF] Executed DbCommand (95ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-07-03 19:13:00.343 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-07-03 19:13:00.437 +03:00 [INF] Executed DbCommand (57ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`, `a`.`ProfilePicture`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-07-03 19:13:01.663 +03:00 [INF] Now listening on: https://localhost:7288
+2025-07-03 19:13:01.671 +03:00 [INF] Now listening on: http://localhost:5069
+2025-07-03 19:13:01.801 +03:00 [ERR] Index was outside the bounds of the array.
+System.IndexOutOfRangeException: Index was outside the bounds of the array.
+   at Hangfire.MySql.MySqlStorage.<>c.<ToString>b__14_1(String[] x)
+   at System.Linq.Enumerable.ArraySelectIterator`2.MoveNext()
+   at System.Linq.Enumerable.ToDictionary[TSource,TKey,TElement](IEnumerable`1 source, Func`2 keySelector, Func`2 elementSelector, IEqualityComparer`1 comparer)
+   at Hangfire.MySql.MySqlStorage.ToString()
+2025-07-03 19:13:01.872 +03:00 [INF] Starting Hangfire Server using job storage: '<Connection string can not be parsed>'
+2025-07-03 19:13:01.906 +03:00 [INF] Using the following options for SQL Server job storage:
+2025-07-03 19:13:01.918 +03:00 [INF]     Queue poll interval: 00:00:10.
+2025-07-03 19:13:01.924 +03:00 [INF] Using the following options for Hangfire Server:
+    Worker count: 20
+    Listening queues: 'default'
+    Shutdown timeout: 00:00:15
+    Schedule polling interval: 00:00:15
+2025-07-03 19:13:02.029 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-07-03 19:13:02.087 +03:00 [INF] Hosting environment: Development
+2025-07-03 19:13:02.088 +03:00 [INF] Content root path: D:\fashion\Projcet\E-Commers\E-Commers
+2025-07-03 19:13:02.132 +03:00 [INF] Server mrrobot:8900:ab8050d7 successfully announced in 52.7717 ms
+2025-07-03 19:13:02.170 +03:00 [INF] Server mrrobot:8900:ab8050d7 is starting the registered dispatchers: ServerWatchdog, ServerJobCancellationWatcher, ExpirationManager, CountersAggregator, Worker, DelayedJobScheduler, RecurringJobScheduler...
+2025-07-03 19:13:02.260 +03:00 [INF] 1 servers were removed due to timeout
+2025-07-03 19:13:02.403 +03:00 [INF] Server mrrobot:8900:ab8050d7 all the dispatchers started
+2025-07-03 19:13:03.097 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/swagger/index.html - null null
+2025-07-03 19:13:03.442 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/swagger/index.html - 200 null text/html;charset=utf-8 344.6116ms
+2025-07-03 19:13:03.831 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/_vs/browserLink - null null
+2025-07-03 19:13:03.831 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/swagger/index.js - null null
+2025-07-03 19:13:03.833 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/_framework/aspnetcore-browser-refresh.js - null null
+2025-07-03 19:13:03.847 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/swagger/index.js - 200 null application/javascript;charset=utf-8 15.9529ms
+2025-07-03 19:13:03.863 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/_framework/aspnetcore-browser-refresh.js - 200 16505 application/javascript; charset=utf-8 29.8134ms
+2025-07-03 19:13:03.891 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/_vs/browserLink - 200 null text/javascript; charset=UTF-8 59.9918ms
+2025-07-03 19:13:04.994 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/swagger/v1/swagger.json - null null
+2025-07-03 19:13:05.124 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 130.0886ms
+2025-07-03 19:15:47.384 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/swagger/index.html - null null
+2025-07-03 19:15:47.405 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/swagger/index.html - 200 null text/html;charset=utf-8 21.0166ms
+2025-07-03 19:15:47.434 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/swagger/index.js - null null
+2025-07-03 19:15:47.438 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/_vs/browserLink - null null
+2025-07-03 19:15:47.442 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/swagger/index.js - 200 null application/javascript;charset=utf-8 7.9431ms
+2025-07-03 19:15:47.448 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/_framework/aspnetcore-browser-refresh.js - null null
+2025-07-03 19:15:47.467 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/_framework/aspnetcore-browser-refresh.js - 200 16505 application/javascript; charset=utf-8 19.5316ms
+2025-07-03 19:15:47.471 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/_vs/browserLink - 200 null text/javascript; charset=UTF-8 32.8615ms
+2025-07-03 19:15:47.687 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/swagger/v1/swagger.json - null null
+2025-07-03 19:15:47.800 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 112.7263ms
+2025-07-03 19:16:09.408 +03:00 [INF] Request starting HTTP/1.1 POST https://localhost:7288/api/categories - multipart/form-data; boundary=--------------------------960045119224604377280503 760027
+2025-07-03 19:16:09.559 +03:00 [INF] Failed to validate the token.
+Microsoft.IdentityModel.Tokens.SecurityTokenExpiredException: IDX10223: Lifetime validation failed. The token is expired. ValidTo (UTC): '7/3/2025 3:44:40 PM', Current time (UTC): '7/3/2025 4:16:09 PM'.
+   at Microsoft.IdentityModel.Tokens.Validators.ValidateLifetime(Nullable`1 notBefore, Nullable`1 expires, SecurityToken securityToken, TokenValidationParameters validationParameters)
+   at Microsoft.IdentityModel.JsonWebTokens.JsonWebTokenHandler.ValidateTokenPayloadAsync(JsonWebToken jsonWebToken, TokenValidationParameters validationParameters, BaseConfiguration configuration)
+   at Microsoft.IdentityModel.JsonWebTokens.JsonWebTokenHandler.ValidateJWSAsync(JsonWebToken jsonWebToken, TokenValidationParameters validationParameters, BaseConfiguration configuration)
+2025-07-03 19:16:09.569 +03:00 [INF] Bearer was not authenticated. Failure message: IDX10223: Lifetime validation failed. The token is expired. ValidTo (UTC): '7/3/2025 3:44:40 PM', Current time (UTC): '7/3/2025 4:16:09 PM'.
+2025-07-03 19:16:09.575 +03:00 [INF] Executing UserAuthenticationMiddleware
+2025-07-03 19:16:09.652 +03:00 [INF] Executed DbCommand (2ms) [Parameters=[@__userId_0='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`SecurityStamp`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`Id` = @__userId_0)
+LIMIT 1
+2025-07-03 19:16:09.720 +03:00 [INF] Authorization failed. These requirements were not met:
+RolesAuthorizationRequirement:User.IsInRole must be true for one of the following roles: (Admin)
+2025-07-03 19:16:09.730 +03:00 [INF] AuthenticationScheme: Bearer was challenged.
+2025-07-03 19:16:09.741 +03:00 [INF] Request finished HTTP/1.1 POST https://localhost:7288/api/categories - 401 0 null 332.1041ms
+2025-07-03 19:16:09.750 +03:00 [INF] Connection id "0HNDQ9HU423R3", Request id "0HNDQ9HU423R3:00000001": the application completed without reading the entire request body.
+2025-07-03 19:16:39.955 +03:00 [INF] Request starting HTTP/1.1 POST https://localhost:7288/api/Account/refresh-token - application/json 167
+2025-07-03 19:16:39.965 +03:00 [INF] Executing UserAuthenticationMiddleware
+2025-07-03 19:16:39.981 +03:00 [INF] Executing endpoint 'E_Commers.Controllers.AccountController.RefreshTokenAsync (E-Commerce)'
+2025-07-03 19:16:40.021 +03:00 [INF] Route matched with {action = "RefreshTokenAsync", controller = "Account"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[E_Commers.DtoModels.Responses.ApiResponse`1[System.String]]] RefreshTokenAsync(E_Commers.DtoModels.RefreshTokenDto) on controller E_Commers.Controllers.AccountController (E-Commerce).
+2025-07-03 19:16:40.424 +03:00 [INF] In RefreshTokenAsync Method
+2025-07-03 19:16:40.462 +03:00 [INF] Executed DbCommand (2ms) [Parameters=[@__p_0='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`, `a`.`ProfilePicture`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`Id` = @__p_0)
+LIMIT 1
+2025-07-03 19:16:40.472 +03:00 [INF] In ValidateRefreshTokenAsync Method
+2025-07-03 19:16:40.483 +03:00 [INF] Valid Refreshtoken
+2025-07-03 19:16:40.486 +03:00 [INF] 🔄 RefreshToken() started for User ID: 54f3c4dd-ad04-4f23-9523-b4ed366f6a75
+2025-07-03 19:16:40.497 +03:00 [INF] Successfully removed RefreshToken for User 54f3c4dd-ad04-4f23-9523-b4ed366f6a75
+2025-07-03 19:16:40.505 +03:00 [INF] 🔐 Generating Access Token for User ID: 54f3c4dd-ad04-4f23-9523-b4ed366f6a75
+2025-07-03 19:16:40.571 +03:00 [INF] Executed DbCommand (6ms) [Parameters=[@__userId_0='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a0`.`Name`
+FROM `AspNetUserRoles` AS `a`
+INNER JOIN `AspNetRoles` AS `a0` ON `a`.`RoleId` = `a0`.`Id`
+WHERE `a`.`UserId` = @__userId_0
+2025-07-03 19:16:40.600 +03:00 [INF] ✅ Access Token generated successfully for User ID: 54f3c4dd-ad04-4f23-9523-b4ed366f6a75
+2025-07-03 19:16:40.613 +03:00 [INF] Executing OkObjectResult, writing value of type 'E_Commers.DtoModels.Responses.ApiResponse`1[[System.String, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2025-07-03 19:16:40.661 +03:00 [INF] Executed action E_Commers.Controllers.AccountController.RefreshTokenAsync (E-Commerce) in 618.6088ms
+2025-07-03 19:16:40.714 +03:00 [INF] Executed endpoint 'E_Commers.Controllers.AccountController.RefreshTokenAsync (E-Commerce)'
+2025-07-03 19:16:40.720 +03:00 [INF] Request finished HTTP/1.1 POST https://localhost:7288/api/Account/refresh-token - 200 775 application/json; charset=utf-8 764.5978ms
+2025-07-03 19:17:15.632 +03:00 [INF] Request starting HTTP/1.1 POST https://localhost:7288/api/categories - multipart/form-data; boundary=--------------------------916943590937310089265145 760027
+2025-07-03 19:17:15.662 +03:00 [INF] Executing UserAuthenticationMiddleware
+2025-07-03 19:17:15.671 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__userId_0='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`SecurityStamp`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`Id` = @__userId_0)
+LIMIT 1
+2025-07-03 19:17:15.681 +03:00 [INF] Executing endpoint 'E_Commers.Controllers.CategoriesController.CreateAsync (E-Commerce)'
+2025-07-03 19:17:15.694 +03:00 [INF] Route matched with {action = "CreateAsync", controller = "Categories"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[E_Commers.DtoModels.Responses.ApiResponse`1[E_Commers.DtoModels.CategoryDtos.CategoryDto]]] CreateAsync(E_Commers.DtoModels.CategoryDtos.CreateCategotyDto) on controller E_Commers.Controllers.CategoriesController (E-Commerce).
+2025-07-03 19:17:15.766 +03:00 [INF] Executing CreateAsync
+2025-07-03 19:17:15.780 +03:00 [INF] Execute CreateAsync
+2025-07-03 19:17:15.827 +03:00 [INF] Executed DbCommand (28ms) [Parameters=[@__name_0='?' (Size = 20)], CommandType='"Text"', CommandTimeout='30']
+SELECT `c`.`Id`, `c`.`CreatedAt`, `c`.`DeletedAt`, `c`.`Description`, `c`.`DisplayOrder`, `c`.`ImageId`, `c`.`IsActive`, `c`.`ModifiedAt`, `c`.`Name`
+FROM `Categories` AS `c`
+WHERE (`c`.`Name` = @__name_0) AND `c`.`DeletedAt` IS NULL
+LIMIT 1
+2025-07-03 19:17:15.883 +03:00 [INF] Executing ConflictObjectResult, writing value of type 'E_Commers.DtoModels.Responses.ApiResponse`1[[E_Commers.DtoModels.CategoryDtos.CategoryDto, E-Commerce, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2025-07-03 19:17:15.900 +03:00 [INF] Executed action E_Commers.Controllers.CategoriesController.CreateAsync (E-Commerce) in 197.722ms
+2025-07-03 19:17:15.902 +03:00 [INF] Executed endpoint 'E_Commers.Controllers.CategoriesController.CreateAsync (E-Commerce)'
+2025-07-03 19:17:15.917 +03:00 [INF] Request finished HTTP/1.1 POST https://localhost:7288/api/categories - 409 260 application/json; charset=utf-8 285.4409ms
+2025-07-03 19:18:21.682 +03:00 [INF] Request starting HTTP/1.1 POST https://localhost:7288/api/categories - multipart/form-data; boundary=--------------------------313635607901444358853312 760019
+2025-07-03 19:18:21.687 +03:00 [INF] Executing UserAuthenticationMiddleware
+2025-07-03 19:18:21.708 +03:00 [INF] Executed DbCommand (11ms) [Parameters=[@__userId_0='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`SecurityStamp`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`Id` = @__userId_0)
+LIMIT 1
+2025-07-03 19:18:21.722 +03:00 [INF] Executing endpoint 'E_Commers.Controllers.CategoriesController.CreateAsync (E-Commerce)'
+2025-07-03 19:18:21.725 +03:00 [INF] Route matched with {action = "CreateAsync", controller = "Categories"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[E_Commers.DtoModels.Responses.ApiResponse`1[E_Commers.DtoModels.CategoryDtos.CategoryDto]]] CreateAsync(E_Commers.DtoModels.CategoryDtos.CreateCategotyDto) on controller E_Commers.Controllers.CategoriesController (E-Commerce).
+2025-07-03 19:18:21.748 +03:00 [INF] Executing CreateAsync
+2025-07-03 19:18:21.749 +03:00 [INF] Execute CreateAsync
+2025-07-03 19:18:21.753 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__name_0='?' (Size = 20)], CommandType='"Text"', CommandTimeout='30']
+SELECT `c`.`Id`, `c`.`CreatedAt`, `c`.`DeletedAt`, `c`.`Description`, `c`.`DisplayOrder`, `c`.`ImageId`, `c`.`IsActive`, `c`.`ModifiedAt`, `c`.`Name`
+FROM `Categories` AS `c`
+WHERE (`c`.`Name` = @__name_0) AND `c`.`DeletedAt` IS NULL
+LIMIT 1
+2025-07-03 19:18:21.790 +03:00 [INF] Executing CreateAsync for entity Category
+2025-07-03 19:18:21.843 +03:00 [INF] Category added successfully (pending save)
+2025-07-03 19:18:22.012 +03:00 [INF] Executed DbCommand (12ms) [Parameters=[@p0='?' (DbType = DateTime), @p1='?' (DbType = DateTime), @p2='?' (Size = 50), @p3='?' (DbType = Int32), @p4='?' (DbType = Int32), @p5='?' (DbType = Boolean), @p6='?' (DbType = DateTime), @p7='?' (Size = 20)], CommandType='"Text"', CommandTimeout='30']
+INSERT INTO `Categories` (`CreatedAt`, `DeletedAt`, `Description`, `DisplayOrder`, `ImageId`, `IsActive`, `ModifiedAt`, `Name`)
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7);
+SELECT `Id`
+FROM `Categories`
+WHERE ROW_COUNT() = 1 AND `Id` = LAST_INSERT_ID();
+2025-07-03 19:18:22.056 +03:00 [INF] 📥 Saving 2 images to CategoryPhotos
+2025-07-03 19:18:22.061 +03:00 [INF] 📥 Saving image to CategoryPhotos
+2025-07-03 19:18:22.081 +03:00 [INF] Executing CreateAsync for entity Image
+2025-07-03 19:18:22.163 +03:00 [INF] Image added successfully (pending save)
+2025-07-03 19:18:22.200 +03:00 [INF] Executed DbCommand (9ms) [Parameters=[@p0='?' (Size = 4000), @p1='?' (DbType = Int32), @p2='?' (DbType = Int32), @p3='?' (DbType = DateTime), @p4='?' (DbType = DateTime), @p5='?' (DbType = Int64), @p6='?' (Size = 4000), @p7='?' (Size = 4000), @p8='?' (DbType = Int32), @p9='?' (DbType = Boolean), @p10='?' (DbType = DateTime), @p11='?' (DbType = Int32), @p12='?' (DbType = Int32), @p13='?' (Size = 4000), @p14='?' (DbType = DateTime), @p15='?' (Size = 4000), @p16='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+INSERT INTO `Images` (`AltText`, `CategoryId`, `CollectionId`, `CreatedAt`, `DeletedAt`, `FileSize`, `FileType`, `Folder`, `Height`, `IsMain`, `ModifiedAt`, `ProductId`, `SubCategoryId`, `Title`, `UploadDate`, `Url`, `Width`)
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9, @p10, @p11, @p12, @p13, @p14, @p15, @p16);
+SELECT `Id`
+FROM `Images`
+WHERE ROW_COUNT() = 1 AND `Id` = LAST_INSERT_ID();
+2025-07-03 19:18:22.218 +03:00 [INF] Execute AddAdminOpreationAsync
+2025-07-03 19:18:22.224 +03:00 [INF] Executing CreateAsync for entity AdminOperationsLog
+2025-07-03 19:18:22.265 +03:00 [INF] AdminOperationsLog added successfully (pending save)
+2025-07-03 19:18:22.267 +03:00 [INF] ✅ Image saved: /CategoryPhotos/9238d34f-2d69-4e05-9233-0c2722adcafa.jpg
+2025-07-03 19:18:22.270 +03:00 [INF] 📥 Saving image to CategoryPhotos
+2025-07-03 19:18:22.276 +03:00 [INF] Executing CreateAsync for entity Image
+2025-07-03 19:18:22.280 +03:00 [INF] Image added successfully (pending save)
+2025-07-03 19:18:22.315 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@p0='?' (Size = 4000), @p1='?' (DbType = Int32), @p2='?' (DbType = Int32), @p3='?' (DbType = DateTime), @p4='?' (DbType = DateTime), @p5='?' (DbType = Int64), @p6='?' (Size = 4000), @p7='?' (Size = 4000), @p8='?' (DbType = Int32), @p9='?' (DbType = Boolean), @p10='?' (DbType = DateTime), @p11='?' (DbType = Int32), @p12='?' (DbType = Int32), @p13='?' (Size = 4000), @p14='?' (DbType = DateTime), @p15='?' (Size = 4000), @p16='?' (DbType = Int32), @p17='?' (Size = 255), @p18='?' (DbType = DateTime), @p19='?' (DbType = DateTime), @p20='?' (Size = 4000), @p21='?' (DbType = Int32), @p22='?' (DbType = DateTime), @p23='?' (DbType = Int32), @p24='?' (DbType = DateTime)], CommandType='"Text"', CommandTimeout='30']
+INSERT INTO `Images` (`AltText`, `CategoryId`, `CollectionId`, `CreatedAt`, `DeletedAt`, `FileSize`, `FileType`, `Folder`, `Height`, `IsMain`, `ModifiedAt`, `ProductId`, `SubCategoryId`, `Title`, `UploadDate`, `Url`, `Width`)
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9, @p10, @p11, @p12, @p13, @p14, @p15, @p16);
+SELECT `Id`
+FROM `Images`
+WHERE ROW_COUNT() = 1 AND `Id` = LAST_INSERT_ID();
+
+INSERT INTO `adminOperationsLogs` (`AdminId`, `CreatedAt`, `DeletedAt`, `Description`, `ItemId`, `ModifiedAt`, `OperationType`, `Timestamp`)
+VALUES (@p17, @p18, @p19, @p20, @p21, @p22, @p23, @p24);
+SELECT `Id`
+FROM `adminOperationsLogs`
+WHERE ROW_COUNT() = 1 AND `Id` = LAST_INSERT_ID();
+2025-07-03 19:18:22.326 +03:00 [INF] Execute AddAdminOpreationAsync
+2025-07-03 19:18:22.328 +03:00 [INF] Executing CreateAsync for entity AdminOperationsLog
+2025-07-03 19:18:22.331 +03:00 [INF] AdminOperationsLog added successfully (pending save)
+2025-07-03 19:18:22.332 +03:00 [INF] ✅ Image saved: /CategoryPhotos/2a02924b-9add-4475-a62b-b5cd5af714bd.jpg
+2025-07-03 19:18:22.340 +03:00 [INF] 📥 Saving main image to CategoryPhotos
+2025-07-03 19:18:22.346 +03:00 [INF] Executing CreateAsync for entity Image
+2025-07-03 19:18:22.349 +03:00 [INF] Image added successfully (pending save)
+2025-07-03 19:18:22.354 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@p0='?' (Size = 4000), @p1='?' (DbType = Int32), @p2='?' (DbType = Int32), @p3='?' (DbType = DateTime), @p4='?' (DbType = DateTime), @p5='?' (DbType = Int64), @p6='?' (Size = 4000), @p7='?' (Size = 4000), @p8='?' (DbType = Int32), @p9='?' (DbType = Boolean), @p10='?' (DbType = DateTime), @p11='?' (DbType = Int32), @p12='?' (DbType = Int32), @p13='?' (Size = 4000), @p14='?' (DbType = DateTime), @p15='?' (Size = 4000), @p16='?' (DbType = Int32), @p17='?' (Size = 255), @p18='?' (DbType = DateTime), @p19='?' (DbType = DateTime), @p20='?' (Size = 4000), @p21='?' (DbType = Int32), @p22='?' (DbType = DateTime), @p23='?' (DbType = Int32), @p24='?' (DbType = DateTime)], CommandType='"Text"', CommandTimeout='30']
+INSERT INTO `Images` (`AltText`, `CategoryId`, `CollectionId`, `CreatedAt`, `DeletedAt`, `FileSize`, `FileType`, `Folder`, `Height`, `IsMain`, `ModifiedAt`, `ProductId`, `SubCategoryId`, `Title`, `UploadDate`, `Url`, `Width`)
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9, @p10, @p11, @p12, @p13, @p14, @p15, @p16);
+SELECT `Id`
+FROM `Images`
+WHERE ROW_COUNT() = 1 AND `Id` = LAST_INSERT_ID();
+
+INSERT INTO `adminOperationsLogs` (`AdminId`, `CreatedAt`, `DeletedAt`, `Description`, `ItemId`, `ModifiedAt`, `OperationType`, `Timestamp`)
+VALUES (@p17, @p18, @p19, @p20, @p21, @p22, @p23, @p24);
+SELECT `Id`
+FROM `adminOperationsLogs`
+WHERE ROW_COUNT() = 1 AND `Id` = LAST_INSERT_ID();
+2025-07-03 19:18:22.361 +03:00 [INF] Execute AddAdminOpreationAsync
+2025-07-03 19:18:22.362 +03:00 [INF] Executing CreateAsync for entity AdminOperationsLog
+2025-07-03 19:18:22.364 +03:00 [INF] AdminOperationsLog added successfully (pending save)
+2025-07-03 19:18:22.367 +03:00 [INF] ✅ Main image saved: /CategoryPhotos/a6391d5e-c535-4db6-88ef-5227292d64b3.jpg
+2025-07-03 19:18:22.370 +03:00 [INF] Execute UpdateAsync for entity Category
+2025-07-03 19:18:22.404 +03:00 [INF] Category marked for update (pending save)
+2025-07-03 19:18:22.406 +03:00 [INF] Execute AddAdminOpreationAsync
+2025-07-03 19:18:22.407 +03:00 [INF] Executing CreateAsync for entity AdminOperationsLog
+2025-07-03 19:18:22.410 +03:00 [INF] AdminOperationsLog added successfully (pending save)
+2025-07-03 19:18:22.417 +03:00 [INF] Removing cache by tag: category
+2025-07-03 19:18:22.429 +03:00 [WRN] No cache entries found for tag: category
+2025-07-03 19:18:22.440 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@p1='?' (DbType = Int32), @p0='?' (DbType = Int32), @p3='?' (DbType = Int32), @p2='?' (DbType = Int32), @p5='?' (DbType = Int32), @p4='?' (DbType = Int32), @p6='?' (Size = 255), @p7='?' (DbType = DateTime), @p8='?' (DbType = DateTime), @p9='?' (Size = 4000), @p10='?' (DbType = Int32), @p11='?' (DbType = DateTime), @p12='?' (DbType = Int32), @p13='?' (DbType = DateTime), @p14='?' (Size = 255), @p15='?' (DbType = DateTime), @p16='?' (DbType = DateTime), @p17='?' (Size = 4000), @p18='?' (DbType = Int32), @p19='?' (DbType = DateTime), @p20='?' (DbType = Int32), @p21='?' (DbType = DateTime)], CommandType='"Text"', CommandTimeout='30']
+UPDATE `Images` SET `CategoryId` = @p0
+WHERE `Id` = @p1;
+SELECT ROW_COUNT();
+
+UPDATE `Images` SET `CategoryId` = @p2
+WHERE `Id` = @p3;
+SELECT ROW_COUNT();
+
+UPDATE `Images` SET `CategoryId` = @p4
+WHERE `Id` = @p5;
+SELECT ROW_COUNT();
+
+INSERT INTO `adminOperationsLogs` (`AdminId`, `CreatedAt`, `DeletedAt`, `Description`, `ItemId`, `ModifiedAt`, `OperationType`, `Timestamp`)
+VALUES (@p6, @p7, @p8, @p9, @p10, @p11, @p12, @p13);
+SELECT `Id`
+FROM `adminOperationsLogs`
+WHERE ROW_COUNT() = 1 AND `Id` = LAST_INSERT_ID();
+
+INSERT INTO `adminOperationsLogs` (`AdminId`, `CreatedAt`, `DeletedAt`, `Description`, `ItemId`, `ModifiedAt`, `OperationType`, `Timestamp`)
+VALUES (@p14, @p15, @p16, @p17, @p18, @p19, @p20, @p21);
+SELECT `Id`
+FROM `adminOperationsLogs`
+WHERE ROW_COUNT() = 1 AND `Id` = LAST_INSERT_ID();
+2025-07-03 19:18:22.460 +03:00 [INF] Retrieving category with ID 41 after creation
+2025-07-03 19:18:22.464 +03:00 [INF] Executing GetCategoryById for id: 41
+2025-07-03 19:18:22.558 +03:00 [WRN] Compiling a query which loads related collections for more than one collection navigation, either via 'Include' or through projection, but no 'QuerySplittingBehavior' has been configured. By default, Entity Framework will use 'QuerySplittingBehavior.SingleQuery', which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))'.
+2025-07-03 19:18:22.622 +03:00 [INF] Executed DbCommand (52ms) [Parameters=[@__id_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT `t`.`Id`, `t`.`CreatedAt`, `t`.`DeletedAt`, `t`.`Description`, `t`.`DisplayOrder`, `t`.`ImageId`, `t`.`IsActive`, `t`.`ModifiedAt`, `t`.`Name`, `i`.`Id`, `i`.`AltText`, `i`.`CategoryId`, `i`.`CollectionId`, `i`.`CreatedAt`, `i`.`DeletedAt`, `i`.`FileSize`, `i`.`FileType`, `i`.`Folder`, `i`.`Height`, `i`.`IsMain`, `i`.`ModifiedAt`, `i`.`ProductId`, `i`.`SubCategoryId`, `i`.`Title`, `i`.`UploadDate`, `i`.`Url`, `i`.`Width`, `t0`.`Id`, `t0`.`CategoryId`, `t0`.`CreatedAt`, `t0`.`DeletedAt`, `t0`.`Description`, `t0`.`ImageId`, `t0`.`IsActive`, `t0`.`ModifiedAt`, `t0`.`Name`, `t0`.`Id0`, `t0`.`AltText`, `t0`.`CategoryId0`, `t0`.`CollectionId`, `t0`.`CreatedAt0`, `t0`.`DeletedAt0`, `t0`.`FileSize`, `t0`.`FileType`, `t0`.`Folder`, `t0`.`Height`, `t0`.`IsMain`, `t0`.`ModifiedAt0`, `t0`.`ProductId`, `t0`.`SubCategoryId`, `t0`.`Title`, `t0`.`UploadDate`, `t0`.`Url`, `t0`.`Width`
+FROM (
+    SELECT `c`.`Id`, `c`.`CreatedAt`, `c`.`DeletedAt`, `c`.`Description`, `c`.`DisplayOrder`, `c`.`ImageId`, `c`.`IsActive`, `c`.`ModifiedAt`, `c`.`Name`
+    FROM `Categories` AS `c`
+    WHERE (`c`.`Id` = @__id_0) AND `c`.`DeletedAt` IS NULL
+    LIMIT 1
+) AS `t`
+LEFT JOIN `Images` AS `i` ON `t`.`Id` = `i`.`CategoryId`
+LEFT JOIN (
+    SELECT `s`.`Id`, `s`.`CategoryId`, `s`.`CreatedAt`, `s`.`DeletedAt`, `s`.`Description`, `s`.`ImageId`, `s`.`IsActive`, `s`.`ModifiedAt`, `s`.`Name`, `i0`.`Id` AS `Id0`, `i0`.`AltText`, `i0`.`CategoryId` AS `CategoryId0`, `i0`.`CollectionId`, `i0`.`CreatedAt` AS `CreatedAt0`, `i0`.`DeletedAt` AS `DeletedAt0`, `i0`.`FileSize`, `i0`.`FileType`, `i0`.`Folder`, `i0`.`Height`, `i0`.`IsMain`, `i0`.`ModifiedAt` AS `ModifiedAt0`, `i0`.`ProductId`, `i0`.`SubCategoryId`, `i0`.`Title`, `i0`.`UploadDate`, `i0`.`Url`, `i0`.`Width`
+    FROM `SubCategory` AS `s`
+    LEFT JOIN `Images` AS `i0` ON `s`.`Id` = `i0`.`SubCategoryId`
+    WHERE `s`.`DeletedAt` IS NULL
+) AS `t0` ON `t`.`Id` = `t0`.`CategoryId`
+ORDER BY `t`.`Id`, `i`.`Id`, `t0`.`Id`
+2025-07-03 19:18:22.638 +03:00 [INF] Category with id: 41 exists
+2025-07-03 19:18:22.640 +03:00 [INF] Successfully retrieved category: Id=41, Name=oamrgamaa
+2025-07-03 19:18:22.641 +03:00 [INF] Category has 3 images
+2025-07-03 19:18:22.643 +03:00 [INF] Mapping category with 3 images
+2025-07-03 19:18:22.659 +03:00 [INF] Successfully mapped category to DTO
+2025-07-03 19:18:22.664 +03:00 [INF] Executing ObjectResult, writing value of type 'E_Commers.DtoModels.Responses.ApiResponse`1[[E_Commers.DtoModels.CategoryDtos.CategoryDto, E-Commerce, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2025-07-03 19:18:22.682 +03:00 [INF] Executed action E_Commers.Controllers.CategoriesController.CreateAsync (E-Commerce) in 953.0243ms
+2025-07-03 19:18:22.784 +03:00 [INF] Executed endpoint 'E_Commers.Controllers.CategoriesController.CreateAsync (E-Commerce)'
+2025-07-03 19:18:22.833 +03:00 [INF] Request finished HTTP/1.1 POST https://localhost:7288/api/categories - 201 611 application/json; charset=utf-8 1151.4248ms
+2025-07-03 19:18:58.718 +03:00 [INF] Request starting HTTP/1.1 POST https://localhost:7288/api/categories - multipart/form-data; boundary=--------------------------150042329446040397637610 1384354
+2025-07-03 19:18:58.728 +03:00 [INF] Executing UserAuthenticationMiddleware
+2025-07-03 19:18:58.755 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__userId_0='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`SecurityStamp`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`Id` = @__userId_0)
+LIMIT 1
+2025-07-03 19:18:58.762 +03:00 [INF] Executing endpoint 'E_Commers.Controllers.CategoriesController.CreateAsync (E-Commerce)'
+2025-07-03 19:18:58.764 +03:00 [INF] Route matched with {action = "CreateAsync", controller = "Categories"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[E_Commers.DtoModels.Responses.ApiResponse`1[E_Commers.DtoModels.CategoryDtos.CategoryDto]]] CreateAsync(E_Commers.DtoModels.CategoryDtos.CreateCategotyDto) on controller E_Commers.Controllers.CategoriesController (E-Commerce).
+2025-07-03 19:18:58.821 +03:00 [INF] Executing CreateAsync
+2025-07-03 19:18:58.824 +03:00 [INF] Execute CreateAsync
+2025-07-03 19:18:58.829 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__name_0='?' (Size = 20)], CommandType='"Text"', CommandTimeout='30']
+SELECT `c`.`Id`, `c`.`CreatedAt`, `c`.`DeletedAt`, `c`.`Description`, `c`.`DisplayOrder`, `c`.`ImageId`, `c`.`IsActive`, `c`.`ModifiedAt`, `c`.`Name`
+FROM `Categories` AS `c`
+WHERE (`c`.`Name` = @__name_0) AND `c`.`DeletedAt` IS NULL
+LIMIT 1
+2025-07-03 19:18:58.835 +03:00 [INF] Executing ConflictObjectResult, writing value of type 'E_Commers.DtoModels.Responses.ApiResponse`1[[E_Commers.DtoModels.CategoryDtos.CategoryDto, E-Commerce, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2025-07-03 19:18:58.840 +03:00 [INF] Executed action E_Commers.Controllers.CategoriesController.CreateAsync (E-Commerce) in 67.8369ms
+2025-07-03 19:18:58.843 +03:00 [INF] Executed endpoint 'E_Commers.Controllers.CategoriesController.CreateAsync (E-Commerce)'
+2025-07-03 19:18:58.850 +03:00 [INF] Request finished HTTP/1.1 POST https://localhost:7288/api/categories - 409 244 application/json; charset=utf-8 132.0312ms
+2025-07-03 19:19:08.290 +03:00 [INF] Request starting HTTP/1.1 POST https://localhost:7288/api/categories - multipart/form-data; boundary=--------------------------199581005663092531674986 1384356
+2025-07-03 19:19:08.333 +03:00 [INF] Executing UserAuthenticationMiddleware
+2025-07-03 19:19:08.337 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__userId_0='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`SecurityStamp`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`Id` = @__userId_0)
+LIMIT 1
+2025-07-03 19:19:08.341 +03:00 [INF] Executing endpoint 'E_Commers.Controllers.CategoriesController.CreateAsync (E-Commerce)'
+2025-07-03 19:19:08.345 +03:00 [INF] Route matched with {action = "CreateAsync", controller = "Categories"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[E_Commers.DtoModels.Responses.ApiResponse`1[E_Commers.DtoModels.CategoryDtos.CategoryDto]]] CreateAsync(E_Commers.DtoModels.CategoryDtos.CreateCategotyDto) on controller E_Commers.Controllers.CategoriesController (E-Commerce).
+2025-07-03 19:19:08.399 +03:00 [INF] Executing CreateAsync
+2025-07-03 19:19:08.401 +03:00 [INF] Execute CreateAsync
+2025-07-03 19:19:08.405 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__name_0='?' (Size = 20)], CommandType='"Text"', CommandTimeout='30']
+SELECT `c`.`Id`, `c`.`CreatedAt`, `c`.`DeletedAt`, `c`.`Description`, `c`.`DisplayOrder`, `c`.`ImageId`, `c`.`IsActive`, `c`.`ModifiedAt`, `c`.`Name`
+FROM `Categories` AS `c`
+WHERE (`c`.`Name` = @__name_0) AND `c`.`DeletedAt` IS NULL
+LIMIT 1
+2025-07-03 19:19:08.423 +03:00 [INF] Executing CreateAsync for entity Category
+2025-07-03 19:19:08.426 +03:00 [INF] Category added successfully (pending save)
+2025-07-03 19:19:08.438 +03:00 [INF] Executed DbCommand (8ms) [Parameters=[@p0='?' (DbType = DateTime), @p1='?' (DbType = DateTime), @p2='?' (Size = 50), @p3='?' (DbType = Int32), @p4='?' (DbType = Int32), @p5='?' (DbType = Boolean), @p6='?' (DbType = DateTime), @p7='?' (Size = 20)], CommandType='"Text"', CommandTimeout='30']
+INSERT INTO `Categories` (`CreatedAt`, `DeletedAt`, `Description`, `DisplayOrder`, `ImageId`, `IsActive`, `ModifiedAt`, `Name`)
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7);
+SELECT `Id`
+FROM `Categories`
+WHERE ROW_COUNT() = 1 AND `Id` = LAST_INSERT_ID();
+2025-07-03 19:19:08.444 +03:00 [INF] 📥 Saving 2 images to CategoryPhotos
+2025-07-03 19:19:08.446 +03:00 [INF] 📥 Saving image to CategoryPhotos
+2025-07-03 19:19:08.451 +03:00 [INF] Executing CreateAsync for entity Image
+2025-07-03 19:19:08.454 +03:00 [INF] Image added successfully (pending save)
+2025-07-03 19:19:08.458 +03:00 [INF] Executed DbCommand (2ms) [Parameters=[@p0='?' (Size = 4000), @p1='?' (DbType = Int32), @p2='?' (DbType = Int32), @p3='?' (DbType = DateTime), @p4='?' (DbType = DateTime), @p5='?' (DbType = Int64), @p6='?' (Size = 4000), @p7='?' (Size = 4000), @p8='?' (DbType = Int32), @p9='?' (DbType = Boolean), @p10='?' (DbType = DateTime), @p11='?' (DbType = Int32), @p12='?' (DbType = Int32), @p13='?' (Size = 4000), @p14='?' (DbType = DateTime), @p15='?' (Size = 4000), @p16='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+INSERT INTO `Images` (`AltText`, `CategoryId`, `CollectionId`, `CreatedAt`, `DeletedAt`, `FileSize`, `FileType`, `Folder`, `Height`, `IsMain`, `ModifiedAt`, `ProductId`, `SubCategoryId`, `Title`, `UploadDate`, `Url`, `Width`)
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9, @p10, @p11, @p12, @p13, @p14, @p15, @p16);
+SELECT `Id`
+FROM `Images`
+WHERE ROW_COUNT() = 1 AND `Id` = LAST_INSERT_ID();
+2025-07-03 19:19:08.465 +03:00 [INF] Execute AddAdminOpreationAsync
+2025-07-03 19:19:08.467 +03:00 [INF] Executing CreateAsync for entity AdminOperationsLog
+2025-07-03 19:19:08.469 +03:00 [INF] AdminOperationsLog added successfully (pending save)
+2025-07-03 19:19:08.471 +03:00 [INF] ✅ Image saved: /CategoryPhotos/9d51250b-9429-4334-a9e0-cb8610a21b87.jpg
+2025-07-03 19:19:08.474 +03:00 [INF] 📥 Saving image to CategoryPhotos
+2025-07-03 19:19:08.478 +03:00 [ERR] ❌ Failed to save image #2: Invalid extension. Allowed: .jpg, .jpeg, .png, .gif, .webp
+2025-07-03 19:19:08.480 +03:00 [WRN] Some images failed to save: Image #2: Invalid extension. Allowed: .jpg, .jpeg, .png, .gif, .webp
+2025-07-03 19:19:08.481 +03:00 [INF] 📥 Saving main image to CategoryPhotos
+2025-07-03 19:19:08.488 +03:00 [INF] Executing CreateAsync for entity Image
+2025-07-03 19:19:08.491 +03:00 [INF] Image added successfully (pending save)
+2025-07-03 19:19:08.494 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@p0='?' (Size = 4000), @p1='?' (DbType = Int32), @p2='?' (DbType = Int32), @p3='?' (DbType = DateTime), @p4='?' (DbType = DateTime), @p5='?' (DbType = Int64), @p6='?' (Size = 4000), @p7='?' (Size = 4000), @p8='?' (DbType = Int32), @p9='?' (DbType = Boolean), @p10='?' (DbType = DateTime), @p11='?' (DbType = Int32), @p12='?' (DbType = Int32), @p13='?' (Size = 4000), @p14='?' (DbType = DateTime), @p15='?' (Size = 4000), @p16='?' (DbType = Int32), @p17='?' (Size = 255), @p18='?' (DbType = DateTime), @p19='?' (DbType = DateTime), @p20='?' (Size = 4000), @p21='?' (DbType = Int32), @p22='?' (DbType = DateTime), @p23='?' (DbType = Int32), @p24='?' (DbType = DateTime)], CommandType='"Text"', CommandTimeout='30']
+INSERT INTO `Images` (`AltText`, `CategoryId`, `CollectionId`, `CreatedAt`, `DeletedAt`, `FileSize`, `FileType`, `Folder`, `Height`, `IsMain`, `ModifiedAt`, `ProductId`, `SubCategoryId`, `Title`, `UploadDate`, `Url`, `Width`)
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9, @p10, @p11, @p12, @p13, @p14, @p15, @p16);
+SELECT `Id`
+FROM `Images`
+WHERE ROW_COUNT() = 1 AND `Id` = LAST_INSERT_ID();
+
+INSERT INTO `adminOperationsLogs` (`AdminId`, `CreatedAt`, `DeletedAt`, `Description`, `ItemId`, `ModifiedAt`, `OperationType`, `Timestamp`)
+VALUES (@p17, @p18, @p19, @p20, @p21, @p22, @p23, @p24);
+SELECT `Id`
+FROM `adminOperationsLogs`
+WHERE ROW_COUNT() = 1 AND `Id` = LAST_INSERT_ID();
+2025-07-03 19:19:08.503 +03:00 [INF] Execute AddAdminOpreationAsync
+2025-07-03 19:19:08.506 +03:00 [INF] Executing CreateAsync for entity AdminOperationsLog
+2025-07-03 19:19:08.508 +03:00 [INF] AdminOperationsLog added successfully (pending save)
+2025-07-03 19:19:08.509 +03:00 [INF] ✅ Main image saved: /CategoryPhotos/d6f38ad2-bb5c-41e6-ba5a-cfb0b2046cb8.jpg
+2025-07-03 19:19:08.512 +03:00 [INF] Execute UpdateAsync for entity Category
+2025-07-03 19:19:08.517 +03:00 [INF] Category marked for update (pending save)
+2025-07-03 19:19:08.519 +03:00 [INF] Execute AddAdminOpreationAsync
+2025-07-03 19:19:08.520 +03:00 [INF] Executing CreateAsync for entity AdminOperationsLog
+2025-07-03 19:19:08.522 +03:00 [INF] AdminOperationsLog added successfully (pending save)
+2025-07-03 19:19:08.523 +03:00 [INF] Removing cache by tag: category
+2025-07-03 19:19:08.525 +03:00 [WRN] No cache entries found for tag: category
+2025-07-03 19:19:08.530 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@p1='?' (DbType = Int32), @p0='?' (DbType = Int32), @p3='?' (DbType = Int32), @p2='?' (DbType = Int32), @p4='?' (Size = 255), @p5='?' (DbType = DateTime), @p6='?' (DbType = DateTime), @p7='?' (Size = 4000), @p8='?' (DbType = Int32), @p9='?' (DbType = DateTime), @p10='?' (DbType = Int32), @p11='?' (DbType = DateTime), @p12='?' (Size = 255), @p13='?' (DbType = DateTime), @p14='?' (DbType = DateTime), @p15='?' (Size = 4000), @p16='?' (DbType = Int32), @p17='?' (DbType = DateTime), @p18='?' (DbType = Int32), @p19='?' (DbType = DateTime)], CommandType='"Text"', CommandTimeout='30']
+UPDATE `Images` SET `CategoryId` = @p0
+WHERE `Id` = @p1;
+SELECT ROW_COUNT();
+
+UPDATE `Images` SET `CategoryId` = @p2
+WHERE `Id` = @p3;
+SELECT ROW_COUNT();
+
+INSERT INTO `adminOperationsLogs` (`AdminId`, `CreatedAt`, `DeletedAt`, `Description`, `ItemId`, `ModifiedAt`, `OperationType`, `Timestamp`)
+VALUES (@p4, @p5, @p6, @p7, @p8, @p9, @p10, @p11);
+SELECT `Id`
+FROM `adminOperationsLogs`
+WHERE ROW_COUNT() = 1 AND `Id` = LAST_INSERT_ID();
+
+INSERT INTO `adminOperationsLogs` (`AdminId`, `CreatedAt`, `DeletedAt`, `Description`, `ItemId`, `ModifiedAt`, `OperationType`, `Timestamp`)
+VALUES (@p12, @p13, @p14, @p15, @p16, @p17, @p18, @p19);
+SELECT `Id`
+FROM `adminOperationsLogs`
+WHERE ROW_COUNT() = 1 AND `Id` = LAST_INSERT_ID();
+2025-07-03 19:19:08.543 +03:00 [INF] Retrieving category with ID 42 after creation
+2025-07-03 19:19:08.545 +03:00 [INF] Executing GetCategoryById for id: 42
+2025-07-03 19:19:08.573 +03:00 [INF] Executed DbCommand (24ms) [Parameters=[@__id_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT `t`.`Id`, `t`.`CreatedAt`, `t`.`DeletedAt`, `t`.`Description`, `t`.`DisplayOrder`, `t`.`ImageId`, `t`.`IsActive`, `t`.`ModifiedAt`, `t`.`Name`, `i`.`Id`, `i`.`AltText`, `i`.`CategoryId`, `i`.`CollectionId`, `i`.`CreatedAt`, `i`.`DeletedAt`, `i`.`FileSize`, `i`.`FileType`, `i`.`Folder`, `i`.`Height`, `i`.`IsMain`, `i`.`ModifiedAt`, `i`.`ProductId`, `i`.`SubCategoryId`, `i`.`Title`, `i`.`UploadDate`, `i`.`Url`, `i`.`Width`, `t0`.`Id`, `t0`.`CategoryId`, `t0`.`CreatedAt`, `t0`.`DeletedAt`, `t0`.`Description`, `t0`.`ImageId`, `t0`.`IsActive`, `t0`.`ModifiedAt`, `t0`.`Name`, `t0`.`Id0`, `t0`.`AltText`, `t0`.`CategoryId0`, `t0`.`CollectionId`, `t0`.`CreatedAt0`, `t0`.`DeletedAt0`, `t0`.`FileSize`, `t0`.`FileType`, `t0`.`Folder`, `t0`.`Height`, `t0`.`IsMain`, `t0`.`ModifiedAt0`, `t0`.`ProductId`, `t0`.`SubCategoryId`, `t0`.`Title`, `t0`.`UploadDate`, `t0`.`Url`, `t0`.`Width`
+FROM (
+    SELECT `c`.`Id`, `c`.`CreatedAt`, `c`.`DeletedAt`, `c`.`Description`, `c`.`DisplayOrder`, `c`.`ImageId`, `c`.`IsActive`, `c`.`ModifiedAt`, `c`.`Name`
+    FROM `Categories` AS `c`
+    WHERE (`c`.`Id` = @__id_0) AND `c`.`DeletedAt` IS NULL
+    LIMIT 1
+) AS `t`
+LEFT JOIN `Images` AS `i` ON `t`.`Id` = `i`.`CategoryId`
+LEFT JOIN (
+    SELECT `s`.`Id`, `s`.`CategoryId`, `s`.`CreatedAt`, `s`.`DeletedAt`, `s`.`Description`, `s`.`ImageId`, `s`.`IsActive`, `s`.`ModifiedAt`, `s`.`Name`, `i0`.`Id` AS `Id0`, `i0`.`AltText`, `i0`.`CategoryId` AS `CategoryId0`, `i0`.`CollectionId`, `i0`.`CreatedAt` AS `CreatedAt0`, `i0`.`DeletedAt` AS `DeletedAt0`, `i0`.`FileSize`, `i0`.`FileType`, `i0`.`Folder`, `i0`.`Height`, `i0`.`IsMain`, `i0`.`ModifiedAt` AS `ModifiedAt0`, `i0`.`ProductId`, `i0`.`SubCategoryId`, `i0`.`Title`, `i0`.`UploadDate`, `i0`.`Url`, `i0`.`Width`
+    FROM `SubCategory` AS `s`
+    LEFT JOIN `Images` AS `i0` ON `s`.`Id` = `i0`.`SubCategoryId`
+    WHERE `s`.`DeletedAt` IS NULL
+) AS `t0` ON `t`.`Id` = `t0`.`CategoryId`
+ORDER BY `t`.`Id`, `i`.`Id`, `t0`.`Id`
+2025-07-03 19:19:08.579 +03:00 [INF] Category with id: 42 exists
+2025-07-03 19:19:08.581 +03:00 [INF] Successfully retrieved category: Id=42, Name=oamrgamaada
+2025-07-03 19:19:08.583 +03:00 [INF] Category has 2 images
+2025-07-03 19:19:08.585 +03:00 [INF] Mapping category with 2 images
+2025-07-03 19:19:08.587 +03:00 [INF] Successfully mapped category to DTO
+2025-07-03 19:19:08.589 +03:00 [INF] Executing ObjectResult, writing value of type 'E_Commers.DtoModels.Responses.ApiResponse`1[[E_Commers.DtoModels.CategoryDtos.CategoryDto, E-Commerce, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2025-07-03 19:19:08.593 +03:00 [INF] Executed action E_Commers.Controllers.CategoriesController.CreateAsync (E-Commerce) in 243.826ms
+2025-07-03 19:19:08.597 +03:00 [INF] Executed endpoint 'E_Commers.Controllers.CategoriesController.CreateAsync (E-Commerce)'
+2025-07-03 19:19:08.600 +03:00 [INF] Request finished HTTP/1.1 POST https://localhost:7288/api/categories - 201 514 application/json; charset=utf-8 310.1847ms
+2025-07-03 19:20:25.868 +03:00 [INF] DB tables already exist. Exit install
+2025-07-03 19:20:29.666 +03:00 [INF] Executed DbCommand (5ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='Fashion_Site' AND TABLE_NAME='__EFMigrationsHistory';
+2025-07-03 19:20:29.696 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='Fashion_Site' AND TABLE_NAME='__EFMigrationsHistory';
+2025-07-03 19:20:29.735 +03:00 [INF] Executed DbCommand (3ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT `MigrationId`, `ProductVersion`
+FROM `__EFMigrationsHistory`
+ORDER BY `MigrationId`;
+2025-07-03 19:20:29.772 +03:00 [INF] No migrations were applied. The database is already up to date.
+2025-07-03 19:20:29.835 +03:00 [INF] User profile is available. Using 'C:\Users\DELL\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2025-07-03 19:20:30.570 +03:00 [INF] Executed DbCommand (81ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-07-03 19:20:30.701 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-07-03 19:20:30.739 +03:00 [INF] Executed DbCommand (2ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`, `a`.`ProfilePicture`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-07-03 19:20:32.190 +03:00 [INF] Now listening on: https://localhost:7288
+2025-07-03 19:20:32.223 +03:00 [INF] Now listening on: http://localhost:5069
+2025-07-03 19:20:32.510 +03:00 [ERR] Index was outside the bounds of the array.
+System.IndexOutOfRangeException: Index was outside the bounds of the array.
+   at Hangfire.MySql.MySqlStorage.<>c.<ToString>b__14_1(String[] x)
+   at System.Linq.Enumerable.ArraySelectIterator`2.MoveNext()
+   at System.Linq.Enumerable.ToDictionary[TSource,TKey,TElement](IEnumerable`1 source, Func`2 keySelector, Func`2 elementSelector, IEqualityComparer`1 comparer)
+   at Hangfire.MySql.MySqlStorage.ToString()
+2025-07-03 19:20:32.701 +03:00 [INF] Starting Hangfire Server using job storage: '<Connection string can not be parsed>'
+2025-07-03 19:20:32.704 +03:00 [INF] Using the following options for SQL Server job storage:
+2025-07-03 19:20:32.708 +03:00 [INF]     Queue poll interval: 00:00:10.
+2025-07-03 19:20:32.710 +03:00 [INF] Using the following options for Hangfire Server:
+    Worker count: 20
+    Listening queues: 'default'
+    Shutdown timeout: 00:00:15
+    Schedule polling interval: 00:00:15
+2025-07-03 19:20:32.775 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-07-03 19:20:32.783 +03:00 [INF] Hosting environment: Development
+2025-07-03 19:20:32.802 +03:00 [INF] Content root path: D:\fashion\Projcet\E-Commers\E-Commers
+2025-07-03 19:20:32.805 +03:00 [INF] Server mrrobot:10472:414703b6 successfully announced in 26.6752 ms
+2025-07-03 19:20:32.848 +03:00 [INF] Server mrrobot:10472:414703b6 is starting the registered dispatchers: ServerWatchdog, ServerJobCancellationWatcher, ExpirationManager, CountersAggregator, Worker, DelayedJobScheduler, RecurringJobScheduler...
+2025-07-03 19:20:34.543 +03:00 [INF] Server mrrobot:10472:414703b6 all the dispatchers started
+2025-07-03 19:20:35.079 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/swagger/index.html - null null
+2025-07-03 19:20:36.295 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/swagger/index.html - 200 null text/html;charset=utf-8 1249.2783ms
+2025-07-03 19:20:36.425 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/_framework/aspnetcore-browser-refresh.js - null null
+2025-07-03 19:20:36.425 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/swagger/index.js - null null
+2025-07-03 19:20:36.426 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/_vs/browserLink - null null
+2025-07-03 19:20:36.971 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/swagger/index.js - 200 null application/javascript;charset=utf-8 545.2903ms
+2025-07-03 19:20:36.975 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/_framework/aspnetcore-browser-refresh.js - 200 16505 application/javascript; charset=utf-8 550.5672ms
+2025-07-03 19:20:37.111 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/_vs/browserLink - 200 null text/javascript; charset=UTF-8 685.7827ms
+2025-07-03 19:20:37.440 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/swagger/v1/swagger.json - null null
+2025-07-03 19:20:38.236 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 796.093ms
+2025-07-03 19:20:55.640 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/swagger/index.html - null null
+2025-07-03 19:20:55.660 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/swagger/index.html - 200 null text/html;charset=utf-8 20.0626ms
+2025-07-03 19:20:55.749 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/swagger/index.js - null null
+2025-07-03 19:20:55.757 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/_framework/aspnetcore-browser-refresh.js - null null
+2025-07-03 19:20:55.770 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/_vs/browserLink - null null
+2025-07-03 19:20:55.822 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/swagger/index.js - 200 null application/javascript;charset=utf-8 73.8275ms
+2025-07-03 19:20:55.839 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/_framework/aspnetcore-browser-refresh.js - 200 16505 application/javascript; charset=utf-8 81.8023ms
+2025-07-03 19:20:55.946 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/_vs/browserLink - 200 null text/javascript; charset=UTF-8 175.2905ms
+2025-07-03 19:20:56.024 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/swagger/v1/swagger.json - null null
+2025-07-03 19:20:56.442 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 417.9665ms
+2025-07-03 19:21:02.662 +03:00 [INF] Request starting HTTP/1.1 POST https://localhost:7288/api/categories - multipart/form-data; boundary=--------------------------907697684968963339223648 1384357
+2025-07-03 19:21:02.998 +03:00 [INF] Executing UserAuthenticationMiddleware
+2025-07-03 19:21:03.129 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__userId_0='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`SecurityStamp`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`Id` = @__userId_0)
+LIMIT 1
+2025-07-03 19:21:03.246 +03:00 [INF] Executing endpoint 'E_Commers.Controllers.CategoriesController.CreateAsync (E-Commerce)'
+2025-07-03 19:21:03.326 +03:00 [INF] Route matched with {action = "CreateAsync", controller = "Categories"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[E_Commers.DtoModels.Responses.ApiResponse`1[E_Commers.DtoModels.CategoryDtos.CategoryDto]]] CreateAsync(E_Commers.DtoModels.CategoryDtos.CreateCategotyDto) on controller E_Commers.Controllers.CategoriesController (E-Commerce).
+2025-07-03 19:21:03.939 +03:00 [INF] Executing CreateAsync
+2025-07-03 19:21:03.948 +03:00 [INF] Execute CreateAsync
+2025-07-03 19:21:03.994 +03:00 [INF] Executed DbCommand (4ms) [Parameters=[@__name_0='?' (Size = 20)], CommandType='"Text"', CommandTimeout='30']
+SELECT `c`.`Id`, `c`.`CreatedAt`, `c`.`DeletedAt`, `c`.`Description`, `c`.`DisplayOrder`, `c`.`ImageId`, `c`.`IsActive`, `c`.`ModifiedAt`, `c`.`Name`
+FROM `Categories` AS `c`
+WHERE (`c`.`Name` = @__name_0) AND `c`.`DeletedAt` IS NULL
+LIMIT 1
+2025-07-03 19:21:04.051 +03:00 [INF] Executing CreateAsync for entity Category
+2025-07-03 19:21:04.169 +03:00 [INF] Category added successfully (pending save)
+2025-07-03 19:21:04.364 +03:00 [INF] Executed DbCommand (5ms) [Parameters=[@p0='?' (DbType = DateTime), @p1='?' (DbType = DateTime), @p2='?' (Size = 50), @p3='?' (DbType = Int32), @p4='?' (DbType = Int32), @p5='?' (DbType = Boolean), @p6='?' (DbType = DateTime), @p7='?' (Size = 20)], CommandType='"Text"', CommandTimeout='30']
+INSERT INTO `Categories` (`CreatedAt`, `DeletedAt`, `Description`, `DisplayOrder`, `ImageId`, `IsActive`, `ModifiedAt`, `Name`)
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7);
+SELECT `Id`
+FROM `Categories`
+WHERE ROW_COUNT() = 1 AND `Id` = LAST_INSERT_ID();
+2025-07-03 19:21:04.450 +03:00 [INF] 📥 Saving 2 images to CategoryPhotos
+2025-07-03 19:21:04.454 +03:00 [INF] 📥 Saving image to CategoryPhotos
+2025-07-03 19:21:04.481 +03:00 [INF] Executing CreateAsync for entity Image
+2025-07-03 19:21:04.576 +03:00 [INF] Image added successfully (pending save)
+2025-07-03 19:21:04.614 +03:00 [INF] Executed DbCommand (6ms) [Parameters=[@p0='?' (Size = 4000), @p1='?' (DbType = Int32), @p2='?' (DbType = Int32), @p3='?' (DbType = DateTime), @p4='?' (DbType = DateTime), @p5='?' (DbType = Int64), @p6='?' (Size = 4000), @p7='?' (Size = 4000), @p8='?' (DbType = Int32), @p9='?' (DbType = Boolean), @p10='?' (DbType = DateTime), @p11='?' (DbType = Int32), @p12='?' (DbType = Int32), @p13='?' (Size = 4000), @p14='?' (DbType = DateTime), @p15='?' (Size = 4000), @p16='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+INSERT INTO `Images` (`AltText`, `CategoryId`, `CollectionId`, `CreatedAt`, `DeletedAt`, `FileSize`, `FileType`, `Folder`, `Height`, `IsMain`, `ModifiedAt`, `ProductId`, `SubCategoryId`, `Title`, `UploadDate`, `Url`, `Width`)
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9, @p10, @p11, @p12, @p13, @p14, @p15, @p16);
+SELECT `Id`
+FROM `Images`
+WHERE ROW_COUNT() = 1 AND `Id` = LAST_INSERT_ID();
+2025-07-03 19:21:05.670 +03:00 [INF] Execute AddAdminOpreationAsync
+2025-07-03 19:21:06.325 +03:00 [INF] Executing CreateAsync for entity AdminOperationsLog
+2025-07-03 19:21:07.387 +03:00 [INF] AdminOperationsLog added successfully (pending save)
+2025-07-03 19:21:07.763 +03:00 [INF] ✅ Image saved: /CategoryPhotos/28ba4a66-b39a-4fcd-b8b5-b3643b2eed91.jpg
+2025-07-03 19:21:07.869 +03:00 [INF] 📥 Saving image to CategoryPhotos
+2025-07-03 19:21:07.888 +03:00 [ERR] ❌ Failed to save image #2: Invalid extension. Allowed: .jpg, .jpeg, .png, .gif, .webp
+2025-07-03 19:21:08.148 +03:00 [WRN] Some images failed to save: Image #2: Invalid extension. Allowed: .jpg, .jpeg, .png, .gif, .webp
+2025-07-03 19:21:08.257 +03:00 [INF] 📥 Saving main image to CategoryPhotos
+2025-07-03 19:21:08.310 +03:00 [INF] Executing CreateAsync for entity Image
+2025-07-03 19:21:08.315 +03:00 [INF] Image added successfully (pending save)
+2025-07-03 19:21:08.477 +03:00 [INF] Executed DbCommand (11ms) [Parameters=[@p0='?' (Size = 4000), @p1='?' (DbType = Int32), @p2='?' (DbType = Int32), @p3='?' (DbType = DateTime), @p4='?' (DbType = DateTime), @p5='?' (DbType = Int64), @p6='?' (Size = 4000), @p7='?' (Size = 4000), @p8='?' (DbType = Int32), @p9='?' (DbType = Boolean), @p10='?' (DbType = DateTime), @p11='?' (DbType = Int32), @p12='?' (DbType = Int32), @p13='?' (Size = 4000), @p14='?' (DbType = DateTime), @p15='?' (Size = 4000), @p16='?' (DbType = Int32), @p17='?' (Size = 255), @p18='?' (DbType = DateTime), @p19='?' (DbType = DateTime), @p20='?' (Size = 4000), @p21='?' (DbType = Int32), @p22='?' (DbType = DateTime), @p23='?' (DbType = Int32), @p24='?' (DbType = DateTime)], CommandType='"Text"', CommandTimeout='30']
+INSERT INTO `Images` (`AltText`, `CategoryId`, `CollectionId`, `CreatedAt`, `DeletedAt`, `FileSize`, `FileType`, `Folder`, `Height`, `IsMain`, `ModifiedAt`, `ProductId`, `SubCategoryId`, `Title`, `UploadDate`, `Url`, `Width`)
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9, @p10, @p11, @p12, @p13, @p14, @p15, @p16);
+SELECT `Id`
+FROM `Images`
+WHERE ROW_COUNT() = 1 AND `Id` = LAST_INSERT_ID();
+
+INSERT INTO `adminOperationsLogs` (`AdminId`, `CreatedAt`, `DeletedAt`, `Description`, `ItemId`, `ModifiedAt`, `OperationType`, `Timestamp`)
+VALUES (@p17, @p18, @p19, @p20, @p21, @p22, @p23, @p24);
+SELECT `Id`
+FROM `adminOperationsLogs`
+WHERE ROW_COUNT() = 1 AND `Id` = LAST_INSERT_ID();
+2025-07-03 19:21:08.552 +03:00 [INF] Execute AddAdminOpreationAsync
+2025-07-03 19:21:08.947 +03:00 [INF] Executing CreateAsync for entity AdminOperationsLog
+2025-07-03 19:21:09.391 +03:00 [INF] AdminOperationsLog added successfully (pending save)
+2025-07-03 19:21:09.589 +03:00 [INF] ✅ Main image saved: /CategoryPhotos/1b38b9bd-3a10-41b1-9ae4-242c19774acf.jpg
+2025-07-03 19:21:09.729 +03:00 [INF] Execute UpdateAsync for entity Category
+2025-07-03 19:21:09.915 +03:00 [INF] Category marked for update (pending save)
+2025-07-03 19:21:10.045 +03:00 [INF] Execute AddAdminOpreationAsync
+2025-07-03 19:21:10.046 +03:00 [INF] Executing CreateAsync for entity AdminOperationsLog
+2025-07-03 19:21:10.047 +03:00 [INF] AdminOperationsLog added successfully (pending save)
+2025-07-03 19:21:10.169 +03:00 [INF] Removing cache by tag: category
+2025-07-03 19:21:10.585 +03:00 [WRN] No cache entries found for tag: category
+2025-07-03 19:21:11.021 +03:00 [INF] Executed DbCommand (7ms) [Parameters=[@p1='?' (DbType = Int32), @p0='?' (DbType = Int32), @p3='?' (DbType = Int32), @p2='?' (DbType = Int32), @p4='?' (Size = 255), @p5='?' (DbType = DateTime), @p6='?' (DbType = DateTime), @p7='?' (Size = 4000), @p8='?' (DbType = Int32), @p9='?' (DbType = DateTime), @p10='?' (DbType = Int32), @p11='?' (DbType = DateTime), @p12='?' (Size = 255), @p13='?' (DbType = DateTime), @p14='?' (DbType = DateTime), @p15='?' (Size = 4000), @p16='?' (DbType = Int32), @p17='?' (DbType = DateTime), @p18='?' (DbType = Int32), @p19='?' (DbType = DateTime)], CommandType='"Text"', CommandTimeout='30']
+UPDATE `Images` SET `CategoryId` = @p0
+WHERE `Id` = @p1;
+SELECT ROW_COUNT();
+
+UPDATE `Images` SET `CategoryId` = @p2
+WHERE `Id` = @p3;
+SELECT ROW_COUNT();
+
+INSERT INTO `adminOperationsLogs` (`AdminId`, `CreatedAt`, `DeletedAt`, `Description`, `ItemId`, `ModifiedAt`, `OperationType`, `Timestamp`)
+VALUES (@p4, @p5, @p6, @p7, @p8, @p9, @p10, @p11);
+SELECT `Id`
+FROM `adminOperationsLogs`
+WHERE ROW_COUNT() = 1 AND `Id` = LAST_INSERT_ID();
+
+INSERT INTO `adminOperationsLogs` (`AdminId`, `CreatedAt`, `DeletedAt`, `Description`, `ItemId`, `ModifiedAt`, `OperationType`, `Timestamp`)
+VALUES (@p12, @p13, @p14, @p15, @p16, @p17, @p18, @p19);
+SELECT `Id`
+FROM `adminOperationsLogs`
+WHERE ROW_COUNT() = 1 AND `Id` = LAST_INSERT_ID();
+2025-07-03 19:21:11.417 +03:00 [INF] Retrieving category with ID 43 after creation
+2025-07-03 19:21:11.429 +03:00 [INF] Executing GetCategoryById for id: 43
+2025-07-03 19:21:11.985 +03:00 [WRN] Compiling a query which loads related collections for more than one collection navigation, either via 'Include' or through projection, but no 'QuerySplittingBehavior' has been configured. By default, Entity Framework will use 'QuerySplittingBehavior.SingleQuery', which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))'.
+2025-07-03 19:21:12.196 +03:00 [INF] Executed DbCommand (43ms) [Parameters=[@__id_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT `t`.`Id`, `t`.`CreatedAt`, `t`.`DeletedAt`, `t`.`Description`, `t`.`DisplayOrder`, `t`.`ImageId`, `t`.`IsActive`, `t`.`ModifiedAt`, `t`.`Name`, `i`.`Id`, `i`.`AltText`, `i`.`CategoryId`, `i`.`CollectionId`, `i`.`CreatedAt`, `i`.`DeletedAt`, `i`.`FileSize`, `i`.`FileType`, `i`.`Folder`, `i`.`Height`, `i`.`IsMain`, `i`.`ModifiedAt`, `i`.`ProductId`, `i`.`SubCategoryId`, `i`.`Title`, `i`.`UploadDate`, `i`.`Url`, `i`.`Width`, `t0`.`Id`, `t0`.`CategoryId`, `t0`.`CreatedAt`, `t0`.`DeletedAt`, `t0`.`Description`, `t0`.`ImageId`, `t0`.`IsActive`, `t0`.`ModifiedAt`, `t0`.`Name`, `t0`.`Id0`, `t0`.`AltText`, `t0`.`CategoryId0`, `t0`.`CollectionId`, `t0`.`CreatedAt0`, `t0`.`DeletedAt0`, `t0`.`FileSize`, `t0`.`FileType`, `t0`.`Folder`, `t0`.`Height`, `t0`.`IsMain`, `t0`.`ModifiedAt0`, `t0`.`ProductId`, `t0`.`SubCategoryId`, `t0`.`Title`, `t0`.`UploadDate`, `t0`.`Url`, `t0`.`Width`
+FROM (
+    SELECT `c`.`Id`, `c`.`CreatedAt`, `c`.`DeletedAt`, `c`.`Description`, `c`.`DisplayOrder`, `c`.`ImageId`, `c`.`IsActive`, `c`.`ModifiedAt`, `c`.`Name`
+    FROM `Categories` AS `c`
+    WHERE (`c`.`Id` = @__id_0) AND `c`.`DeletedAt` IS NULL
+    LIMIT 1
+) AS `t`
+LEFT JOIN `Images` AS `i` ON `t`.`Id` = `i`.`CategoryId`
+LEFT JOIN (
+    SELECT `s`.`Id`, `s`.`CategoryId`, `s`.`CreatedAt`, `s`.`DeletedAt`, `s`.`Description`, `s`.`ImageId`, `s`.`IsActive`, `s`.`ModifiedAt`, `s`.`Name`, `i0`.`Id` AS `Id0`, `i0`.`AltText`, `i0`.`CategoryId` AS `CategoryId0`, `i0`.`CollectionId`, `i0`.`CreatedAt` AS `CreatedAt0`, `i0`.`DeletedAt` AS `DeletedAt0`, `i0`.`FileSize`, `i0`.`FileType`, `i0`.`Folder`, `i0`.`Height`, `i0`.`IsMain`, `i0`.`ModifiedAt` AS `ModifiedAt0`, `i0`.`ProductId`, `i0`.`SubCategoryId`, `i0`.`Title`, `i0`.`UploadDate`, `i0`.`Url`, `i0`.`Width`
+    FROM `SubCategory` AS `s`
+    LEFT JOIN `Images` AS `i0` ON `s`.`Id` = `i0`.`SubCategoryId`
+    WHERE `s`.`DeletedAt` IS NULL
+) AS `t0` ON `t`.`Id` = `t0`.`CategoryId`
+ORDER BY `t`.`Id`, `i`.`Id`, `t0`.`Id`
+2025-07-03 19:21:12.247 +03:00 [INF] Category with id: 43 exists
+2025-07-03 19:21:12.282 +03:00 [INF] Successfully retrieved category: Id=43, Name=oamrgamaadad
+2025-07-03 19:21:12.294 +03:00 [INF] Category has 2 images
+2025-07-03 19:21:12.303 +03:00 [INF] Mapping category with 2 images
+2025-07-03 19:21:12.374 +03:00 [INF] Successfully mapped category to DTO
+2025-07-03 19:21:58.070 +03:00 [INF] Executing ObjectResult, writing value of type 'E_Commers.DtoModels.Responses.ApiResponse`1[[E_Commers.DtoModels.CategoryDtos.CategoryDto, E-Commerce, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2025-07-03 19:21:58.145 +03:00 [INF] Executed action E_Commers.Controllers.CategoriesController.CreateAsync (E-Commerce) in 54803.5683ms
+2025-07-03 19:21:58.149 +03:00 [INF] Executed endpoint 'E_Commers.Controllers.CategoriesController.CreateAsync (E-Commerce)'
+2025-07-03 19:21:58.172 +03:00 [INF] Request finished HTTP/1.1 POST https://localhost:7288/api/categories - 201 515 application/json; charset=utf-8 55509.782ms
+2025-07-03 19:25:38.727 +03:00 [INF] 1 servers were removed due to timeout
+2025-07-03 19:25:42.193 +03:00 [INF] Request starting HTTP/1.1 POST https://localhost:7288/api/categories - multipart/form-data; boundary=--------------------------732883109389706951040350 1384359
+2025-07-03 19:25:46.144 +03:00 [INF] Executing UserAuthenticationMiddleware
+2025-07-03 19:25:47.222 +03:00 [INF] Executed DbCommand (17ms) [Parameters=[@__userId_0='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`SecurityStamp`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`Id` = @__userId_0)
+LIMIT 1
+2025-07-03 19:25:48.278 +03:00 [INF] Executing endpoint 'E_Commers.Controllers.CategoriesController.CreateAsync (E-Commerce)'
+2025-07-03 19:25:49.720 +03:00 [INF] Route matched with {action = "CreateAsync", controller = "Categories"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[E_Commers.DtoModels.Responses.ApiResponse`1[E_Commers.DtoModels.CategoryDtos.CategoryDto]]] CreateAsync(E_Commers.DtoModels.CategoryDtos.CreateCategotyDto) on controller E_Commers.Controllers.CategoriesController (E-Commerce).
+2025-07-03 19:25:50.235 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/swagger/index.html - null null
+2025-07-03 19:25:53.213 +03:00 [INF] Executing CreateAsync
+2025-07-03 19:25:55.306 +03:00 [INF] Execute CreateAsync
+2025-07-03 19:25:55.489 +03:00 [INF] Executed DbCommand (68ms) [Parameters=[@__name_0='?' (Size = 20)], CommandType='"Text"', CommandTimeout='30']
+SELECT `c`.`Id`, `c`.`CreatedAt`, `c`.`DeletedAt`, `c`.`Description`, `c`.`DisplayOrder`, `c`.`ImageId`, `c`.`IsActive`, `c`.`ModifiedAt`, `c`.`Name`
+FROM `Categories` AS `c`
+WHERE (`c`.`Name` = @__name_0) AND `c`.`DeletedAt` IS NULL
+LIMIT 1
+2025-07-03 19:25:55.721 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/swagger/index.html - 200 null text/html;charset=utf-8 5485.8917ms
+2025-07-03 19:25:56.206 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/swagger/index.js - null null
+2025-07-03 19:25:56.206 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/_framework/aspnetcore-browser-refresh.js - null null
+2025-07-03 19:25:56.864 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/_vs/browserLink - null null
+2025-07-03 19:25:56.868 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/swagger/index.js - 200 null application/javascript;charset=utf-8 661.5146ms
+2025-07-03 19:25:56.873 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/_framework/aspnetcore-browser-refresh.js - 200 16505 application/javascript; charset=utf-8 666.8095ms
+2025-07-03 19:25:56.946 +03:00 [INF] Executing CreateAsync for entity Category
+2025-07-03 19:25:56.948 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/_vs/browserLink - 200 null text/javascript; charset=UTF-8 84.1754ms
+2025-07-03 19:25:56.959 +03:00 [INF] Category added successfully (pending save)
+2025-07-03 19:25:57.098 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/swagger/v1/swagger.json - null null
+2025-07-03 19:25:57.107 +03:00 [INF] Executed DbCommand (82ms) [Parameters=[@p0='?' (DbType = DateTime), @p1='?' (DbType = DateTime), @p2='?' (Size = 50), @p3='?' (DbType = Int32), @p4='?' (DbType = Int32), @p5='?' (DbType = Boolean), @p6='?' (DbType = DateTime), @p7='?' (Size = 20)], CommandType='"Text"', CommandTimeout='30']
+INSERT INTO `Categories` (`CreatedAt`, `DeletedAt`, `Description`, `DisplayOrder`, `ImageId`, `IsActive`, `ModifiedAt`, `Name`)
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7);
+SELECT `Id`
+FROM `Categories`
+WHERE ROW_COUNT() = 1 AND `Id` = LAST_INSERT_ID();
+2025-07-03 19:25:57.302 +03:00 [INF] 📥 Saving 2 images to CategoryPhotos
+2025-07-03 19:25:57.354 +03:00 [INF] 📥 Saving image to CategoryPhotos
+2025-07-03 19:25:57.392 +03:00 [INF] Executing CreateAsync for entity Image
+2025-07-03 19:25:57.404 +03:00 [INF] Image added successfully (pending save)
+2025-07-03 19:25:57.466 +03:00 [INF] Executed DbCommand (14ms) [Parameters=[@p0='?' (Size = 4000), @p1='?' (DbType = Int32), @p2='?' (DbType = Int32), @p3='?' (DbType = DateTime), @p4='?' (DbType = DateTime), @p5='?' (DbType = Int64), @p6='?' (Size = 4000), @p7='?' (Size = 4000), @p8='?' (DbType = Int32), @p9='?' (DbType = Boolean), @p10='?' (DbType = DateTime), @p11='?' (DbType = Int32), @p12='?' (DbType = Int32), @p13='?' (Size = 4000), @p14='?' (DbType = DateTime), @p15='?' (Size = 4000), @p16='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+INSERT INTO `Images` (`AltText`, `CategoryId`, `CollectionId`, `CreatedAt`, `DeletedAt`, `FileSize`, `FileType`, `Folder`, `Height`, `IsMain`, `ModifiedAt`, `ProductId`, `SubCategoryId`, `Title`, `UploadDate`, `Url`, `Width`)
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9, @p10, @p11, @p12, @p13, @p14, @p15, @p16);
+SELECT `Id`
+FROM `Images`
+WHERE ROW_COUNT() = 1 AND `Id` = LAST_INSERT_ID();
+2025-07-03 19:25:57.468 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 370.2544ms
+2025-07-03 19:25:58.172 +03:00 [INF] Execute AddAdminOpreationAsync
+2025-07-03 19:25:58.284 +03:00 [INF] Executing CreateAsync for entity AdminOperationsLog
+2025-07-03 19:25:58.290 +03:00 [INF] AdminOperationsLog added successfully (pending save)
+2025-07-03 19:25:58.921 +03:00 [INF] ✅ Image saved: /CategoryPhotos/4895b55f-a942-478f-b6ab-ced1dbea9f01.jpg
+2025-07-03 19:25:59.802 +03:00 [INF] 📥 Saving image to CategoryPhotos
+2025-07-03 19:26:02.119 +03:00 [ERR] ❌ Failed to save image #2: Invalid extension. Allowed: .jpg, .jpeg, .png, .gif, .webp
+2025-07-03 19:26:02.856 +03:00 [WRN] Some images failed to save: Image #2: Invalid extension. Allowed: .jpg, .jpeg, .png, .gif, .webp
+2025-07-03 19:26:04.858 +03:00 [INF] 📥 Saving main image to CategoryPhotos
+2025-07-03 19:26:05.897 +03:00 [INF] Executing CreateAsync for entity Image
+2025-07-03 19:26:05.901 +03:00 [INF] Image added successfully (pending save)
+2025-07-03 19:26:05.956 +03:00 [INF] Executed DbCommand (3ms) [Parameters=[@p0='?' (Size = 4000), @p1='?' (DbType = Int32), @p2='?' (DbType = Int32), @p3='?' (DbType = DateTime), @p4='?' (DbType = DateTime), @p5='?' (DbType = Int64), @p6='?' (Size = 4000), @p7='?' (Size = 4000), @p8='?' (DbType = Int32), @p9='?' (DbType = Boolean), @p10='?' (DbType = DateTime), @p11='?' (DbType = Int32), @p12='?' (DbType = Int32), @p13='?' (Size = 4000), @p14='?' (DbType = DateTime), @p15='?' (Size = 4000), @p16='?' (DbType = Int32), @p17='?' (Size = 255), @p18='?' (DbType = DateTime), @p19='?' (DbType = DateTime), @p20='?' (Size = 4000), @p21='?' (DbType = Int32), @p22='?' (DbType = DateTime), @p23='?' (DbType = Int32), @p24='?' (DbType = DateTime)], CommandType='"Text"', CommandTimeout='30']
+INSERT INTO `Images` (`AltText`, `CategoryId`, `CollectionId`, `CreatedAt`, `DeletedAt`, `FileSize`, `FileType`, `Folder`, `Height`, `IsMain`, `ModifiedAt`, `ProductId`, `SubCategoryId`, `Title`, `UploadDate`, `Url`, `Width`)
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9, @p10, @p11, @p12, @p13, @p14, @p15, @p16);
+SELECT `Id`
+FROM `Images`
+WHERE ROW_COUNT() = 1 AND `Id` = LAST_INSERT_ID();
+
+INSERT INTO `adminOperationsLogs` (`AdminId`, `CreatedAt`, `DeletedAt`, `Description`, `ItemId`, `ModifiedAt`, `OperationType`, `Timestamp`)
+VALUES (@p17, @p18, @p19, @p20, @p21, @p22, @p23, @p24);
+SELECT `Id`
+FROM `adminOperationsLogs`
+WHERE ROW_COUNT() = 1 AND `Id` = LAST_INSERT_ID();
+2025-07-03 19:26:06.706 +03:00 [INF] Execute AddAdminOpreationAsync
+2025-07-03 19:26:07.758 +03:00 [INF] Executing CreateAsync for entity AdminOperationsLog
+2025-07-03 19:26:08.544 +03:00 [INF] AdminOperationsLog added successfully (pending save)
+2025-07-03 19:26:09.103 +03:00 [INF] ✅ Main image saved: /CategoryPhotos/a18a3105-75c8-42e2-9aa2-cb2a744e9a29.jpg
+2025-07-03 19:26:09.576 +03:00 [INF] Execute UpdateAsync for entity Category
+2025-07-03 19:26:09.586 +03:00 [INF] Category marked for update (pending save)
+2025-07-03 19:26:09.587 +03:00 [INF] Execute AddAdminOpreationAsync
+2025-07-03 19:26:09.591 +03:00 [INF] Executing CreateAsync for entity AdminOperationsLog
+2025-07-03 19:26:09.595 +03:00 [INF] AdminOperationsLog added successfully (pending save)
+2025-07-03 19:26:09.597 +03:00 [INF] Removing cache by tag: category
+2025-07-03 19:26:09.665 +03:00 [WRN] No cache entries found for tag: category
+2025-07-03 19:26:10.641 +03:00 [INF] Executed DbCommand (27ms) [Parameters=[@p1='?' (DbType = Int32), @p0='?' (DbType = Int32), @p3='?' (DbType = Int32), @p2='?' (DbType = Int32), @p4='?' (Size = 255), @p5='?' (DbType = DateTime), @p6='?' (DbType = DateTime), @p7='?' (Size = 4000), @p8='?' (DbType = Int32), @p9='?' (DbType = DateTime), @p10='?' (DbType = Int32), @p11='?' (DbType = DateTime), @p12='?' (Size = 255), @p13='?' (DbType = DateTime), @p14='?' (DbType = DateTime), @p15='?' (Size = 4000), @p16='?' (DbType = Int32), @p17='?' (DbType = DateTime), @p18='?' (DbType = Int32), @p19='?' (DbType = DateTime)], CommandType='"Text"', CommandTimeout='30']
+UPDATE `Images` SET `CategoryId` = @p0
+WHERE `Id` = @p1;
+SELECT ROW_COUNT();
+
+UPDATE `Images` SET `CategoryId` = @p2
+WHERE `Id` = @p3;
+SELECT ROW_COUNT();
+
+INSERT INTO `adminOperationsLogs` (`AdminId`, `CreatedAt`, `DeletedAt`, `Description`, `ItemId`, `ModifiedAt`, `OperationType`, `Timestamp`)
+VALUES (@p4, @p5, @p6, @p7, @p8, @p9, @p10, @p11);
+SELECT `Id`
+FROM `adminOperationsLogs`
+WHERE ROW_COUNT() = 1 AND `Id` = LAST_INSERT_ID();
+
+INSERT INTO `adminOperationsLogs` (`AdminId`, `CreatedAt`, `DeletedAt`, `Description`, `ItemId`, `ModifiedAt`, `OperationType`, `Timestamp`)
+VALUES (@p12, @p13, @p14, @p15, @p16, @p17, @p18, @p19);
+SELECT `Id`
+FROM `adminOperationsLogs`
+WHERE ROW_COUNT() = 1 AND `Id` = LAST_INSERT_ID();
+2025-07-03 19:26:11.624 +03:00 [INF] Retrieving category with ID 44 after creation
+2025-07-03 19:26:11.704 +03:00 [INF] Executing GetCategoryById for id: 44
+2025-07-03 19:26:11.893 +03:00 [INF] Executed DbCommand (56ms) [Parameters=[@__id_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT `t`.`Id`, `t`.`CreatedAt`, `t`.`DeletedAt`, `t`.`Description`, `t`.`DisplayOrder`, `t`.`ImageId`, `t`.`IsActive`, `t`.`ModifiedAt`, `t`.`Name`, `i`.`Id`, `i`.`AltText`, `i`.`CategoryId`, `i`.`CollectionId`, `i`.`CreatedAt`, `i`.`DeletedAt`, `i`.`FileSize`, `i`.`FileType`, `i`.`Folder`, `i`.`Height`, `i`.`IsMain`, `i`.`ModifiedAt`, `i`.`ProductId`, `i`.`SubCategoryId`, `i`.`Title`, `i`.`UploadDate`, `i`.`Url`, `i`.`Width`, `t0`.`Id`, `t0`.`CategoryId`, `t0`.`CreatedAt`, `t0`.`DeletedAt`, `t0`.`Description`, `t0`.`ImageId`, `t0`.`IsActive`, `t0`.`ModifiedAt`, `t0`.`Name`, `t0`.`Id0`, `t0`.`AltText`, `t0`.`CategoryId0`, `t0`.`CollectionId`, `t0`.`CreatedAt0`, `t0`.`DeletedAt0`, `t0`.`FileSize`, `t0`.`FileType`, `t0`.`Folder`, `t0`.`Height`, `t0`.`IsMain`, `t0`.`ModifiedAt0`, `t0`.`ProductId`, `t0`.`SubCategoryId`, `t0`.`Title`, `t0`.`UploadDate`, `t0`.`Url`, `t0`.`Width`
+FROM (
+    SELECT `c`.`Id`, `c`.`CreatedAt`, `c`.`DeletedAt`, `c`.`Description`, `c`.`DisplayOrder`, `c`.`ImageId`, `c`.`IsActive`, `c`.`ModifiedAt`, `c`.`Name`
+    FROM `Categories` AS `c`
+    WHERE (`c`.`Id` = @__id_0) AND `c`.`DeletedAt` IS NULL
+    LIMIT 1
+) AS `t`
+LEFT JOIN `Images` AS `i` ON `t`.`Id` = `i`.`CategoryId`
+LEFT JOIN (
+    SELECT `s`.`Id`, `s`.`CategoryId`, `s`.`CreatedAt`, `s`.`DeletedAt`, `s`.`Description`, `s`.`ImageId`, `s`.`IsActive`, `s`.`ModifiedAt`, `s`.`Name`, `i0`.`Id` AS `Id0`, `i0`.`AltText`, `i0`.`CategoryId` AS `CategoryId0`, `i0`.`CollectionId`, `i0`.`CreatedAt` AS `CreatedAt0`, `i0`.`DeletedAt` AS `DeletedAt0`, `i0`.`FileSize`, `i0`.`FileType`, `i0`.`Folder`, `i0`.`Height`, `i0`.`IsMain`, `i0`.`ModifiedAt` AS `ModifiedAt0`, `i0`.`ProductId`, `i0`.`SubCategoryId`, `i0`.`Title`, `i0`.`UploadDate`, `i0`.`Url`, `i0`.`Width`
+    FROM `SubCategory` AS `s`
+    LEFT JOIN `Images` AS `i0` ON `s`.`Id` = `i0`.`SubCategoryId`
+    WHERE `s`.`DeletedAt` IS NULL
+) AS `t0` ON `t`.`Id` = `t0`.`CategoryId`
+ORDER BY `t`.`Id`, `i`.`Id`, `t0`.`Id`
+2025-07-03 19:26:12.141 +03:00 [INF] Category with id: 44 exists
+2025-07-03 19:26:12.190 +03:00 [INF] Successfully retrieved category: Id=44, Name=qwoamrgamaadad
+2025-07-03 19:26:12.297 +03:00 [INF] Category has 2 images
+2025-07-03 19:26:12.337 +03:00 [INF] Mapping category with 2 images
+2025-07-03 19:26:12.357 +03:00 [INF] Successfully mapped category to DTO
+2025-07-03 19:26:14.479 +03:00 [INF] Executing ObjectResult, writing value of type 'E_Commers.DtoModels.Responses.ApiResponse`1[[E_Commers.DtoModels.CategoryDtos.CategoryDto, E-Commerce, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2025-07-03 19:26:14.949 +03:00 [INF] Executed action E_Commers.Controllers.CategoriesController.CreateAsync (E-Commerce) in 21835.954ms
+2025-07-03 19:26:14.998 +03:00 [INF] Executed endpoint 'E_Commers.Controllers.CategoriesController.CreateAsync (E-Commerce)'
+2025-07-03 19:26:16.812 +03:00 [INF] Request finished HTTP/1.1 POST https://localhost:7288/api/categories - 201 518 application/json; charset=utf-8 34706.2908ms
+2025-07-03 19:27:07.472 +03:00 [INF] Request starting HTTP/1.1 POST https://localhost:7288/api/categories - multipart/form-data; boundary=--------------------------572772670170234376380302 1384361
+2025-07-03 19:27:07.636 +03:00 [INF] Executing UserAuthenticationMiddleware
+2025-07-03 19:27:07.644 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__userId_0='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`SecurityStamp`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`Id` = @__userId_0)
+LIMIT 1
+2025-07-03 19:27:07.654 +03:00 [INF] Executing endpoint 'E_Commers.Controllers.CategoriesController.CreateAsync (E-Commerce)'
+2025-07-03 19:27:07.681 +03:00 [INF] Route matched with {action = "CreateAsync", controller = "Categories"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[E_Commers.DtoModels.Responses.ApiResponse`1[E_Commers.DtoModels.CategoryDtos.CategoryDto]]] CreateAsync(E_Commers.DtoModels.CategoryDtos.CreateCategotyDto) on controller E_Commers.Controllers.CategoriesController (E-Commerce).
+2025-07-03 19:27:07.752 +03:00 [INF] Executing CreateAsync
+2025-07-03 19:27:07.753 +03:00 [INF] Execute CreateAsync
+2025-07-03 19:27:07.757 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__name_0='?' (Size = 20)], CommandType='"Text"', CommandTimeout='30']
+SELECT `c`.`Id`, `c`.`CreatedAt`, `c`.`DeletedAt`, `c`.`Description`, `c`.`DisplayOrder`, `c`.`ImageId`, `c`.`IsActive`, `c`.`ModifiedAt`, `c`.`Name`
+FROM `Categories` AS `c`
+WHERE (`c`.`Name` = @__name_0) AND `c`.`DeletedAt` IS NULL
+LIMIT 1
+2025-07-03 19:27:07.774 +03:00 [INF] Executing CreateAsync for entity Category
+2025-07-03 19:27:07.777 +03:00 [INF] Category added successfully (pending save)
+2025-07-03 19:27:07.786 +03:00 [INF] Executed DbCommand (5ms) [Parameters=[@p0='?' (DbType = DateTime), @p1='?' (DbType = DateTime), @p2='?' (Size = 50), @p3='?' (DbType = Int32), @p4='?' (DbType = Int32), @p5='?' (DbType = Boolean), @p6='?' (DbType = DateTime), @p7='?' (Size = 20)], CommandType='"Text"', CommandTimeout='30']
+INSERT INTO `Categories` (`CreatedAt`, `DeletedAt`, `Description`, `DisplayOrder`, `ImageId`, `IsActive`, `ModifiedAt`, `Name`)
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7);
+SELECT `Id`
+FROM `Categories`
+WHERE ROW_COUNT() = 1 AND `Id` = LAST_INSERT_ID();
+2025-07-03 19:27:07.794 +03:00 [INF] 📥 Saving 2 images to CategoryPhotos
+2025-07-03 19:27:07.797 +03:00 [INF] 📥 Saving image to CategoryPhotos
+2025-07-03 19:27:07.804 +03:00 [INF] Executing CreateAsync for entity Image
+2025-07-03 19:27:07.807 +03:00 [INF] Image added successfully (pending save)
+2025-07-03 19:27:07.818 +03:00 [INF] Executed DbCommand (4ms) [Parameters=[@p0='?' (Size = 4000), @p1='?' (DbType = Int32), @p2='?' (DbType = Int32), @p3='?' (DbType = DateTime), @p4='?' (DbType = DateTime), @p5='?' (DbType = Int64), @p6='?' (Size = 4000), @p7='?' (Size = 4000), @p8='?' (DbType = Int32), @p9='?' (DbType = Boolean), @p10='?' (DbType = DateTime), @p11='?' (DbType = Int32), @p12='?' (DbType = Int32), @p13='?' (Size = 4000), @p14='?' (DbType = DateTime), @p15='?' (Size = 4000), @p16='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+INSERT INTO `Images` (`AltText`, `CategoryId`, `CollectionId`, `CreatedAt`, `DeletedAt`, `FileSize`, `FileType`, `Folder`, `Height`, `IsMain`, `ModifiedAt`, `ProductId`, `SubCategoryId`, `Title`, `UploadDate`, `Url`, `Width`)
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9, @p10, @p11, @p12, @p13, @p14, @p15, @p16);
+SELECT `Id`
+FROM `Images`
+WHERE ROW_COUNT() = 1 AND `Id` = LAST_INSERT_ID();
+2025-07-03 19:27:07.826 +03:00 [INF] Execute AddAdminOpreationAsync
+2025-07-03 19:27:07.829 +03:00 [INF] Executing CreateAsync for entity AdminOperationsLog
+2025-07-03 19:27:07.831 +03:00 [INF] AdminOperationsLog added successfully (pending save)
+2025-07-03 19:27:07.832 +03:00 [INF] ✅ Image saved: /CategoryPhotos/99bf7836-a372-4724-bcdd-a6ce9f8b39b5.jpg
+2025-07-03 19:27:07.835 +03:00 [INF] 📥 Saving image to CategoryPhotos
+2025-07-03 19:27:07.838 +03:00 [ERR] ❌ Failed to save image #2: Invalid extension. Allowed: .jpg, .jpeg, .png, .gif, .webp
+2025-07-03 19:27:07.842 +03:00 [WRN] Some images failed to save: Image #2: Invalid extension. Allowed: .jpg, .jpeg, .png, .gif, .webp
+2025-07-03 19:27:41.820 +03:00 [INF] 📥 Saving main image to CategoryPhotos
+2025-07-03 19:27:41.884 +03:00 [INF] Executing CreateAsync for entity Image
+2025-07-03 19:27:41.886 +03:00 [INF] Image added successfully (pending save)
+2025-07-03 19:27:41.895 +03:00 [INF] Executed DbCommand (3ms) [Parameters=[@p0='?' (Size = 4000), @p1='?' (DbType = Int32), @p2='?' (DbType = Int32), @p3='?' (DbType = DateTime), @p4='?' (DbType = DateTime), @p5='?' (DbType = Int64), @p6='?' (Size = 4000), @p7='?' (Size = 4000), @p8='?' (DbType = Int32), @p9='?' (DbType = Boolean), @p10='?' (DbType = DateTime), @p11='?' (DbType = Int32), @p12='?' (DbType = Int32), @p13='?' (Size = 4000), @p14='?' (DbType = DateTime), @p15='?' (Size = 4000), @p16='?' (DbType = Int32), @p17='?' (Size = 255), @p18='?' (DbType = DateTime), @p19='?' (DbType = DateTime), @p20='?' (Size = 4000), @p21='?' (DbType = Int32), @p22='?' (DbType = DateTime), @p23='?' (DbType = Int32), @p24='?' (DbType = DateTime)], CommandType='"Text"', CommandTimeout='30']
+INSERT INTO `Images` (`AltText`, `CategoryId`, `CollectionId`, `CreatedAt`, `DeletedAt`, `FileSize`, `FileType`, `Folder`, `Height`, `IsMain`, `ModifiedAt`, `ProductId`, `SubCategoryId`, `Title`, `UploadDate`, `Url`, `Width`)
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9, @p10, @p11, @p12, @p13, @p14, @p15, @p16);
+SELECT `Id`
+FROM `Images`
+WHERE ROW_COUNT() = 1 AND `Id` = LAST_INSERT_ID();
+
+INSERT INTO `adminOperationsLogs` (`AdminId`, `CreatedAt`, `DeletedAt`, `Description`, `ItemId`, `ModifiedAt`, `OperationType`, `Timestamp`)
+VALUES (@p17, @p18, @p19, @p20, @p21, @p22, @p23, @p24);
+SELECT `Id`
+FROM `adminOperationsLogs`
+WHERE ROW_COUNT() = 1 AND `Id` = LAST_INSERT_ID();
+2025-07-03 19:27:41.911 +03:00 [INF] Execute AddAdminOpreationAsync
+2025-07-03 19:27:41.913 +03:00 [INF] Executing CreateAsync for entity AdminOperationsLog
+2025-07-03 19:27:41.916 +03:00 [INF] AdminOperationsLog added successfully (pending save)
+2025-07-03 19:27:41.919 +03:00 [INF] ✅ Main image saved: /CategoryPhotos/5b6cf77d-b1a5-4ded-bbd7-bef47b31d418.jpg
+2025-07-03 19:27:41.922 +03:00 [INF] Execute UpdateAsync for entity Category
+2025-07-03 19:27:41.945 +03:00 [INF] Category marked for update (pending save)
+2025-07-03 19:27:41.946 +03:00 [INF] Execute AddAdminOpreationAsync
+2025-07-03 19:27:41.947 +03:00 [INF] Executing CreateAsync for entity AdminOperationsLog
+2025-07-03 19:27:41.948 +03:00 [INF] AdminOperationsLog added successfully (pending save)
+2025-07-03 19:27:41.949 +03:00 [INF] Removing cache by tag: category
+2025-07-03 19:27:41.951 +03:00 [WRN] No cache entries found for tag: category
+2025-07-03 19:27:41.955 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@p1='?' (DbType = Int32), @p0='?' (DbType = Int32), @p3='?' (DbType = Int32), @p2='?' (DbType = Int32), @p4='?' (Size = 255), @p5='?' (DbType = DateTime), @p6='?' (DbType = DateTime), @p7='?' (Size = 4000), @p8='?' (DbType = Int32), @p9='?' (DbType = DateTime), @p10='?' (DbType = Int32), @p11='?' (DbType = DateTime), @p12='?' (Size = 255), @p13='?' (DbType = DateTime), @p14='?' (DbType = DateTime), @p15='?' (Size = 4000), @p16='?' (DbType = Int32), @p17='?' (DbType = DateTime), @p18='?' (DbType = Int32), @p19='?' (DbType = DateTime)], CommandType='"Text"', CommandTimeout='30']
+UPDATE `Images` SET `CategoryId` = @p0
+WHERE `Id` = @p1;
+SELECT ROW_COUNT();
+
+UPDATE `Images` SET `CategoryId` = @p2
+WHERE `Id` = @p3;
+SELECT ROW_COUNT();
+
+INSERT INTO `adminOperationsLogs` (`AdminId`, `CreatedAt`, `DeletedAt`, `Description`, `ItemId`, `ModifiedAt`, `OperationType`, `Timestamp`)
+VALUES (@p4, @p5, @p6, @p7, @p8, @p9, @p10, @p11);
+SELECT `Id`
+FROM `adminOperationsLogs`
+WHERE ROW_COUNT() = 1 AND `Id` = LAST_INSERT_ID();
+
+INSERT INTO `adminOperationsLogs` (`AdminId`, `CreatedAt`, `DeletedAt`, `Description`, `ItemId`, `ModifiedAt`, `OperationType`, `Timestamp`)
+VALUES (@p12, @p13, @p14, @p15, @p16, @p17, @p18, @p19);
+SELECT `Id`
+FROM `adminOperationsLogs`
+WHERE ROW_COUNT() = 1 AND `Id` = LAST_INSERT_ID();
+2025-07-03 19:27:42.019 +03:00 [INF] Retrieving category with ID 45 after creation
+2025-07-03 19:27:42.026 +03:00 [INF] Executing GetCategoryById for id: 45
+2025-07-03 19:27:42.075 +03:00 [INF] Executed DbCommand (43ms) [Parameters=[@__id_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT `t`.`Id`, `t`.`CreatedAt`, `t`.`DeletedAt`, `t`.`Description`, `t`.`DisplayOrder`, `t`.`ImageId`, `t`.`IsActive`, `t`.`ModifiedAt`, `t`.`Name`, `i`.`Id`, `i`.`AltText`, `i`.`CategoryId`, `i`.`CollectionId`, `i`.`CreatedAt`, `i`.`DeletedAt`, `i`.`FileSize`, `i`.`FileType`, `i`.`Folder`, `i`.`Height`, `i`.`IsMain`, `i`.`ModifiedAt`, `i`.`ProductId`, `i`.`SubCategoryId`, `i`.`Title`, `i`.`UploadDate`, `i`.`Url`, `i`.`Width`, `t0`.`Id`, `t0`.`CategoryId`, `t0`.`CreatedAt`, `t0`.`DeletedAt`, `t0`.`Description`, `t0`.`ImageId`, `t0`.`IsActive`, `t0`.`ModifiedAt`, `t0`.`Name`, `t0`.`Id0`, `t0`.`AltText`, `t0`.`CategoryId0`, `t0`.`CollectionId`, `t0`.`CreatedAt0`, `t0`.`DeletedAt0`, `t0`.`FileSize`, `t0`.`FileType`, `t0`.`Folder`, `t0`.`Height`, `t0`.`IsMain`, `t0`.`ModifiedAt0`, `t0`.`ProductId`, `t0`.`SubCategoryId`, `t0`.`Title`, `t0`.`UploadDate`, `t0`.`Url`, `t0`.`Width`
+FROM (
+    SELECT `c`.`Id`, `c`.`CreatedAt`, `c`.`DeletedAt`, `c`.`Description`, `c`.`DisplayOrder`, `c`.`ImageId`, `c`.`IsActive`, `c`.`ModifiedAt`, `c`.`Name`
+    FROM `Categories` AS `c`
+    WHERE (`c`.`Id` = @__id_0) AND `c`.`DeletedAt` IS NULL
+    LIMIT 1
+) AS `t`
+LEFT JOIN `Images` AS `i` ON `t`.`Id` = `i`.`CategoryId`
+LEFT JOIN (
+    SELECT `s`.`Id`, `s`.`CategoryId`, `s`.`CreatedAt`, `s`.`DeletedAt`, `s`.`Description`, `s`.`ImageId`, `s`.`IsActive`, `s`.`ModifiedAt`, `s`.`Name`, `i0`.`Id` AS `Id0`, `i0`.`AltText`, `i0`.`CategoryId` AS `CategoryId0`, `i0`.`CollectionId`, `i0`.`CreatedAt` AS `CreatedAt0`, `i0`.`DeletedAt` AS `DeletedAt0`, `i0`.`FileSize`, `i0`.`FileType`, `i0`.`Folder`, `i0`.`Height`, `i0`.`IsMain`, `i0`.`ModifiedAt` AS `ModifiedAt0`, `i0`.`ProductId`, `i0`.`SubCategoryId`, `i0`.`Title`, `i0`.`UploadDate`, `i0`.`Url`, `i0`.`Width`
+    FROM `SubCategory` AS `s`
+    LEFT JOIN `Images` AS `i0` ON `s`.`Id` = `i0`.`SubCategoryId`
+    WHERE `s`.`DeletedAt` IS NULL
+) AS `t0` ON `t`.`Id` = `t0`.`CategoryId`
+ORDER BY `t`.`Id`, `i`.`Id`, `t0`.`Id`
+2025-07-03 19:27:42.088 +03:00 [INF] Category with id: 45 exists
+2025-07-03 19:27:42.089 +03:00 [INF] Successfully retrieved category: Id=45, Name=qwoamrgamaadsaad
+2025-07-03 19:27:42.090 +03:00 [INF] Category has 2 images
+2025-07-03 19:27:42.092 +03:00 [INF] Mapping category with 2 images
+2025-07-03 19:27:42.093 +03:00 [INF] Successfully mapped category to DTO
+2025-07-03 19:27:42.808 +03:00 [INF] Executing ObjectResult, writing value of type 'E_Commers.DtoModels.Responses.ApiResponse`1[[E_Commers.DtoModels.CategoryDtos.CategoryDto, E-Commerce, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2025-07-03 19:27:42.847 +03:00 [INF] Executed action E_Commers.Controllers.CategoriesController.CreateAsync (E-Commerce) in 35159.707ms
+2025-07-03 19:27:43.129 +03:00 [INF] Executed endpoint 'E_Commers.Controllers.CategoriesController.CreateAsync (E-Commerce)'
+2025-07-03 19:27:43.136 +03:00 [INF] Request finished HTTP/1.1 POST https://localhost:7288/api/categories - 201 520 application/json; charset=utf-8 35666.6933ms
+2025-07-03 19:27:49.236 +03:00 [INF] Request starting HTTP/1.1 POST https://localhost:7288/api/categories - multipart/form-data; boundary=--------------------------505596125318331369936796 1384357
+2025-07-03 19:27:49.249 +03:00 [INF] Executing UserAuthenticationMiddleware
+2025-07-03 19:27:49.257 +03:00 [INF] Executed DbCommand (2ms) [Parameters=[@__userId_0='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`SecurityStamp`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`Id` = @__userId_0)
+LIMIT 1
+2025-07-03 19:27:49.266 +03:00 [INF] Executing endpoint 'E_Commers.Controllers.CategoriesController.CreateAsync (E-Commerce)'
+2025-07-03 19:27:49.270 +03:00 [INF] Route matched with {action = "CreateAsync", controller = "Categories"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[E_Commers.DtoModels.Responses.ApiResponse`1[E_Commers.DtoModels.CategoryDtos.CategoryDto]]] CreateAsync(E_Commers.DtoModels.CategoryDtos.CreateCategotyDto) on controller E_Commers.Controllers.CategoriesController (E-Commerce).
+2025-07-03 19:27:49.325 +03:00 [INF] Executing CreateAsync
+2025-07-03 19:27:49.327 +03:00 [INF] Execute CreateAsync
+2025-07-03 19:27:49.336 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__name_0='?' (Size = 20)], CommandType='"Text"', CommandTimeout='30']
+SELECT `c`.`Id`, `c`.`CreatedAt`, `c`.`DeletedAt`, `c`.`Description`, `c`.`DisplayOrder`, `c`.`ImageId`, `c`.`IsActive`, `c`.`ModifiedAt`, `c`.`Name`
+FROM `Categories` AS `c`
+WHERE (`c`.`Name` = @__name_0) AND `c`.`DeletedAt` IS NULL
+LIMIT 1
+2025-07-03 19:27:49.344 +03:00 [INF] Executing CreateAsync for entity Category
+2025-07-03 19:27:49.346 +03:00 [INF] Category added successfully (pending save)
+2025-07-03 19:27:49.352 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@p0='?' (DbType = DateTime), @p1='?' (DbType = DateTime), @p2='?' (Size = 50), @p3='?' (DbType = Int32), @p4='?' (DbType = Int32), @p5='?' (DbType = Boolean), @p6='?' (DbType = DateTime), @p7='?' (Size = 20)], CommandType='"Text"', CommandTimeout='30']
+INSERT INTO `Categories` (`CreatedAt`, `DeletedAt`, `Description`, `DisplayOrder`, `ImageId`, `IsActive`, `ModifiedAt`, `Name`)
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7);
+SELECT `Id`
+FROM `Categories`
+WHERE ROW_COUNT() = 1 AND `Id` = LAST_INSERT_ID();
+2025-07-03 19:27:55.377 +03:00 [INF] 📥 Saving 2 images to CategoryPhotos
+2025-07-03 19:28:03.744 +03:00 [INF] 📥 Saving image to CategoryPhotos
+2025-07-03 19:28:49.913 +03:00 [INF] Executing CreateAsync for entity Image
+2025-07-03 19:28:50.883 +03:00 [INF] Image added successfully (pending save)
+2025-07-03 19:28:53.985 +03:00 [INF] Executed DbCommand (44ms) [Parameters=[@p0='?' (Size = 4000), @p1='?' (DbType = Int32), @p2='?' (DbType = Int32), @p3='?' (DbType = DateTime), @p4='?' (DbType = DateTime), @p5='?' (DbType = Int64), @p6='?' (Size = 4000), @p7='?' (Size = 4000), @p8='?' (DbType = Int32), @p9='?' (DbType = Boolean), @p10='?' (DbType = DateTime), @p11='?' (DbType = Int32), @p12='?' (DbType = Int32), @p13='?' (Size = 4000), @p14='?' (DbType = DateTime), @p15='?' (Size = 4000), @p16='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+INSERT INTO `Images` (`AltText`, `CategoryId`, `CollectionId`, `CreatedAt`, `DeletedAt`, `FileSize`, `FileType`, `Folder`, `Height`, `IsMain`, `ModifiedAt`, `ProductId`, `SubCategoryId`, `Title`, `UploadDate`, `Url`, `Width`)
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9, @p10, @p11, @p12, @p13, @p14, @p15, @p16);
+SELECT `Id`
+FROM `Images`
+WHERE ROW_COUNT() = 1 AND `Id` = LAST_INSERT_ID();
+2025-07-03 19:28:59.421 +03:00 [INF] Execute AddAdminOpreationAsync
+2025-07-03 19:29:21.147 +03:00 [INF] Executing CreateAsync for entity AdminOperationsLog
+2025-07-03 19:29:21.178 +03:00 [INF] AdminOperationsLog added successfully (pending save)
+2025-07-03 19:29:21.185 +03:00 [INF] ✅ Image saved: /CategoryPhotos/7e3fe6d7-9a73-4928-867a-854f785e68d7.jpg
+2025-07-03 19:29:23.400 +03:00 [INF] 📥 Saving image to CategoryPhotos
+2025-07-03 19:29:49.351 +03:00 [ERR] ❌ Failed to save image #2: Invalid extension. Allowed: .jpg, .jpeg, .png, .gif, .webp
+2025-07-03 19:29:55.820 +03:00 [WRN] Some images failed to save: Image #2: Invalid extension. Allowed: .jpg, .jpeg, .png, .gif, .webp
+2025-07-03 19:30:30.636 +03:00 [INF] 📥 Saving main image to CategoryPhotos
+2025-07-03 19:30:30.652 +03:00 [INF] Executing CreateAsync for entity Image
+2025-07-03 19:30:30.658 +03:00 [INF] Image added successfully (pending save)
+2025-07-03 19:30:30.669 +03:00 [INF] Executed DbCommand (3ms) [Parameters=[@p0='?' (Size = 4000), @p1='?' (DbType = Int32), @p2='?' (DbType = Int32), @p3='?' (DbType = DateTime), @p4='?' (DbType = DateTime), @p5='?' (DbType = Int64), @p6='?' (Size = 4000), @p7='?' (Size = 4000), @p8='?' (DbType = Int32), @p9='?' (DbType = Boolean), @p10='?' (DbType = DateTime), @p11='?' (DbType = Int32), @p12='?' (DbType = Int32), @p13='?' (Size = 4000), @p14='?' (DbType = DateTime), @p15='?' (Size = 4000), @p16='?' (DbType = Int32), @p17='?' (Size = 255), @p18='?' (DbType = DateTime), @p19='?' (DbType = DateTime), @p20='?' (Size = 4000), @p21='?' (DbType = Int32), @p22='?' (DbType = DateTime), @p23='?' (DbType = Int32), @p24='?' (DbType = DateTime)], CommandType='"Text"', CommandTimeout='30']
+INSERT INTO `Images` (`AltText`, `CategoryId`, `CollectionId`, `CreatedAt`, `DeletedAt`, `FileSize`, `FileType`, `Folder`, `Height`, `IsMain`, `ModifiedAt`, `ProductId`, `SubCategoryId`, `Title`, `UploadDate`, `Url`, `Width`)
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9, @p10, @p11, @p12, @p13, @p14, @p15, @p16);
+SELECT `Id`
+FROM `Images`
+WHERE ROW_COUNT() = 1 AND `Id` = LAST_INSERT_ID();
+
+INSERT INTO `adminOperationsLogs` (`AdminId`, `CreatedAt`, `DeletedAt`, `Description`, `ItemId`, `ModifiedAt`, `OperationType`, `Timestamp`)
+VALUES (@p17, @p18, @p19, @p20, @p21, @p22, @p23, @p24);
+SELECT `Id`
+FROM `adminOperationsLogs`
+WHERE ROW_COUNT() = 1 AND `Id` = LAST_INSERT_ID();
+2025-07-03 19:30:30.682 +03:00 [INF] Execute AddAdminOpreationAsync
+2025-07-03 19:30:30.685 +03:00 [INF] Executing CreateAsync for entity AdminOperationsLog
+2025-07-03 19:30:30.686 +03:00 [INF] AdminOperationsLog added successfully (pending save)
+2025-07-03 19:30:30.688 +03:00 [INF] ✅ Main image saved: /CategoryPhotos/4109142e-8cf8-4212-b95f-cc0ae4d50f86.jpg
+2025-07-03 19:30:30.690 +03:00 [INF] Execute UpdateAsync for entity Category
+2025-07-03 19:30:30.699 +03:00 [INF] Category marked for update (pending save)
+2025-07-03 19:30:30.701 +03:00 [INF] Execute AddAdminOpreationAsync
+2025-07-03 19:30:30.702 +03:00 [INF] Executing CreateAsync for entity AdminOperationsLog
+2025-07-03 19:30:30.703 +03:00 [INF] AdminOperationsLog added successfully (pending save)
+2025-07-03 19:30:30.704 +03:00 [INF] Removing cache by tag: category
+2025-07-03 19:30:30.705 +03:00 [WRN] No cache entries found for tag: category
+2025-07-03 19:30:30.712 +03:00 [INF] Executed DbCommand (3ms) [Parameters=[@p1='?' (DbType = Int32), @p0='?' (DbType = Int32), @p3='?' (DbType = Int32), @p2='?' (DbType = Int32), @p4='?' (Size = 255), @p5='?' (DbType = DateTime), @p6='?' (DbType = DateTime), @p7='?' (Size = 4000), @p8='?' (DbType = Int32), @p9='?' (DbType = DateTime), @p10='?' (DbType = Int32), @p11='?' (DbType = DateTime), @p12='?' (Size = 255), @p13='?' (DbType = DateTime), @p14='?' (DbType = DateTime), @p15='?' (Size = 4000), @p16='?' (DbType = Int32), @p17='?' (DbType = DateTime), @p18='?' (DbType = Int32), @p19='?' (DbType = DateTime)], CommandType='"Text"', CommandTimeout='30']
+UPDATE `Images` SET `CategoryId` = @p0
+WHERE `Id` = @p1;
+SELECT ROW_COUNT();
+
+UPDATE `Images` SET `CategoryId` = @p2
+WHERE `Id` = @p3;
+SELECT ROW_COUNT();
+
+INSERT INTO `adminOperationsLogs` (`AdminId`, `CreatedAt`, `DeletedAt`, `Description`, `ItemId`, `ModifiedAt`, `OperationType`, `Timestamp`)
+VALUES (@p4, @p5, @p6, @p7, @p8, @p9, @p10, @p11);
+SELECT `Id`
+FROM `adminOperationsLogs`
+WHERE ROW_COUNT() = 1 AND `Id` = LAST_INSERT_ID();
+
+INSERT INTO `adminOperationsLogs` (`AdminId`, `CreatedAt`, `DeletedAt`, `Description`, `ItemId`, `ModifiedAt`, `OperationType`, `Timestamp`)
+VALUES (@p12, @p13, @p14, @p15, @p16, @p17, @p18, @p19);
+SELECT `Id`
+FROM `adminOperationsLogs`
+WHERE ROW_COUNT() = 1 AND `Id` = LAST_INSERT_ID();
+2025-07-03 19:30:30.725 +03:00 [INF] Retrieving category with ID 46 after creation
+2025-07-03 19:30:30.734 +03:00 [INF] Executing GetCategoryById for id: 46
+2025-07-03 19:30:30.773 +03:00 [INF] Executed DbCommand (35ms) [Parameters=[@__id_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT `t`.`Id`, `t`.`CreatedAt`, `t`.`DeletedAt`, `t`.`Description`, `t`.`DisplayOrder`, `t`.`ImageId`, `t`.`IsActive`, `t`.`ModifiedAt`, `t`.`Name`, `i`.`Id`, `i`.`AltText`, `i`.`CategoryId`, `i`.`CollectionId`, `i`.`CreatedAt`, `i`.`DeletedAt`, `i`.`FileSize`, `i`.`FileType`, `i`.`Folder`, `i`.`Height`, `i`.`IsMain`, `i`.`ModifiedAt`, `i`.`ProductId`, `i`.`SubCategoryId`, `i`.`Title`, `i`.`UploadDate`, `i`.`Url`, `i`.`Width`, `t0`.`Id`, `t0`.`CategoryId`, `t0`.`CreatedAt`, `t0`.`DeletedAt`, `t0`.`Description`, `t0`.`ImageId`, `t0`.`IsActive`, `t0`.`ModifiedAt`, `t0`.`Name`, `t0`.`Id0`, `t0`.`AltText`, `t0`.`CategoryId0`, `t0`.`CollectionId`, `t0`.`CreatedAt0`, `t0`.`DeletedAt0`, `t0`.`FileSize`, `t0`.`FileType`, `t0`.`Folder`, `t0`.`Height`, `t0`.`IsMain`, `t0`.`ModifiedAt0`, `t0`.`ProductId`, `t0`.`SubCategoryId`, `t0`.`Title`, `t0`.`UploadDate`, `t0`.`Url`, `t0`.`Width`
+FROM (
+    SELECT `c`.`Id`, `c`.`CreatedAt`, `c`.`DeletedAt`, `c`.`Description`, `c`.`DisplayOrder`, `c`.`ImageId`, `c`.`IsActive`, `c`.`ModifiedAt`, `c`.`Name`
+    FROM `Categories` AS `c`
+    WHERE (`c`.`Id` = @__id_0) AND `c`.`DeletedAt` IS NULL
+    LIMIT 1
+) AS `t`
+LEFT JOIN `Images` AS `i` ON `t`.`Id` = `i`.`CategoryId`
+LEFT JOIN (
+    SELECT `s`.`Id`, `s`.`CategoryId`, `s`.`CreatedAt`, `s`.`DeletedAt`, `s`.`Description`, `s`.`ImageId`, `s`.`IsActive`, `s`.`ModifiedAt`, `s`.`Name`, `i0`.`Id` AS `Id0`, `i0`.`AltText`, `i0`.`CategoryId` AS `CategoryId0`, `i0`.`CollectionId`, `i0`.`CreatedAt` AS `CreatedAt0`, `i0`.`DeletedAt` AS `DeletedAt0`, `i0`.`FileSize`, `i0`.`FileType`, `i0`.`Folder`, `i0`.`Height`, `i0`.`IsMain`, `i0`.`ModifiedAt` AS `ModifiedAt0`, `i0`.`ProductId`, `i0`.`SubCategoryId`, `i0`.`Title`, `i0`.`UploadDate`, `i0`.`Url`, `i0`.`Width`
+    FROM `SubCategory` AS `s`
+    LEFT JOIN `Images` AS `i0` ON `s`.`Id` = `i0`.`SubCategoryId`
+    WHERE `s`.`DeletedAt` IS NULL
+) AS `t0` ON `t`.`Id` = `t0`.`CategoryId`
+ORDER BY `t`.`Id`, `i`.`Id`, `t0`.`Id`
+2025-07-03 19:30:30.856 +03:00 [INF] Category with id: 46 exists
+2025-07-03 19:30:30.906 +03:00 [INF] Successfully retrieved category: Id=46, Name=qwoamrgasaad
+2025-07-03 19:30:31.227 +03:00 [INF] Category has 2 images
+2025-07-03 19:30:31.316 +03:00 [INF] Mapping category with 2 images
+2025-07-03 19:30:31.809 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/swagger/index.html - null null
+2025-07-03 19:30:32.174 +03:00 [INF] Successfully mapped category to DTO
+2025-07-03 19:30:33.548 +03:00 [INF] Executing ObjectResult, writing value of type 'E_Commers.DtoModels.Responses.ApiResponse`1[[E_Commers.DtoModels.CategoryDtos.CategoryDto, E-Commerce, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2025-07-03 19:30:33.570 +03:00 [INF] Executed action E_Commers.Controllers.CategoriesController.CreateAsync (E-Commerce) in 164289.0876ms
+2025-07-03 19:30:33.622 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/swagger/index.html - 200 null text/html;charset=utf-8 1813.0952ms
+2025-07-03 19:30:34.036 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/_vs/browserLink - null null
+2025-07-03 19:30:33.987 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/_framework/aspnetcore-browser-refresh.js - null null
+2025-07-03 19:30:34.129 +03:00 [INF] Executed endpoint 'E_Commers.Controllers.CategoriesController.CreateAsync (E-Commerce)'
+2025-07-03 19:30:34.108 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/swagger/index.js - null null
+2025-07-03 19:30:35.148 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/_vs/browserLink - 200 null text/javascript; charset=UTF-8 1111.8312ms
+2025-07-03 19:30:36.640 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/_framework/aspnetcore-browser-refresh.js - 200 16505 application/javascript; charset=utf-8 2653.085ms
+2025-07-03 19:30:36.639 +03:00 [INF] Request finished HTTP/1.1 POST https://localhost:7288/api/categories - 201 584 application/json; charset=utf-8 167402.6649ms
+2025-07-03 19:30:36.678 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/swagger/index.js - 200 null application/javascript;charset=utf-8 2570.0865ms
+2025-07-03 19:30:36.942 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/swagger/v1/swagger.json - null null
+2025-07-03 19:30:37.327 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 385.549ms
+2025-07-03 19:31:43.248 +03:00 [INF] Request starting HTTP/1.1 POST https://localhost:7288/api/categories - multipart/form-data; boundary=--------------------------187181719193062073795095 1042890
+2025-07-03 19:31:43.399 +03:00 [INF] Executing UserAuthenticationMiddleware
+2025-07-03 19:31:43.413 +03:00 [INF] Executed DbCommand (2ms) [Parameters=[@__userId_0='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`SecurityStamp`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`Id` = @__userId_0)
+LIMIT 1
+2025-07-03 19:31:43.427 +03:00 [INF] Executing endpoint 'E_Commers.Controllers.CategoriesController.CreateAsync (E-Commerce)'
+2025-07-03 19:31:43.446 +03:00 [INF] Route matched with {action = "CreateAsync", controller = "Categories"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[E_Commers.DtoModels.Responses.ApiResponse`1[E_Commers.DtoModels.CategoryDtos.CategoryDto]]] CreateAsync(E_Commers.DtoModels.CategoryDtos.CreateCategotyDto) on controller E_Commers.Controllers.CategoriesController (E-Commerce).
+2025-07-03 19:31:43.481 +03:00 [INF] Executing CreateAsync
+2025-07-03 19:31:43.484 +03:00 [INF] Execute CreateAsync
+2025-07-03 19:31:43.491 +03:00 [INF] Executed DbCommand (3ms) [Parameters=[@__name_0='?' (Size = 20)], CommandType='"Text"', CommandTimeout='30']
+SELECT `c`.`Id`, `c`.`CreatedAt`, `c`.`DeletedAt`, `c`.`Description`, `c`.`DisplayOrder`, `c`.`ImageId`, `c`.`IsActive`, `c`.`ModifiedAt`, `c`.`Name`
+FROM `Categories` AS `c`
+WHERE (`c`.`Name` = @__name_0) AND `c`.`DeletedAt` IS NULL
+LIMIT 1
+2025-07-03 19:31:43.499 +03:00 [INF] Executing CreateAsync for entity Category
+2025-07-03 19:31:43.502 +03:00 [INF] Category added successfully (pending save)
+2025-07-03 19:31:43.508 +03:00 [INF] Executed DbCommand (2ms) [Parameters=[@p0='?' (DbType = DateTime), @p1='?' (DbType = DateTime), @p2='?' (Size = 50), @p3='?' (DbType = Int32), @p4='?' (DbType = Int32), @p5='?' (DbType = Boolean), @p6='?' (DbType = DateTime), @p7='?' (Size = 20)], CommandType='"Text"', CommandTimeout='30']
+INSERT INTO `Categories` (`CreatedAt`, `DeletedAt`, `Description`, `DisplayOrder`, `ImageId`, `IsActive`, `ModifiedAt`, `Name`)
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7);
+SELECT `Id`
+FROM `Categories`
+WHERE ROW_COUNT() = 1 AND `Id` = LAST_INSERT_ID();
+2025-07-03 19:31:48.287 +03:00 [INF] 📥 Saving 1 images to CategoryPhotos
+2025-07-03 19:31:52.613 +03:00 [INF] 📥 Saving image to CategoryPhotos
+2025-07-03 19:31:52.637 +03:00 [INF] Executing CreateAsync for entity Image
+2025-07-03 19:31:52.640 +03:00 [INF] Image added successfully (pending save)
+2025-07-03 19:31:52.644 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@p0='?' (Size = 4000), @p1='?' (DbType = Int32), @p2='?' (DbType = Int32), @p3='?' (DbType = DateTime), @p4='?' (DbType = DateTime), @p5='?' (DbType = Int64), @p6='?' (Size = 4000), @p7='?' (Size = 4000), @p8='?' (DbType = Int32), @p9='?' (DbType = Boolean), @p10='?' (DbType = DateTime), @p11='?' (DbType = Int32), @p12='?' (DbType = Int32), @p13='?' (Size = 4000), @p14='?' (DbType = DateTime), @p15='?' (Size = 4000), @p16='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+INSERT INTO `Images` (`AltText`, `CategoryId`, `CollectionId`, `CreatedAt`, `DeletedAt`, `FileSize`, `FileType`, `Folder`, `Height`, `IsMain`, `ModifiedAt`, `ProductId`, `SubCategoryId`, `Title`, `UploadDate`, `Url`, `Width`)
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9, @p10, @p11, @p12, @p13, @p14, @p15, @p16);
+SELECT `Id`
+FROM `Images`
+WHERE ROW_COUNT() = 1 AND `Id` = LAST_INSERT_ID();
+2025-07-03 19:31:52.653 +03:00 [INF] Execute AddAdminOpreationAsync
+2025-07-03 19:31:52.657 +03:00 [INF] Executing CreateAsync for entity AdminOperationsLog
+2025-07-03 19:31:52.660 +03:00 [INF] AdminOperationsLog added successfully (pending save)
+2025-07-03 19:31:52.662 +03:00 [INF] ✅ Image saved: /CategoryPhotos/d68fe701-0a9c-4909-b988-5e30b01a9714.jpg
+2025-07-03 19:31:52.671 +03:00 [INF] 📥 Saving main image to CategoryPhotos
+2025-07-03 19:31:52.675 +03:00 [WRN] Failed to save main image: Invalid extension. Allowed: .jpg, .jpeg, .png, .gif, .webp
+2025-07-03 19:31:56.096 +03:00 [INF] Executing BadRequestObjectResult, writing value of type 'E_Commers.DtoModels.Responses.ApiResponse`1[[E_Commers.DtoModels.CategoryDtos.CategoryDto, E-Commerce, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2025-07-03 19:31:56.110 +03:00 [INF] Executed action E_Commers.Controllers.CategoriesController.CreateAsync (E-Commerce) in 12659.7627ms
+2025-07-03 19:31:56.115 +03:00 [INF] Executed endpoint 'E_Commers.Controllers.CategoriesController.CreateAsync (E-Commerce)'
+2025-07-03 19:31:56.123 +03:00 [INF] Request finished HTTP/1.1 POST https://localhost:7288/api/categories - 400 332 application/json; charset=utf-8 12886.1642ms
+2025-07-03 19:32:29.381 +03:00 [INF] Request starting HTTP/1.1 POST https://localhost:7288/api/categories - multipart/form-data; boundary=--------------------------239660282984383024185531 342132
+2025-07-03 19:32:29.391 +03:00 [INF] Executing UserAuthenticationMiddleware
+2025-07-03 19:32:29.404 +03:00 [INF] Executed DbCommand (4ms) [Parameters=[@__userId_0='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`SecurityStamp`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`Id` = @__userId_0)
+LIMIT 1
+2025-07-03 19:32:29.415 +03:00 [INF] Executing endpoint 'E_Commers.Controllers.CategoriesController.CreateAsync (E-Commerce)'
+2025-07-03 19:32:29.416 +03:00 [INF] Route matched with {action = "CreateAsync", controller = "Categories"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[E_Commers.DtoModels.Responses.ApiResponse`1[E_Commers.DtoModels.CategoryDtos.CategoryDto]]] CreateAsync(E_Commers.DtoModels.CategoryDtos.CreateCategotyDto) on controller E_Commers.Controllers.CategoriesController (E-Commerce).
+2025-07-03 19:32:29.445 +03:00 [INF] Executing CreateAsync
+2025-07-03 19:32:29.455 +03:00 [INF] Executing BadRequestObjectResult, writing value of type 'E_Commers.DtoModels.Responses.ApiResponse`1[[E_Commers.DtoModels.CategoryDtos.CategoryDto, E-Commerce, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2025-07-03 19:32:29.459 +03:00 [INF] Executed action E_Commers.Controllers.CategoriesController.CreateAsync (E-Commerce) in 34.5189ms
+2025-07-03 19:32:29.462 +03:00 [INF] Executed endpoint 'E_Commers.Controllers.CategoriesController.CreateAsync (E-Commerce)'
+2025-07-03 19:32:29.465 +03:00 [INF] Request finished HTTP/1.1 POST https://localhost:7288/api/categories - 400 214 application/json; charset=utf-8 84.3282ms
+2025-07-03 19:33:37.968 +03:00 [INF] Request starting HTTP/1.1 GET https://localhost:7288/api/categories - null null
+2025-07-03 19:33:38.657 +03:00 [INF] Executing UserAuthenticationMiddleware
+2025-07-03 19:33:38.781 +03:00 [INF] Executed DbCommand (3ms) [Parameters=[@__userId_0='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`SecurityStamp`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`Id` = @__userId_0)
+LIMIT 1
+2025-07-03 19:33:38.827 +03:00 [INF] Executing endpoint 'E_Commers.Controllers.CategoriesController.GetAll (E-Commerce)'
+2025-07-03 19:33:38.855 +03:00 [INF] Route matched with {action = "GetAll", controller = "Categories"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[E_Commers.DtoModels.Responses.ApiResponse`1[System.Collections.Generic.List`1[E_Commers.DtoModels.CategoryDtos.CategoryDto]]]] GetAll() on controller E_Commers.Controllers.CategoriesController (E-Commerce).
+2025-07-03 19:33:38.895 +03:00 [INF] Executing GetAll
+2025-07-03 19:33:38.991 +03:00 [INF] Executing GetAll
+2025-07-03 19:33:39.665 +03:00 [INF] Getting cache for key: category
+2025-07-03 19:33:40.587 +03:00 [WRN] Cache miss for key: category
+2025-07-03 19:33:40.642 +03:00 [INF] Execute GetAll for entity Category
+2025-07-03 19:33:40.666 +03:00 [INF] Data retrieved from Database
+2025-07-03 19:33:40.839 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT `c`.`Id`, `c`.`CreatedAt`, `c`.`DeletedAt`, `c`.`Description`, `c`.`DisplayOrder`, `c`.`ImageId`, `c`.`IsActive`, `c`.`ModifiedAt`, `c`.`Name`
+FROM `Categories` AS `c`
+2025-07-03 19:33:40.875 +03:00 [INF] Setting cache for key: category
+2025-07-03 19:33:41.307 +03:00 [INF] Cache set successfully for key: category with tags: category
+2025-07-03 19:33:42.009 +03:00 [INF] Executing OkObjectResult, writing value of type 'E_Commers.DtoModels.Responses.ApiResponse`1[[System.Collections.Generic.List`1[[E_Commers.DtoModels.CategoryDtos.CategoryDto, E-Commerce, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2025-07-03 19:33:42.713 +03:00 [INF] Executed action E_Commers.Controllers.CategoriesController.GetAll (E-Commerce) in 3833.0346ms
+2025-07-03 19:33:43.312 +03:00 [INF] Executed endpoint 'E_Commers.Controllers.CategoriesController.GetAll (E-Commerce)'
+2025-07-03 19:33:43.337 +03:00 [INF] Request finished HTTP/1.1 GET https://localhost:7288/api/categories - 200 8361 application/json; charset=utf-8 5368.7417ms
+2025-07-03 19:40:43.729 +03:00 [INF] DB tables already exist. Exit install
+2025-07-03 19:40:45.055 +03:00 [INF] Executed DbCommand (11ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='Fashion_Site' AND TABLE_NAME='__EFMigrationsHistory';
+2025-07-03 19:40:45.069 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='Fashion_Site' AND TABLE_NAME='__EFMigrationsHistory';
+2025-07-03 19:40:45.098 +03:00 [INF] Executed DbCommand (8ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT `MigrationId`, `ProductVersion`
+FROM `__EFMigrationsHistory`
+ORDER BY `MigrationId`;
+2025-07-03 19:40:45.117 +03:00 [INF] No migrations were applied. The database is already up to date.
+2025-07-03 19:40:45.162 +03:00 [INF] User profile is available. Using 'C:\Users\DELL\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2025-07-03 19:40:45.518 +03:00 [INF] Executed DbCommand (49ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-07-03 19:40:45.583 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-07-03 19:40:45.609 +03:00 [INF] Executed DbCommand (3ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`, `a`.`ProfilePicture`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-07-03 19:40:46.317 +03:00 [INF] Now listening on: https://localhost:7288
+2025-07-03 19:40:46.320 +03:00 [INF] Now listening on: http://localhost:5069
+2025-07-03 19:40:46.396 +03:00 [ERR] Index was outside the bounds of the array.
+System.IndexOutOfRangeException: Index was outside the bounds of the array.
+   at Hangfire.MySql.MySqlStorage.<>c.<ToString>b__14_1(String[] x)
+   at System.Linq.Enumerable.ArraySelectIterator`2.MoveNext()
+   at System.Linq.Enumerable.ToDictionary[TSource,TKey,TElement](IEnumerable`1 source, Func`2 keySelector, Func`2 elementSelector, IEqualityComparer`1 comparer)
+   at Hangfire.MySql.MySqlStorage.ToString()
+2025-07-03 19:40:46.429 +03:00 [INF] Starting Hangfire Server using job storage: '<Connection string can not be parsed>'
+2025-07-03 19:40:46.431 +03:00 [INF] Using the following options for SQL Server job storage:
+2025-07-03 19:40:46.434 +03:00 [INF]     Queue poll interval: 00:00:10.
+2025-07-03 19:40:46.436 +03:00 [INF] Using the following options for Hangfire Server:
+    Worker count: 20
+    Listening queues: 'default'
+    Shutdown timeout: 00:00:15
+    Schedule polling interval: 00:00:15
+2025-07-03 19:40:46.453 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-07-03 19:40:46.454 +03:00 [INF] Hosting environment: Development
+2025-07-03 19:40:46.462 +03:00 [INF] Content root path: D:\fashion\Projcet\E-Commers\E-Commers
+2025-07-03 19:40:46.478 +03:00 [INF] Server mrrobot:7944:b85c2af7 successfully announced in 16.6479 ms
+2025-07-03 19:40:46.491 +03:00 [INF] Server mrrobot:7944:b85c2af7 is starting the registered dispatchers: ServerWatchdog, ServerJobCancellationWatcher, ExpirationManager, CountersAggregator, Worker, DelayedJobScheduler, RecurringJobScheduler...
+2025-07-03 19:40:46.497 +03:00 [INF] 1 servers were removed due to timeout
+2025-07-03 19:40:46.626 +03:00 [INF] Server mrrobot:7944:b85c2af7 all the dispatchers started
+2025-07-03 19:40:47.626 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/swagger/index.html - null null
+2025-07-03 19:40:47.858 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/swagger/index.html - 200 null text/html;charset=utf-8 232.4744ms
+2025-07-03 19:40:47.899 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/_framework/aspnetcore-browser-refresh.js - null null
+2025-07-03 19:40:47.899 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/swagger/index.js - null null
+2025-07-03 19:40:47.922 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/_vs/browserLink - null null
+2025-07-03 19:40:48.027 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/_framework/aspnetcore-browser-refresh.js - 200 16505 application/javascript; charset=utf-8 128.8643ms
+2025-07-03 19:40:48.075 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/swagger/index.js - 200 null application/javascript;charset=utf-8 175.8313ms
+2025-07-03 19:40:48.190 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/_vs/browserLink - 200 null text/javascript; charset=UTF-8 268.111ms
+2025-07-03 19:40:48.391 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/swagger/v1/swagger.json - null null
+2025-07-03 19:40:48.672 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 280.3158ms
+2025-07-03 19:41:43.111 +03:00 [INF] DB tables already exist. Exit install
+2025-07-03 19:41:44.483 +03:00 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='Fashion_Site' AND TABLE_NAME='__EFMigrationsHistory';
+2025-07-03 19:41:44.496 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='Fashion_Site' AND TABLE_NAME='__EFMigrationsHistory';
+2025-07-03 19:41:44.526 +03:00 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT `MigrationId`, `ProductVersion`
+FROM `__EFMigrationsHistory`
+ORDER BY `MigrationId`;
+2025-07-03 19:41:44.553 +03:00 [INF] No migrations were applied. The database is already up to date.
+2025-07-03 19:41:44.595 +03:00 [INF] User profile is available. Using 'C:\Users\DELL\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2025-07-03 19:41:44.975 +03:00 [INF] Executed DbCommand (41ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-07-03 19:41:45.053 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-07-03 19:41:45.075 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`, `a`.`ProfilePicture`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-07-03 19:41:45.588 +03:00 [INF] Now listening on: https://localhost:7288
+2025-07-03 19:41:45.591 +03:00 [INF] Now listening on: http://localhost:5069
+2025-07-03 19:41:45.669 +03:00 [ERR] Index was outside the bounds of the array.
+System.IndexOutOfRangeException: Index was outside the bounds of the array.
+   at Hangfire.MySql.MySqlStorage.<>c.<ToString>b__14_1(String[] x)
+   at System.Linq.Enumerable.ArraySelectIterator`2.MoveNext()
+   at System.Linq.Enumerable.ToDictionary[TSource,TKey,TElement](IEnumerable`1 source, Func`2 keySelector, Func`2 elementSelector, IEqualityComparer`1 comparer)
+   at Hangfire.MySql.MySqlStorage.ToString()
+2025-07-03 19:41:45.685 +03:00 [INF] Starting Hangfire Server using job storage: '<Connection string can not be parsed>'
+2025-07-03 19:41:45.686 +03:00 [INF] Using the following options for SQL Server job storage:
+2025-07-03 19:41:45.689 +03:00 [INF]     Queue poll interval: 00:00:10.
+2025-07-03 19:41:45.690 +03:00 [INF] Using the following options for Hangfire Server:
+    Worker count: 20
+    Listening queues: 'default'
+    Shutdown timeout: 00:00:15
+    Schedule polling interval: 00:00:15
+2025-07-03 19:41:45.703 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-07-03 19:41:45.704 +03:00 [INF] Hosting environment: Development
+2025-07-03 19:41:45.706 +03:00 [INF] Content root path: D:\fashion\Projcet\E-Commers\E-Commers
+2025-07-03 19:41:45.722 +03:00 [INF] Server mrrobot:19816:cf570105 successfully announced in 15.8692 ms
+2025-07-03 19:41:45.726 +03:00 [INF] Server mrrobot:19816:cf570105 is starting the registered dispatchers: ServerWatchdog, ServerJobCancellationWatcher, ExpirationManager, CountersAggregator, Worker, DelayedJobScheduler, RecurringJobScheduler...
+2025-07-03 19:41:45.916 +03:00 [INF] Server mrrobot:19816:cf570105 all the dispatchers started
+2025-07-03 19:41:45.928 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/swagger/index.html - null null
+2025-07-03 19:41:46.133 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/swagger/index.html - 200 null text/html;charset=utf-8 203.7834ms
+2025-07-03 19:41:46.170 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/_framework/aspnetcore-browser-refresh.js - null null
+2025-07-03 19:41:46.170 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/swagger/index.js - null null
+2025-07-03 19:41:46.170 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/_vs/browserLink - null null
+2025-07-03 19:41:46.184 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/swagger/index.js - 200 null application/javascript;charset=utf-8 13.4834ms
+2025-07-03 19:41:46.189 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/_framework/aspnetcore-browser-refresh.js - 200 16505 application/javascript; charset=utf-8 18.7947ms
+2025-07-03 19:41:46.224 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/_vs/browserLink - 200 null text/javascript; charset=UTF-8 53.6971ms
+2025-07-03 19:41:46.270 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/swagger/v1/swagger.json - null null
+2025-07-03 19:41:46.377 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 106.6098ms
+2025-07-03 19:41:56.292 +03:00 [INF] Request starting HTTP/1.1 GET https://localhost:7288/api/categories - null null
+2025-07-03 19:41:56.416 +03:00 [INF] Failed to validate the token.
+Microsoft.IdentityModel.Tokens.SecurityTokenExpiredException: IDX10223: Lifetime validation failed. The token is expired. ValidTo (UTC): '7/3/2025 4:31:40 PM', Current time (UTC): '7/3/2025 4:41:56 PM'.
+   at Microsoft.IdentityModel.Tokens.Validators.ValidateLifetime(Nullable`1 notBefore, Nullable`1 expires, SecurityToken securityToken, TokenValidationParameters validationParameters)
+   at Microsoft.IdentityModel.JsonWebTokens.JsonWebTokenHandler.ValidateTokenPayloadAsync(JsonWebToken jsonWebToken, TokenValidationParameters validationParameters, BaseConfiguration configuration)
+   at Microsoft.IdentityModel.JsonWebTokens.JsonWebTokenHandler.ValidateJWSAsync(JsonWebToken jsonWebToken, TokenValidationParameters validationParameters, BaseConfiguration configuration)
+2025-07-03 19:41:56.426 +03:00 [INF] Bearer was not authenticated. Failure message: IDX10223: Lifetime validation failed. The token is expired. ValidTo (UTC): '7/3/2025 4:31:40 PM', Current time (UTC): '7/3/2025 4:41:56 PM'.
+2025-07-03 19:41:56.431 +03:00 [INF] Executing UserAuthenticationMiddleware
+2025-07-03 19:41:56.492 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__userId_0='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`SecurityStamp`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`Id` = @__userId_0)
+LIMIT 1
+2025-07-03 19:41:56.552 +03:00 [INF] Authorization failed. These requirements were not met:
+RolesAuthorizationRequirement:User.IsInRole must be true for one of the following roles: (Admin)
+2025-07-03 19:41:56.560 +03:00 [INF] AuthenticationScheme: Bearer was challenged.
+2025-07-03 19:41:56.570 +03:00 [INF] Request finished HTTP/1.1 GET https://localhost:7288/api/categories - 401 0 null 278.1137ms
+2025-07-03 19:42:09.621 +03:00 [INF] Request starting HTTP/1.1 POST https://localhost:7288/api/Account/Login - application/json 75
+2025-07-03 19:42:09.631 +03:00 [INF] Executing UserAuthenticationMiddleware
+2025-07-03 19:42:09.645 +03:00 [INF] Executing endpoint 'E_Commers.Controllers.AccountController.LoginAsync (E-Commerce)'
+2025-07-03 19:42:09.741 +03:00 [INF] Route matched with {action = "LoginAsync", controller = "Account"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[E_Commers.DtoModels.Responses.ApiResponse`1[E_Commers.DtoModels.TokenDtos.TokensDto]]] LoginAsync(E_Commers.DtoModels.AccountDtos.LoginDTo) on controller E_Commers.Controllers.AccountController (E-Commerce).
+2025-07-03 19:42:10.215 +03:00 [INF] In LoginAsync Method 
+2025-07-03 19:42:10.226 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`, `a`.`ProfilePicture`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-07-03 19:42:10.329 +03:00 [INF] 🔐 Generating Access Token for User ID: 54f3c4dd-ad04-4f23-9523-b4ed366f6a75
+2025-07-03 19:42:10.398 +03:00 [INF] Executed DbCommand (4ms) [Parameters=[@__userId_0='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a0`.`Name`
+FROM `AspNetUserRoles` AS `a`
+INNER JOIN `AspNetRoles` AS `a0` ON `a`.`RoleId` = `a0`.`Id`
+WHERE `a`.`UserId` = @__userId_0
+2025-07-03 19:42:10.419 +03:00 [INF] ✅ Access Token generated successfully for User ID: 54f3c4dd-ad04-4f23-9523-b4ed366f6a75
+2025-07-03 19:42:10.423 +03:00 [INF] 🔑 Generating Refresh Token for User ID: 54f3c4dd-ad04-4f23-9523-b4ed366f6a75
+2025-07-03 19:42:10.432 +03:00 [INF] RefreshToken Generated
+2025-07-03 19:42:10.443 +03:00 [INF] Executing OkObjectResult, writing value of type 'E_Commers.DtoModels.Responses.ApiResponse`1[[E_Commers.DtoModels.TokenDtos.TokensDto, E-Commerce, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2025-07-03 19:42:10.483 +03:00 [INF] Executed action E_Commers.Controllers.AccountController.LoginAsync (E-Commerce) in 702.598ms
+2025-07-03 19:42:10.507 +03:00 [INF] Executed endpoint 'E_Commers.Controllers.AccountController.LoginAsync (E-Commerce)'
+2025-07-03 19:42:10.511 +03:00 [INF] Request finished HTTP/1.1 POST https://localhost:7288/api/Account/Login - 200 943 application/json; charset=utf-8 890.0429ms
+2025-07-03 19:42:27.805 +03:00 [INF] Request starting HTTP/1.1 GET https://localhost:7288/api/categories - null null
+2025-07-03 19:42:27.819 +03:00 [INF] Executing UserAuthenticationMiddleware
+2025-07-03 19:42:27.827 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__userId_0='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`SecurityStamp`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`Id` = @__userId_0)
+LIMIT 1
+2025-07-03 19:42:27.833 +03:00 [INF] Executing endpoint 'E_Commers.Controllers.CategoriesController.GetAll (E-Commerce)'
+2025-07-03 19:42:27.842 +03:00 [INF] Route matched with {action = "GetAll", controller = "Categories"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[E_Commers.DtoModels.Responses.ApiResponse`1[System.Collections.Generic.List`1[E_Commers.DtoModels.CategoryDtos.CategoryDto]]]] GetAll() on controller E_Commers.Controllers.CategoriesController (E-Commerce).
+2025-07-03 19:42:27.851 +03:00 [INF] Executing GetAll
+2025-07-03 19:42:27.858 +03:00 [INF] Executing GetAll
+2025-07-03 19:42:27.862 +03:00 [INF] Getting cache for key: category
+2025-07-03 19:42:27.868 +03:00 [INF] Cache hit for key: category
+2025-07-03 19:42:27.887 +03:00 [INF] Executing OkObjectResult, writing value of type 'E_Commers.DtoModels.Responses.ApiResponse`1[[System.Collections.Generic.List`1[[E_Commers.DtoModels.CategoryDtos.CategoryDto, E-Commerce, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2025-07-03 19:42:27.906 +03:00 [INF] Executed action E_Commers.Controllers.CategoriesController.GetAll (E-Commerce) in 59.2831ms
+2025-07-03 19:42:27.913 +03:00 [INF] Executed endpoint 'E_Commers.Controllers.CategoriesController.GetAll (E-Commerce)'
+2025-07-03 19:42:27.916 +03:00 [INF] Request finished HTTP/1.1 GET https://localhost:7288/api/categories - 200 8372 application/json; charset=utf-8 111.3193ms
+2025-07-03 19:43:07.208 +03:00 [INF] DB tables already exist. Exit install
+2025-07-03 19:43:09.506 +03:00 [INF] Executed DbCommand (3ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='Fashion_Site' AND TABLE_NAME='__EFMigrationsHistory';
+2025-07-03 19:43:09.521 +03:00 [INF] Executed DbCommand (0ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='Fashion_Site' AND TABLE_NAME='__EFMigrationsHistory';
+2025-07-03 19:43:09.548 +03:00 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT `MigrationId`, `ProductVersion`
+FROM `__EFMigrationsHistory`
+ORDER BY `MigrationId`;
+2025-07-03 19:43:09.571 +03:00 [INF] No migrations were applied. The database is already up to date.
+2025-07-03 19:43:09.613 +03:00 [INF] User profile is available. Using 'C:\Users\DELL\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2025-07-03 19:43:10.150 +03:00 [INF] Executed DbCommand (72ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-07-03 19:43:10.239 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-07-03 19:43:10.266 +03:00 [INF] Executed DbCommand (3ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`, `a`.`ProfilePicture`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-07-03 19:43:12.259 +03:00 [INF] Now listening on: https://localhost:7288
+2025-07-03 19:43:12.261 +03:00 [INF] Now listening on: http://localhost:5069
+2025-07-03 19:43:12.952 +03:00 [ERR] Index was outside the bounds of the array.
+System.IndexOutOfRangeException: Index was outside the bounds of the array.
+   at Hangfire.MySql.MySqlStorage.<>c.<ToString>b__14_1(String[] x)
+   at System.Linq.Enumerable.ArraySelectIterator`2.MoveNext()
+   at System.Linq.Enumerable.ToDictionary[TSource,TKey,TElement](IEnumerable`1 source, Func`2 keySelector, Func`2 elementSelector, IEqualityComparer`1 comparer)
+   at Hangfire.MySql.MySqlStorage.ToString()
+2025-07-03 19:43:13.074 +03:00 [INF] Starting Hangfire Server using job storage: '<Connection string can not be parsed>'
+2025-07-03 19:43:13.076 +03:00 [INF] Using the following options for SQL Server job storage:
+2025-07-03 19:43:13.078 +03:00 [INF]     Queue poll interval: 00:00:10.
+2025-07-03 19:43:13.079 +03:00 [INF] Using the following options for Hangfire Server:
+    Worker count: 20
+    Listening queues: 'default'
+    Shutdown timeout: 00:00:15
+    Schedule polling interval: 00:00:15
+2025-07-03 19:43:13.348 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-07-03 19:43:13.535 +03:00 [INF] Server mrrobot:6488:da3c422b successfully announced in 119.3906 ms
+2025-07-03 19:43:13.552 +03:00 [INF] Hosting environment: Development
+2025-07-03 19:43:13.603 +03:00 [INF] Server mrrobot:6488:da3c422b is starting the registered dispatchers: ServerWatchdog, ServerJobCancellationWatcher, ExpirationManager, CountersAggregator, Worker, DelayedJobScheduler, RecurringJobScheduler...
+2025-07-03 19:43:13.650 +03:00 [INF] Content root path: D:\fashion\Projcet\E-Commers\E-Commers
+2025-07-03 19:43:14.157 +03:00 [INF] Server mrrobot:6488:da3c422b all the dispatchers started
+2025-07-03 19:43:14.245 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/swagger/index.html - null null
+2025-07-03 19:43:14.585 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/swagger/index.html - 200 null text/html;charset=utf-8 339.9855ms
+2025-07-03 19:43:14.605 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/_framework/aspnetcore-browser-refresh.js - null null
+2025-07-03 19:43:14.610 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/_vs/browserLink - null null
+2025-07-03 19:43:14.605 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/swagger/index.js - null null
+2025-07-03 19:43:14.708 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/_framework/aspnetcore-browser-refresh.js - 200 16505 application/javascript; charset=utf-8 102.6528ms
+2025-07-03 19:43:14.733 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/swagger/index.js - 200 null application/javascript;charset=utf-8 127.694ms
+2025-07-03 19:43:14.848 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/_vs/browserLink - 200 null text/javascript; charset=UTF-8 238.2938ms
+2025-07-03 19:43:14.914 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/swagger/v1/swagger.json - null null
+2025-07-03 19:43:15.213 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 298.7209ms
+2025-07-03 19:43:21.692 +03:00 [INF] Request starting HTTP/1.1 GET https://localhost:7288/api/categories - null null
+2025-07-03 19:43:22.196 +03:00 [INF] Executing UserAuthenticationMiddleware
+2025-07-03 19:43:22.248 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__userId_0='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`SecurityStamp`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`Id` = @__userId_0)
+LIMIT 1
+2025-07-03 19:43:22.367 +03:00 [INF] Executing endpoint 'E_Commers.Controllers.CategoriesController.GetAll (E-Commerce)'
+2025-07-03 19:43:22.396 +03:00 [INF] Route matched with {action = "GetAll", controller = "Categories"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[E_Commers.DtoModels.Responses.ApiResponse`1[System.Collections.Generic.List`1[E_Commers.DtoModels.CategoryDtos.CategoryDto]]]] GetAll() on controller E_Commers.Controllers.CategoriesController (E-Commerce).
+2025-07-03 19:43:22.721 +03:00 [INF] Executing GetAll
+2025-07-03 19:43:22.724 +03:00 [INF] Executing GetAll
+2025-07-03 19:43:22.729 +03:00 [INF] Getting cache for key: category
+2025-07-03 19:43:22.747 +03:00 [INF] Cache hit for key: category
+2025-07-03 19:43:22.803 +03:00 [INF] Executing OkObjectResult, writing value of type 'E_Commers.DtoModels.Responses.ApiResponse`1[[System.Collections.Generic.List`1[[E_Commers.DtoModels.CategoryDtos.CategoryDto, E-Commerce, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2025-07-03 19:43:22.883 +03:00 [INF] Executed action E_Commers.Controllers.CategoriesController.GetAll (E-Commerce) in 477.6276ms
+2025-07-03 19:43:22.886 +03:00 [INF] Executed endpoint 'E_Commers.Controllers.CategoriesController.GetAll (E-Commerce)'
+2025-07-03 19:43:22.900 +03:00 [INF] Request finished HTTP/1.1 GET https://localhost:7288/api/categories - 200 8372 application/json; charset=utf-8 1208.1593ms
+2025-07-03 19:45:21.279 +03:00 [INF] DB tables already exist. Exit install
+2025-07-03 19:45:23.265 +03:00 [INF] Executed DbCommand (3ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='Fashion_Site' AND TABLE_NAME='__EFMigrationsHistory';
+2025-07-03 19:45:23.281 +03:00 [INF] Executed DbCommand (0ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='Fashion_Site' AND TABLE_NAME='__EFMigrationsHistory';
+2025-07-03 19:45:23.309 +03:00 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT `MigrationId`, `ProductVersion`
+FROM `__EFMigrationsHistory`
+ORDER BY `MigrationId`;
+2025-07-03 19:45:23.329 +03:00 [INF] No migrations were applied. The database is already up to date.
+2025-07-03 19:45:23.371 +03:00 [INF] User profile is available. Using 'C:\Users\DELL\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2025-07-03 19:45:23.850 +03:00 [INF] Executed DbCommand (98ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-07-03 19:45:23.935 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-07-03 19:45:23.963 +03:00 [INF] Executed DbCommand (2ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`, `a`.`ProfilePicture`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-07-03 19:45:24.898 +03:00 [INF] Now listening on: https://localhost:7288
+2025-07-03 19:45:24.901 +03:00 [INF] Now listening on: http://localhost:5069
+2025-07-03 19:45:25.661 +03:00 [ERR] Index was outside the bounds of the array.
+System.IndexOutOfRangeException: Index was outside the bounds of the array.
+   at Hangfire.MySql.MySqlStorage.<>c.<ToString>b__14_1(String[] x)
+   at System.Linq.Enumerable.ArraySelectIterator`2.MoveNext()
+   at System.Linq.Enumerable.ToDictionary[TSource,TKey,TElement](IEnumerable`1 source, Func`2 keySelector, Func`2 elementSelector, IEqualityComparer`1 comparer)
+   at Hangfire.MySql.MySqlStorage.ToString()
+2025-07-03 19:45:26.737 +03:00 [INF] Starting Hangfire Server using job storage: '<Connection string can not be parsed>'
+2025-07-03 19:45:26.806 +03:00 [INF] Using the following options for SQL Server job storage:
+2025-07-03 19:45:26.810 +03:00 [INF]     Queue poll interval: 00:00:10.
+2025-07-03 19:45:26.814 +03:00 [INF] Using the following options for Hangfire Server:
+    Worker count: 20
+    Listening queues: 'default'
+    Shutdown timeout: 00:00:15
+    Schedule polling interval: 00:00:15
+2025-07-03 19:45:26.884 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-07-03 19:45:26.910 +03:00 [INF] Hosting environment: Development
+2025-07-03 19:45:26.939 +03:00 [INF] Content root path: D:\fashion\Projcet\E-Commers\E-Commers
+2025-07-03 19:45:26.970 +03:00 [INF] Server mrrobot:20332:59d7bc0e successfully announced in 69.4237 ms
+2025-07-03 19:45:26.989 +03:00 [INF] Server mrrobot:20332:59d7bc0e is starting the registered dispatchers: ServerWatchdog, ServerJobCancellationWatcher, ExpirationManager, CountersAggregator, Worker, DelayedJobScheduler, RecurringJobScheduler...
+2025-07-03 19:45:27.035 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/swagger/index.html - null null
+2025-07-03 19:45:27.349 +03:00 [INF] Server mrrobot:20332:59d7bc0e all the dispatchers started
+2025-07-03 19:45:27.626 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/swagger/index.html - 200 null text/html;charset=utf-8 627.6575ms
+2025-07-03 19:45:27.655 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/_vs/browserLink - null null
+2025-07-03 19:45:27.655 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/_framework/aspnetcore-browser-refresh.js - null null
+2025-07-03 19:45:27.655 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/swagger/index.js - null null
+2025-07-03 19:45:27.757 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/swagger/index.js - 200 null application/javascript;charset=utf-8 101.6896ms
+2025-07-03 19:45:27.771 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/_framework/aspnetcore-browser-refresh.js - 200 16505 application/javascript; charset=utf-8 115.8376ms
+2025-07-03 19:45:27.831 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/_vs/browserLink - 200 null text/javascript; charset=UTF-8 176.0529ms
+2025-07-03 19:45:27.891 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/swagger/v1/swagger.json - null null
+2025-07-03 19:45:28.036 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 145.9544ms
+2025-07-03 19:50:27.320 +03:00 [INF] 3 servers were removed due to timeout
+2025-07-03 20:00:38.871 +03:00 [INF] Request starting HTTP/1.1 GET https://localhost:7288/api/categories - null null
+2025-07-03 20:00:39.412 +03:00 [INF] Executing UserAuthenticationMiddleware
+2025-07-03 20:00:39.606 +03:00 [INF] Executed DbCommand (5ms) [Parameters=[@__userId_0='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`SecurityStamp`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`Id` = @__userId_0)
+LIMIT 1
+2025-07-03 20:00:39.774 +03:00 [INF] Executing endpoint 'E_Commers.Controllers.CategoriesController.GetAll (E-Commerce)'
+2025-07-03 20:00:39.840 +03:00 [INF] Route matched with {action = "GetAll", controller = "Categories"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[E_Commers.DtoModels.Responses.ApiResponse`1[System.Collections.Generic.List`1[E_Commers.DtoModels.CategoryDtos.CategoryDto]]]] GetAll() on controller E_Commers.Controllers.CategoriesController (E-Commerce).
+2025-07-03 20:00:40.181 +03:00 [INF] Executing GetAll
+2025-07-03 20:00:40.185 +03:00 [INF] Executing GetAll
+2025-07-03 20:00:40.192 +03:00 [INF] Getting cache for key: category
+2025-07-03 20:00:40.209 +03:00 [INF] Cache hit for key: category
+2025-07-03 20:00:40.302 +03:00 [INF] Executing OkObjectResult, writing value of type 'E_Commers.DtoModels.Responses.ApiResponse`1[[System.Collections.Generic.List`1[[E_Commers.DtoModels.CategoryDtos.CategoryDto, E-Commerce, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2025-07-03 20:00:40.404 +03:00 [INF] Executed action E_Commers.Controllers.CategoriesController.GetAll (E-Commerce) in 554.2183ms
+2025-07-03 20:00:40.409 +03:00 [INF] Executed endpoint 'E_Commers.Controllers.CategoriesController.GetAll (E-Commerce)'
+2025-07-03 20:00:40.423 +03:00 [INF] Request finished HTTP/1.1 GET https://localhost:7288/api/categories - 200 8372 application/json; charset=utf-8 1560.6423ms
+2025-07-03 23:35:30.038 +03:00 [INF] DB tables already exist. Exit install
+2025-07-03 23:35:31.659 +03:00 [INF] Executed DbCommand (16ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='Fashion_Site' AND TABLE_NAME='__EFMigrationsHistory';
+2025-07-03 23:35:31.676 +03:00 [INF] Executed DbCommand (0ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='Fashion_Site' AND TABLE_NAME='__EFMigrationsHistory';
+2025-07-03 23:35:31.776 +03:00 [INF] Executed DbCommand (78ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT `MigrationId`, `ProductVersion`
+FROM `__EFMigrationsHistory`
+ORDER BY `MigrationId`;
+2025-07-03 23:35:31.796 +03:00 [INF] No migrations were applied. The database is already up to date.
+2025-07-03 23:35:31.823 +03:00 [INF] User profile is available. Using 'C:\Users\DELL\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2025-07-03 23:35:32.171 +03:00 [INF] Executed DbCommand (47ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-07-03 23:35:32.244 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-07-03 23:35:32.294 +03:00 [INF] Executed DbCommand (28ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`, `a`.`ProfilePicture`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-07-03 23:35:33.487 +03:00 [INF] Now listening on: https://localhost:7288
+2025-07-03 23:35:33.491 +03:00 [INF] Now listening on: http://localhost:5069
+2025-07-03 23:35:33.591 +03:00 [ERR] Index was outside the bounds of the array.
+System.IndexOutOfRangeException: Index was outside the bounds of the array.
+   at Hangfire.MySql.MySqlStorage.<>c.<ToString>b__14_1(String[] x)
+   at System.Linq.Enumerable.ArraySelectIterator`2.MoveNext()
+   at System.Linq.Enumerable.ToDictionary[TSource,TKey,TElement](IEnumerable`1 source, Func`2 keySelector, Func`2 elementSelector, IEqualityComparer`1 comparer)
+   at Hangfire.MySql.MySqlStorage.ToString()
+2025-07-03 23:35:33.620 +03:00 [INF] Starting Hangfire Server using job storage: '<Connection string can not be parsed>'
+2025-07-03 23:35:33.622 +03:00 [INF] Using the following options for SQL Server job storage:
+2025-07-03 23:35:33.628 +03:00 [INF]     Queue poll interval: 00:00:10.
+2025-07-03 23:35:33.629 +03:00 [INF] Using the following options for Hangfire Server:
+    Worker count: 20
+    Listening queues: 'default'
+    Shutdown timeout: 00:00:15
+    Schedule polling interval: 00:00:15
+2025-07-03 23:35:33.653 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-07-03 23:35:33.671 +03:00 [INF] Hosting environment: Development
+2025-07-03 23:35:33.681 +03:00 [INF] Content root path: D:\fashion\Projcet\E-Commers\E-Commers
+2025-07-03 23:35:33.684 +03:00 [INF] Server mrrobot:18156:7b115879 successfully announced in 27.5099 ms
+2025-07-03 23:35:33.700 +03:00 [INF] Server mrrobot:18156:7b115879 is starting the registered dispatchers: ServerWatchdog, ServerJobCancellationWatcher, ExpirationManager, CountersAggregator, Worker, DelayedJobScheduler, RecurringJobScheduler...
+2025-07-03 23:35:33.723 +03:00 [INF] 1 servers were removed due to timeout
+2025-07-03 23:35:34.026 +03:00 [INF] Server mrrobot:18156:7b115879 all the dispatchers started
+2025-07-03 23:35:36.024 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/swagger/index.html - null null
+2025-07-03 23:35:36.467 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/swagger/index.html - 200 null text/html;charset=utf-8 444.4916ms
+2025-07-03 23:35:36.560 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/_framework/aspnetcore-browser-refresh.js - null null
+2025-07-03 23:35:36.561 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/swagger/index.js - null null
+2025-07-03 23:35:36.622 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/_vs/browserLink - null null
+2025-07-03 23:35:36.696 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/swagger/index.js - 200 null application/javascript;charset=utf-8 135.6558ms
+2025-07-03 23:35:36.696 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/_framework/aspnetcore-browser-refresh.js - 200 16504 application/javascript; charset=utf-8 135.4654ms
+2025-07-03 23:35:36.874 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/_vs/browserLink - 200 null text/javascript; charset=UTF-8 252.334ms
+2025-07-03 23:35:36.967 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/swagger/v1/swagger.json - null null
+2025-07-03 23:35:37.183 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 216.8551ms
+2025-07-03 23:40:10.072 +03:00 [INF] Request starting HTTP/1.1 POST https://localhost:7288/api/Account/Login - application/json 75
+2025-07-03 23:40:11.460 +03:00 [INF] Executing UserAuthenticationMiddleware
+2025-07-03 23:40:11.522 +03:00 [INF] Executing endpoint 'E_Commers.Controllers.AccountController.LoginAsync (E-Commerce)'
+2025-07-03 23:40:11.557 +03:00 [INF] Route matched with {action = "LoginAsync", controller = "Account"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[E_Commers.DtoModels.Responses.ApiResponse`1[E_Commers.DtoModels.TokenDtos.TokensDto]]] LoginAsync(E_Commers.DtoModels.AccountDtos.LoginDTo) on controller E_Commers.Controllers.AccountController (E-Commerce).
+2025-07-03 23:40:11.830 +03:00 [INF] In LoginAsync Method 
+2025-07-03 23:40:11.845 +03:00 [INF] Executed DbCommand (2ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`, `a`.`ProfilePicture`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-07-03 23:40:11.970 +03:00 [INF] 🔐 Generating Access Token for User ID: 54f3c4dd-ad04-4f23-9523-b4ed366f6a75
+2025-07-03 23:40:12.056 +03:00 [INF] Executed DbCommand (8ms) [Parameters=[@__userId_0='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a0`.`Name`
+FROM `AspNetUserRoles` AS `a`
+INNER JOIN `AspNetRoles` AS `a0` ON `a`.`RoleId` = `a0`.`Id`
+WHERE `a`.`UserId` = @__userId_0
+2025-07-03 23:40:12.138 +03:00 [INF] ✅ Access Token generated successfully for User ID: 54f3c4dd-ad04-4f23-9523-b4ed366f6a75
+2025-07-03 23:40:12.141 +03:00 [INF] 🔑 Generating Refresh Token for User ID: 54f3c4dd-ad04-4f23-9523-b4ed366f6a75
+2025-07-03 23:40:12.151 +03:00 [INF] RefreshToken Generated
+2025-07-03 23:40:12.162 +03:00 [INF] Executing OkObjectResult, writing value of type 'E_Commers.DtoModels.Responses.ApiResponse`1[[E_Commers.DtoModels.TokenDtos.TokensDto, E-Commerce, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2025-07-03 23:40:12.192 +03:00 [INF] Executed action E_Commers.Controllers.AccountController.LoginAsync (E-Commerce) in 627.1259ms
+2025-07-03 23:40:12.196 +03:00 [INF] Executed endpoint 'E_Commers.Controllers.AccountController.LoginAsync (E-Commerce)'
+2025-07-03 23:40:12.202 +03:00 [INF] Request finished HTTP/1.1 POST https://localhost:7288/api/Account/Login - 200 943 application/json; charset=utf-8 2130.4083ms
+2025-07-03 23:40:42.004 +03:00 [INF] Request starting HTTP/1.1 GET https://localhost:7288/api/categories - null null
+2025-07-03 23:40:42.077 +03:00 [INF] Executing UserAuthenticationMiddleware
+2025-07-03 23:40:42.177 +03:00 [INF] Executed DbCommand (0ms) [Parameters=[@__userId_0='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`SecurityStamp`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`Id` = @__userId_0)
+LIMIT 1
+2025-07-03 23:40:42.188 +03:00 [INF] Executing endpoint 'E_Commers.Controllers.CategoriesController.GetAllAsync (E-Commerce)'
+2025-07-03 23:40:42.194 +03:00 [INF] Route matched with {action = "GetAllAsync", controller = "Categories"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[E_Commers.DtoModels.Responses.ApiResponse`1[System.Collections.Generic.List`1[E_Commers.DtoModels.CategoryDtos.CategoryDto]]]] GetAllAsync() on controller E_Commers.Controllers.CategoriesController (E-Commerce).
+2025-07-03 23:40:42.205 +03:00 [INF] Executing GetAllAsync
+2025-07-03 23:40:42.209 +03:00 [INF] Executing GetAllAsync
+2025-07-03 23:40:42.212 +03:00 [INF] Getting cache for key: category
+2025-07-03 23:40:42.215 +03:00 [WRN] Cache miss for key: category
+2025-07-03 23:40:42.218 +03:00 [INF] Execute GetAll for entity Category
+2025-07-03 23:40:42.313 +03:00 [INF] Executed DbCommand (23ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT `c`.`Id`, `c`.`CreatedAt`, `c`.`DeletedAt`, `c`.`Description`, `c`.`DisplayOrder`, `c`.`ImageId`, `c`.`IsActive`, `c`.`ModifiedAt`, `c`.`Name`, `t`.`Id`, `t`.`AltText`, `t`.`CategoryId`, `t`.`CollectionId`, `t`.`CreatedAt`, `t`.`DeletedAt`, `t`.`FileSize`, `t`.`FileType`, `t`.`Folder`, `t`.`Height`, `t`.`IsMain`, `t`.`ModifiedAt`, `t`.`ProductId`, `t`.`SubCategoryId`, `t`.`Title`, `t`.`UploadDate`, `t`.`Url`, `t`.`Width`
+FROM `Categories` AS `c`
+LEFT JOIN (
+    SELECT `i`.`Id`, `i`.`AltText`, `i`.`CategoryId`, `i`.`CollectionId`, `i`.`CreatedAt`, `i`.`DeletedAt`, `i`.`FileSize`, `i`.`FileType`, `i`.`Folder`, `i`.`Height`, `i`.`IsMain`, `i`.`ModifiedAt`, `i`.`ProductId`, `i`.`SubCategoryId`, `i`.`Title`, `i`.`UploadDate`, `i`.`Url`, `i`.`Width`
+    FROM `Images` AS `i`
+    WHERE `i`.`DeletedAt` IS NULL
+) AS `t` ON `c`.`Id` = `t`.`CategoryId`
+WHERE `c`.`DeletedAt` IS NULL
+ORDER BY `c`.`Id`
+2025-07-03 23:40:42.345 +03:00 [INF] Setting cache for key: category
+2025-07-03 23:40:42.380 +03:00 [INF] Cache set successfully for key: category with tags: category
+2025-07-03 23:40:42.382 +03:00 [INF] Executing OkObjectResult, writing value of type 'E_Commers.DtoModels.Responses.ApiResponse`1[[System.Collections.Generic.List`1[[E_Commers.DtoModels.CategoryDtos.CategoryDto, E-Commerce, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2025-07-03 23:40:42.398 +03:00 [INF] Executed action E_Commers.Controllers.CategoriesController.GetAllAsync (E-Commerce) in 200.6355ms
+2025-07-03 23:40:42.401 +03:00 [INF] Executed endpoint 'E_Commers.Controllers.CategoriesController.GetAllAsync (E-Commerce)'
+2025-07-03 23:40:42.449 +03:00 [INF] Request finished HTTP/1.1 GET https://localhost:7288/api/categories - 200 18685 application/json; charset=utf-8 444.2624ms
+2025-07-03 23:41:18.440 +03:00 [INF] Request starting HTTP/1.1 DELETE https://localhost:7288/api/categories/1 - null null
+2025-07-03 23:41:18.448 +03:00 [INF] Executing UserAuthenticationMiddleware
+2025-07-03 23:41:18.456 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__userId_0='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`SecurityStamp`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`Id` = @__userId_0)
+LIMIT 1
+2025-07-03 23:41:18.462 +03:00 [INF] Executing endpoint 'E_Commers.Controllers.CategoriesController.DeleteAsync (E-Commerce)'
+2025-07-03 23:41:18.469 +03:00 [INF] Route matched with {action = "DeleteAsync", controller = "Categories"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[E_Commers.DtoModels.Responses.ApiResponse`1[System.String]]] DeleteAsync(Int32) on controller E_Commers.Controllers.CategoriesController (E-Commerce).
+2025-07-03 23:41:18.478 +03:00 [INF] Executing DeleteAsync for id: 1
+2025-07-03 23:41:18.480 +03:00 [INF] Executing DeleteAsync for categoryId: 1
+2025-07-03 23:41:18.483 +03:00 [INF] Executing GetCategoryById for id: 1
+2025-07-03 23:41:18.527 +03:00 [WRN] Compiling a query which loads related collections for more than one collection navigation, either via 'Include' or through projection, but no 'QuerySplittingBehavior' has been configured. By default, Entity Framework will use 'QuerySplittingBehavior.SingleQuery', which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))'.
+2025-07-03 23:41:18.577 +03:00 [INF] Executed DbCommand (40ms) [Parameters=[@__id_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT `t`.`Id`, `t`.`CreatedAt`, `t`.`DeletedAt`, `t`.`Description`, `t`.`DisplayOrder`, `t`.`ImageId`, `t`.`IsActive`, `t`.`ModifiedAt`, `t`.`Name`, `i`.`Id`, `i`.`AltText`, `i`.`CategoryId`, `i`.`CollectionId`, `i`.`CreatedAt`, `i`.`DeletedAt`, `i`.`FileSize`, `i`.`FileType`, `i`.`Folder`, `i`.`Height`, `i`.`IsMain`, `i`.`ModifiedAt`, `i`.`ProductId`, `i`.`SubCategoryId`, `i`.`Title`, `i`.`UploadDate`, `i`.`Url`, `i`.`Width`, `t0`.`Id`, `t0`.`CategoryId`, `t0`.`CreatedAt`, `t0`.`DeletedAt`, `t0`.`Description`, `t0`.`ImageId`, `t0`.`IsActive`, `t0`.`ModifiedAt`, `t0`.`Name`, `t0`.`Id0`, `t0`.`AltText`, `t0`.`CategoryId0`, `t0`.`CollectionId`, `t0`.`CreatedAt0`, `t0`.`DeletedAt0`, `t0`.`FileSize`, `t0`.`FileType`, `t0`.`Folder`, `t0`.`Height`, `t0`.`IsMain`, `t0`.`ModifiedAt0`, `t0`.`ProductId`, `t0`.`SubCategoryId`, `t0`.`Title`, `t0`.`UploadDate`, `t0`.`Url`, `t0`.`Width`
+FROM (
+    SELECT `c`.`Id`, `c`.`CreatedAt`, `c`.`DeletedAt`, `c`.`Description`, `c`.`DisplayOrder`, `c`.`ImageId`, `c`.`IsActive`, `c`.`ModifiedAt`, `c`.`Name`
+    FROM `Categories` AS `c`
+    WHERE (`c`.`Id` = @__id_0) AND `c`.`DeletedAt` IS NULL
+    LIMIT 1
+) AS `t`
+LEFT JOIN `Images` AS `i` ON `t`.`Id` = `i`.`CategoryId`
+LEFT JOIN (
+    SELECT `s`.`Id`, `s`.`CategoryId`, `s`.`CreatedAt`, `s`.`DeletedAt`, `s`.`Description`, `s`.`ImageId`, `s`.`IsActive`, `s`.`ModifiedAt`, `s`.`Name`, `i0`.`Id` AS `Id0`, `i0`.`AltText`, `i0`.`CategoryId` AS `CategoryId0`, `i0`.`CollectionId`, `i0`.`CreatedAt` AS `CreatedAt0`, `i0`.`DeletedAt` AS `DeletedAt0`, `i0`.`FileSize`, `i0`.`FileType`, `i0`.`Folder`, `i0`.`Height`, `i0`.`IsMain`, `i0`.`ModifiedAt` AS `ModifiedAt0`, `i0`.`ProductId`, `i0`.`SubCategoryId`, `i0`.`Title`, `i0`.`UploadDate`, `i0`.`Url`, `i0`.`Width`
+    FROM `SubCategory` AS `s`
+    LEFT JOIN `Images` AS `i0` ON `s`.`Id` = `i0`.`SubCategoryId`
+    WHERE `s`.`DeletedAt` IS NULL
+) AS `t0` ON `t`.`Id` = `t0`.`CategoryId`
+ORDER BY `t`.`Id`, `i`.`Id`, `t0`.`Id`
+2025-07-03 23:41:18.672 +03:00 [INF] Category with id: 1 exists
+2025-07-03 23:41:18.675 +03:00 [INF] Execute SoftDeleteAsync for entity Category with ID: 1
+2025-07-03 23:41:18.682 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__id_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT `c`.`Id`, `c`.`CreatedAt`, `c`.`DeletedAt`, `c`.`Description`, `c`.`DisplayOrder`, `c`.`ImageId`, `c`.`IsActive`, `c`.`ModifiedAt`, `c`.`Name`
+FROM `Categories` AS `c`
+WHERE (`c`.`Id` = @__id_0) AND `c`.`DeletedAt` IS NULL
+LIMIT 1
+2025-07-03 23:41:18.696 +03:00 [INF] Category with ID: 1 soft deleted.
+2025-07-03 23:41:18.697 +03:00 [INF] Executing OkObjectResult, writing value of type 'E_Commers.DtoModels.Responses.ApiResponse`1[[System.String, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2025-07-03 23:41:18.704 +03:00 [INF] Executed action E_Commers.Controllers.CategoriesController.DeleteAsync (E-Commerce) in 231.8509ms
+2025-07-03 23:41:18.707 +03:00 [INF] Executed endpoint 'E_Commers.Controllers.CategoriesController.DeleteAsync (E-Commerce)'
+2025-07-03 23:41:18.709 +03:00 [INF] Request finished HTTP/1.1 DELETE https://localhost:7288/api/categories/1 - 200 110 application/json; charset=utf-8 268.7487ms
+2025-07-03 23:43:08.888 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/swagger/index.html - null null
+2025-07-03 23:43:08.916 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/swagger/index.html - 200 null text/html;charset=utf-8 28.8018ms
+2025-07-03 23:43:09.358 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/swagger/index.js - null null
+2025-07-03 23:43:09.531 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/swagger/index.js - 200 null application/javascript;charset=utf-8 173.3661ms
+2025-07-03 23:43:09.671 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/_vs/browserLink - null null
+2025-07-03 23:43:09.703 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/_vs/browserLink - 200 null text/javascript; charset=UTF-8 31.2377ms
+2025-07-03 23:43:10.840 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/_framework/aspnetcore-browser-refresh.js - null null
+2025-07-03 23:43:10.867 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/_framework/aspnetcore-browser-refresh.js - 200 16504 application/javascript; charset=utf-8 26.4278ms
+2025-07-03 23:43:12.492 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/swagger/v1/swagger.json - null null
+2025-07-03 23:43:12.630 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 138.2258ms
+2025-07-03 23:49:08.371 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/swagger/index.html - null null
+2025-07-03 23:49:08.453 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/swagger/index.html - 200 null text/html;charset=utf-8 81.7408ms
+2025-07-03 23:49:09.594 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/_framework/aspnetcore-browser-refresh.js - null null
+2025-07-03 23:49:09.594 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/_vs/browserLink - null null
+2025-07-03 23:49:09.594 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/swagger/index.js - null null
+2025-07-03 23:49:09.628 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/swagger/index.js - 200 null application/javascript;charset=utf-8 33.7087ms
+2025-07-03 23:49:09.628 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/_framework/aspnetcore-browser-refresh.js - 200 16504 application/javascript; charset=utf-8 34.5702ms
+2025-07-03 23:49:09.717 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/_vs/browserLink - 200 null text/javascript; charset=UTF-8 123.3873ms
+2025-07-03 23:49:10.935 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/swagger/v1/swagger.json - null null
+2025-07-03 23:49:11.007 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 71.9541ms
+2025-07-03 23:49:27.720 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/swagger/index.html - null null
+2025-07-03 23:49:27.787 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/swagger/index.html - 200 null text/html;charset=utf-8 67.1237ms
+2025-07-03 23:49:27.872 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/swagger/index.js - null null
+2025-07-03 23:49:27.875 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/_vs/browserLink - null null
+2025-07-03 23:49:27.875 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/swagger/index.js - 200 null application/javascript;charset=utf-8 3.5124ms
+2025-07-03 23:49:27.888 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/_vs/browserLink - 200 null text/javascript; charset=UTF-8 12.8416ms
+2025-07-03 23:49:27.894 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/_framework/aspnetcore-browser-refresh.js - null null
+2025-07-03 23:49:27.901 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/_framework/aspnetcore-browser-refresh.js - 200 16504 application/javascript; charset=utf-8 6.6632ms
+2025-07-03 23:49:28.378 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/swagger/v1/swagger.json - null null
+2025-07-03 23:49:28.462 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 83.9142ms
+2025-07-03 23:49:40.263 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/swagger/index.html - null null
+2025-07-03 23:49:40.421 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/swagger/index.html - 200 null text/html;charset=utf-8 157.4553ms
+2025-07-03 23:49:40.514 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/swagger/index.js - null null
+2025-07-03 23:49:40.547 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/swagger/index.js - 200 null application/javascript;charset=utf-8 32.8944ms
+2025-07-03 23:49:40.616 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/_vs/browserLink - null null
+2025-07-03 23:49:40.795 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/_vs/browserLink - 200 null text/javascript; charset=UTF-8 179.455ms
+2025-07-03 23:49:40.814 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/_framework/aspnetcore-browser-refresh.js - null null
+2025-07-03 23:49:40.824 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/_framework/aspnetcore-browser-refresh.js - 200 16504 application/javascript; charset=utf-8 9.8493ms
+2025-07-03 23:49:41.627 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/swagger/v1/swagger.json - null null
+2025-07-03 23:49:41.737 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 109.1613ms
+2025-07-03 23:50:01.933 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/swagger/index.html - null null
+2025-07-03 23:50:01.962 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/swagger/index.html - 200 null text/html;charset=utf-8 28.2805ms
+2025-07-03 23:50:02.123 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/swagger/index.js - null null
+2025-07-03 23:50:02.127 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/swagger/index.js - 200 null application/javascript;charset=utf-8 4.544ms
+2025-07-03 23:50:02.138 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/_vs/browserLink - null null
+2025-07-03 23:50:02.148 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/_vs/browserLink - 200 null text/javascript; charset=UTF-8 10.091ms
+2025-07-03 23:50:02.163 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/_framework/aspnetcore-browser-refresh.js - null null
+2025-07-03 23:50:02.172 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/_framework/aspnetcore-browser-refresh.js - 200 16504 application/javascript; charset=utf-8 8.6289ms
+2025-07-03 23:50:02.301 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/swagger/v1/swagger.json - null null
+2025-07-03 23:50:02.365 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 64.5853ms
+2025-07-03 23:56:45.491 +03:00 [INF] DB tables already exist. Exit install
+2025-07-03 23:56:47.614 +03:00 [INF] Executed DbCommand (10ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='Fashion_Site' AND TABLE_NAME='__EFMigrationsHistory';
+2025-07-03 23:56:47.627 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='Fashion_Site' AND TABLE_NAME='__EFMigrationsHistory';
+2025-07-03 23:56:47.659 +03:00 [INF] Executed DbCommand (3ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT `MigrationId`, `ProductVersion`
+FROM `__EFMigrationsHistory`
+ORDER BY `MigrationId`;
+2025-07-03 23:56:47.677 +03:00 [INF] No migrations were applied. The database is already up to date.
+2025-07-03 23:56:47.715 +03:00 [INF] User profile is available. Using 'C:\Users\DELL\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2025-07-03 23:56:48.017 +03:00 [INF] Executed DbCommand (39ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-07-03 23:56:48.082 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-07-03 23:56:48.107 +03:00 [INF] Executed DbCommand (3ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`, `a`.`ProfilePicture`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-07-03 23:56:48.775 +03:00 [INF] Now listening on: https://localhost:7288
+2025-07-03 23:56:48.778 +03:00 [INF] Now listening on: http://localhost:5069
+2025-07-03 23:56:48.875 +03:00 [ERR] Index was outside the bounds of the array.
+System.IndexOutOfRangeException: Index was outside the bounds of the array.
+   at Hangfire.MySql.MySqlStorage.<>c.<ToString>b__14_1(String[] x)
+   at System.Linq.Enumerable.ArraySelectIterator`2.MoveNext()
+   at System.Linq.Enumerable.ToDictionary[TSource,TKey,TElement](IEnumerable`1 source, Func`2 keySelector, Func`2 elementSelector, IEqualityComparer`1 comparer)
+   at Hangfire.MySql.MySqlStorage.ToString()
+2025-07-03 23:56:48.908 +03:00 [INF] Starting Hangfire Server using job storage: '<Connection string can not be parsed>'
+2025-07-03 23:56:48.910 +03:00 [INF] Using the following options for SQL Server job storage:
+2025-07-03 23:56:48.913 +03:00 [INF]     Queue poll interval: 00:00:10.
+2025-07-03 23:56:48.921 +03:00 [INF] Using the following options for Hangfire Server:
+    Worker count: 20
+    Listening queues: 'default'
+    Shutdown timeout: 00:00:15
+    Schedule polling interval: 00:00:15
+2025-07-03 23:56:48.953 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-07-03 23:56:48.965 +03:00 [INF] Hosting environment: Development
+2025-07-03 23:56:48.977 +03:00 [INF] Content root path: D:\fashion\Projcet\E-Commers\E-Commers
+2025-07-03 23:56:48.984 +03:00 [INF] Server mrrobot:21272:38a9d9df successfully announced in 22.1774 ms
+2025-07-03 23:56:49.002 +03:00 [INF] Server mrrobot:21272:38a9d9df is starting the registered dispatchers: ServerWatchdog, ServerJobCancellationWatcher, ExpirationManager, CountersAggregator, Worker, DelayedJobScheduler, RecurringJobScheduler...
+2025-07-03 23:56:49.009 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/swagger/index.html - null null
+2025-07-03 23:56:49.240 +03:00 [INF] Server mrrobot:21272:38a9d9df all the dispatchers started
+2025-07-03 23:56:49.340 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/swagger/index.html - 200 null text/html;charset=utf-8 331.272ms
+2025-07-03 23:56:49.366 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/swagger/index.js - null null
+2025-07-03 23:56:49.374 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/swagger/index.js - 200 null application/javascript;charset=utf-8 8.0951ms
+2025-07-03 23:56:49.392 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/_vs/browserLink - null null
+2025-07-03 23:56:49.399 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/_framework/aspnetcore-browser-refresh.js - null null
+2025-07-03 23:56:49.413 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/_framework/aspnetcore-browser-refresh.js - 200 16504 application/javascript; charset=utf-8 14.1478ms
+2025-07-03 23:56:49.439 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/_vs/browserLink - 200 null text/javascript; charset=UTF-8 46.8005ms
+2025-07-03 23:56:49.559 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/swagger/v1/swagger.json - null null
+2025-07-03 23:56:49.654 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 94.6832ms

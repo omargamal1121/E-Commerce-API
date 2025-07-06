@@ -38,12 +38,36 @@ namespace E_Commers.Services.Category
 
         protected string? GetUriByAction(string actionName, object? values = null)
         {
-            return _generator.GetUriByAction(
-                httpContext: _context.HttpContext,
-                action: actionName,
-                controller: ControllerName,
-                values: values
-            );
+            try
+            {
+                Console.WriteLine($"Generating URI - Action: {actionName}, Controller: {ControllerName}");
+                if (values != null)
+                {
+                    Console.WriteLine($"Values: {string.Join(", ", values.GetType().GetProperties().Select(p => $"{p.Name}={p.GetValue(values)}"))}");
+                }
+                
+                var uri = _generator.GetUriByAction(
+                    httpContext: _context.HttpContext,
+                    action: actionName,
+                    controller: ControllerName,
+                    values: values
+                );
+                
+                Console.WriteLine($"Generated URI: {uri}");
+                
+                // Debug logging
+                if (string.IsNullOrEmpty(uri))
+                {
+                    Console.WriteLine($"Failed to generate URI for Action: {actionName}, Controller: {ControllerName}");
+                }
+                
+                return uri;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error generating URI for Action: {actionName}, Controller: {ControllerName}, Error: {ex.Message}");
+                return null;
+            }
         }
     }
 }

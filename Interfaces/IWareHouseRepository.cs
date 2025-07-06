@@ -6,7 +6,7 @@ namespace E_Commers.Interfaces
 {
 	public interface IWareHouseRepository:IRepository<Warehouse>
 	{
-		public  Task<Result<Warehouse?>> GetByNameAsync(string Name);
+		public  Task<Warehouse?> GetByNameAsync(string Name);
 
 	}
 }

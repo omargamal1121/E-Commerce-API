@@ -5,16 +5,18 @@ using System.Linq.Expressions;
 
 namespace E_Commers.Interfaces
 {
-	public interface IRepository<T> where T :BaseEntity
+	public interface IRepository<T> where T : BaseEntity
 	{
-	
-		Task<Result<T>> CreateAsync(T model);
-		public Task<Result<bool>> IsDeletedAsync(int id);
-		public Task<Result<T>> GetByQuery(Expression<Func<T, bool>> predicate);
-		Task<Result<T>> UpdateAsync(T model);
-		Task<Result<bool>> RemoveAsync(T model);
-		Task<Result<bool>> IsExsistAsync(int id);
-		 Task<Result<T>> GetByIdAsync(int id); 
-		Task<Result< IQueryable<T>>> GetAllAsync(Func<IQueryable<T>, IQueryable<T>>? include = null, Expression<Func<T, bool>>? filter = null);
+		Task<T?> CreateAsync(T model);
+		Task<bool> SoftDeleteAsync(int id);
+		Task<bool> IsDeletedAsync(int id);
+		Task<T?> GetByQuery(Expression<Func<T, bool>> predicate);
+		bool Update(T model);
+		bool Remove(T model);
+		Task<bool> IsExsistAsync(int id);
+		Task<T?> GetByIdAsync(int id);
+		IQueryable<T> GetAll();
+		Task<List<T>> GetAllDeletedAsync();
+		Task<bool> RestoreAsync(int id);
 	}
 }

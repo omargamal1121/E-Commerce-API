@@ -29,12 +29,20 @@ namespace E_Commers.Context
 		public DbSet<Product> Products { get; set; }
 		public DbSet<Payment> Payments { get; set; }
 		public DbSet<Category> Categories { get; set; }
+		public DbSet<SubCategory> SubCategories { get; set; }
 		public DbSet<ProductInventory> ProductInventory { get; set; }
 		public DbSet<PaymentMethod> PaymentMethods { get; set; }
 		public DbSet<PaymentProvider> PaymentProviders { get; set; }
-		public DbSet<Warehouse> warehouses { get; set; }
+		public DbSet<Warehouse> Warehouses { get; set; }
 		public DbSet<Image> Images { get; set; }
 		public DbSet<ProductVariant> ProductVariants { get; set; }
+		public DbSet<Collection> Collections { get; set; }
+		public DbSet<ProductCollection> ProductCollections { get; set; }
+		public DbSet<Review> Reviews { get; set; }
+		public DbSet<ReturnRequest> ReturnRequests { get; set; }
+		public DbSet<ReturnRequestProduct> ReturnRequestProducts { get; set; }
+		public DbSet<WishlistItem> WishlistItems { get; set; }
+		public DbSet<CustomerAddress> CustomerAddresses { get; set; }
 
 		protected override void OnModelCreating(ModelBuilder builder)
 		{
@@ -71,7 +79,7 @@ namespace E_Commers.Context
 
 			builder.Entity<SubCategory>()
 				.HasOne(p => p.Category)
-				.WithMany(c => c.subCategories)
+				.WithMany(c => c.SubCategories)
 				.HasForeignKey(p => p.CategoryId).OnDelete(DeleteBehavior.Restrict);
 
 			builder.Entity<ProductInventory>()
@@ -105,6 +113,9 @@ namespace E_Commers.Context
 			builder.Entity<Category>()
 				.HasIndex(c => c.Name)
 				.IsUnique();
+			builder.Entity<SubCategory>()
+				.HasIndex(c => c.Name)
+				.IsUnique();
 			builder.Entity<Warehouse>()
 				.HasIndex(c => c.Name)
 				.IsUnique();builder.Entity<Product>()
@@ -112,15 +123,12 @@ namespace E_Commers.Context
 				.IsUnique();builder.Entity<Discount>()
 				.HasIndex(c => c.Name)
 				.IsUnique();
-			builder.Entity<Product>()
-				.HasMany(p => p.Images)
-				.WithMany(i => i.Products)
-				.UsingEntity(j => j.ToTable("ProductImages"));
 
 			builder.Entity<Category>()
 				.HasMany(c => c.Images)
-				.WithMany(i => i.Categories)
-				.UsingEntity(j => j.ToTable("CategoryImages"));
+				.WithOne(i => i.Category)
+				.HasForeignKey(i => i.CategoryId)
+				.OnDelete(DeleteBehavior.Cascade);
 
 			builder.Entity<Product>().HasOne(p => p.SubCategory).WithMany(s => s.Products).HasForeignKey(p=>p.SubCategoryId);
 
@@ -131,10 +139,92 @@ namespace E_Commers.Context
 				.OnDelete(DeleteBehavior.Restrict);
 
 			builder.Entity<Customer>()
-	.HasOne(c => c.Image)
-	.WithMany(i => i.Customers) // new property in Image
-	.HasForeignKey(c => c.ImageId)
-	.OnDelete(DeleteBehavior.SetNull);
+				.HasOne(c => c.Image)
+				.WithMany(i => i.Customers)
+				.HasForeignKey(c => c.ImageId)
+				.OnDelete(DeleteBehavior.SetNull);
+
+			builder.Entity<SubCategory>()
+				.HasMany(s => s.Images)
+				.WithOne(i => i.SubCategory)
+				.HasForeignKey(i => i.SubCategoryId)
+				.OnDelete(DeleteBehavior.Cascade);
+
+			builder.Entity<Product>()
+				.HasMany(p => p.Images)
+				.WithOne(i => i.Product)
+				.HasForeignKey(i => i.ProductId)
+				.OnDelete(DeleteBehavior.Cascade);
+
+			builder.Entity<ProductCollection>()
+				.HasKey(pc => new { pc.ProductId, pc.CollectionId });
+
+			builder.Entity<ProductCollection>()
+				.HasOne(pc => pc.Product)
+				.WithMany(p => p.ProductCollections)
+				.HasForeignKey(pc => pc.ProductId);
+
+			builder.Entity<ProductCollection>()
+				.HasOne(pc => pc.Collection)
+				.WithMany(c => c.ProductCollections)
+				.HasForeignKey(pc => pc.CollectionId);
+
+			builder.Entity<Collection>()
+				.HasMany(c => c.Images)
+				.WithOne(i => i.Collection)
+				.HasForeignKey(i => i.CollectionId)
+				.OnDelete(DeleteBehavior.Cascade);
+
+			builder.Entity<Review>()
+				.HasOne(r => r.Product)
+				.WithMany(p => p.Reviews)
+				.HasForeignKey(r => r.ProductId)
+				.OnDelete(DeleteBehavior.Cascade);
+
+			builder.Entity<Review>()
+				.HasOne(r => r.Customer)
+				.WithMany(c => c.Reviews)
+				.HasForeignKey(r => r.CustomerId)
+				.OnDelete(DeleteBehavior.Cascade);
+
+
+
+			builder.Entity<ReturnRequestProduct>()
+				.HasKey(rrp => new { rrp.ReturnRequestId, rrp.ProductId });
+
+			builder.Entity<ReturnRequestProduct>()
+				.HasOne(rrp => rrp.ReturnRequest)
+				.WithMany(rr => rr.ReturnRequestProducts)
+				.HasForeignKey(rrp => rrp.ReturnRequestId);
+
+			builder.Entity<ReturnRequestProduct>()
+				.HasOne(rrp => rrp.Product)
+				.WithMany(p => p.ReturnRequestProducts)
+				.HasForeignKey(rrp => rrp.ProductId);
+
+			builder.Entity<ReturnRequest>()
+				.HasOne(rr => rr.Order)
+				.WithMany(o => o.ReturnRequests)
+				.HasForeignKey(rr => rr.OrderId)
+				.OnDelete(DeleteBehavior.Cascade);
+
+			builder.Entity<ReturnRequest>()
+				.HasOne(rr => rr.Customer)
+				.WithMany(c => c.ReturnRequests)
+				.HasForeignKey(rr => rr.CustomerId)
+				.OnDelete(DeleteBehavior.Cascade);
+
+			builder.Entity<WishlistItem>()
+				.HasOne(wi => wi.Customer)
+				.WithMany(c => c.WishlistItems)
+				.HasForeignKey(wi => wi.CustomerId)
+				.OnDelete(DeleteBehavior.Cascade);
+
+			builder.Entity<WishlistItem>()
+				.HasOne(wi => wi.Product)
+				.WithMany(p => p.WishlistItems)
+				.HasForeignKey(wi => wi.ProductId)
+				.OnDelete(DeleteBehavior.Cascade);
 
 		}
 	}

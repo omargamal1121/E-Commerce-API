@@ -1,11 +1,13 @@
 ﻿using E_Commers.DtoModels.Shared;
 using E_Commers.ErrorHnadling;
+using System.Collections.Generic;
 
 namespace E_Commers.DtoModels.Responses
 {
-	public class ApiResponse<T> where T : class
+	public class ApiResponse<T> 
 	{
 		public int Statuscode { get; set; }
+		
 		public ResponseBody<T> ResponseBody { get; set; }
 		public ApiResponse()
 		{
@@ -16,13 +18,17 @@ namespace E_Commers.DtoModels.Responses
 			Statuscode = statuscode;
 			ResponseBody = Response;
 		}
-		public static ApiResponse<T> CreateSuccessResponse(string message, T? data=null, int statusCode = 200, List<LinkDto>? links=null)
+		public static ApiResponse<T> CreateSuccessResponse(string message, T? data=default, int statusCode = 200, List<LinkDto>? links=null, List<string>? warnings=null)
 		{
-			return new ApiResponse<T>(statusCode, new ResponseBody<T>(message: message,data: data,links: links));
+			return new ApiResponse<T>(statusCode, new ResponseBody<T>(message: message, data: data, links: links, warings: warnings));
 		}
-		public static ApiResponse<T> CreateErrorResponse(ErrorResponse error, int statusCode = 400, List<LinkDto>? links=null)
+		public static ApiResponse<T> CreateSuccessWithWarnings(string message, List<string> warnings, T? data=default, int statusCode = 200, List<LinkDto>? links=null)
 		{
-			var responsebody = new ResponseBody<T>(error: error, links: links);
+			return new ApiResponse<T>(statusCode, new ResponseBody<T>(message: message, data: data, links: links, warings: warnings));
+		}
+		public static ApiResponse<T> CreateErrorResponse(string message,ErrorResponse error, int statusCode = 400, List<LinkDto>? links=null, List<string>? warnings=null)
+		{
+			var responsebody = new ResponseBody<T>(error: error, links: links, warings: warnings,message:message);
 			return new ApiResponse<T>(statusCode, responsebody );
 		}
 	}

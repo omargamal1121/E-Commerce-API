@@ -18,7 +18,7 @@ namespace E_Commers.Repository
             _entity = context.ProductInventory;
         }
 
-        public  async Task<Result<ProductInventory>> GetByInvetoryIdWithProductAsync(int id)
+        public async Task<ProductInventory?> GetByInvetoryIdWithProductAsync(int id)
         {
             _logger.LogInformation($"Executing {nameof(GetByIdAsync)} for entity {typeof(ProductInventory).Name} with ID: {id}");
 
@@ -31,11 +31,11 @@ namespace E_Commers.Repository
 
             if (inventory != null)
             {
-                return Result<ProductInventory>.Ok((ProductInventory)(object)inventory);
+                return inventory;
             }
 
             _logger.LogWarning($"No {typeof(ProductInventory).Name} with this Id:{id}");
-            return Result<ProductInventory>.Fail($"No {typeof(ProductInventory).Name} with this Id:{id}");
+            return null;
         }
     }
 } 

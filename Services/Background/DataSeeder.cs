@@ -1,8 +1,5 @@
 ﻿using E_Commers.Models;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Threading.Tasks;
 
 public static class DataSeeder
 {

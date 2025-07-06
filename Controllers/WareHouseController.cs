@@ -45,19 +45,19 @@ namespace E_Commers.Controllers
 		}
 
 		[HttpGet]
-		[ActionName(nameof(GetAllAsync))]
-		public async Task<ActionResult<ApiResponse<List<WareHouseDto>>>> GetAllAsync()
+		[ActionName(nameof(GetAll))]
+		public async Task<ActionResult<ApiResponse<List<WareHouseDto>>>> GetAll()
 		{
 			try
 			{
-				_logger.LogInformation($"Executing {nameof(GetAllAsync)} in WareHouseController");
+				_logger.LogInformation($"Executing {nameof(GetAll)} in WareHouseController");
 				var response = await _wareHouseServices.GetAllWareHousesAsync();
 				return Ok(response);
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError(ex, $"Error in {nameof(GetAllAsync)}");
-				return Ok(ApiResponse<List<WareHouseDto>>.CreateErrorResponse(new ErrorResponse("Error", ex.Message)));
+				_logger.LogError(ex, $"Error in {nameof(GetAll)}");
+				return Ok(ApiResponse<List<WareHouseDto>>.CreateErrorResponse("Error", new ErrorResponse("Error", ex.Message), 500));
 			}
 		}		
 
@@ -71,8 +71,7 @@ namespace E_Commers.Controllers
 
 				if (id <= 0)
 				{
-					return BadRequest(ApiResponse<WareHouseDto>.CreateErrorResponse(
-						new ErrorResponse("Invalid Input", "Warehouse ID must be greater than 0")));
+					return BadRequest(ApiResponse<WareHouseDto>.CreateErrorResponse("Invalid Input", new ErrorResponse("Invalid Input", "Warehouse ID must be greater than 0"), 400));
 				}
 
 				var response = await _wareHouseServices.GetWareHouseByIdAsync(id);
@@ -81,7 +80,7 @@ namespace E_Commers.Controllers
 			catch (Exception ex)
 			{
 				_logger.LogError(ex, $"Error in {nameof(GetByIdAsync)}");
-				return Ok(ApiResponse<WareHouseDto>.CreateErrorResponse(new ErrorResponse("Error", ex.Message)));
+				return Ok(ApiResponse<WareHouseDto>.CreateErrorResponse("Error", new ErrorResponse("Error", ex.Message), 500));
 			}
 		}
 
@@ -95,8 +94,7 @@ namespace E_Commers.Controllers
 
 				if (model == null)
 				{
-					return BadRequest(ApiResponse<WareHouseDto>.CreateErrorResponse(
-						new ErrorResponse("Invalid Input", "Warehouse data cannot be null")));
+					return BadRequest(ApiResponse<WareHouseDto>.CreateErrorResponse("Invalid Input", new ErrorResponse("Invalid Input", "Warehouse data cannot be null"), 400));
 				}
 
 				if (!ModelState.IsValid)
@@ -104,14 +102,14 @@ namespace E_Commers.Controllers
 					var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
 					_logger.LogError($"Validation Errors: {string.Join(", ", errors)}");
 
-					return BadRequest(ApiResponse<WareHouseDto>.CreateErrorResponse(new ErrorResponse("Invalid Data", string.Join(';', errors))));
+					return BadRequest(ApiResponse<WareHouseDto>.CreateErrorResponse("Invalid Data", new ErrorResponse("Invalid Data", string.Join(';', errors)), 400));
 				}
 
 				string? userid = GetIdFromToken();
 				if (string.IsNullOrEmpty(userid))
 				{
 					_logger.LogError("Admin ID not found, canceling create operation.");
-					return Unauthorized(ApiResponse<WareHouseDto>.CreateErrorResponse(new ErrorResponse("Auth", "can't found userid in token"), 401));
+					return Unauthorized(ApiResponse<WareHouseDto>.CreateErrorResponse("Auth", new ErrorResponse("Auth", "can't found userid in token"), 401));
 				}
 
 				var response = await _wareHouseServices.CreateWareHouseAsync(userid, model);
@@ -120,7 +118,7 @@ namespace E_Commers.Controllers
 			catch (Exception ex)
 			{
 				_logger.LogError(ex, $"Error in {nameof(CreateWareHouseAsync)}");
-				return Ok(ApiResponse<WareHouseDto>.CreateErrorResponse(new ErrorResponse("Error", ex.Message)));
+				return Ok(ApiResponse<WareHouseDto>.CreateErrorResponse("Error", new ErrorResponse("Error", ex.Message), 500));
 			}
 		}
 
@@ -136,14 +134,12 @@ namespace E_Commers.Controllers
 
 				if (id <= 0)
 				{
-					return BadRequest(ApiResponse<WareHouseDto>.CreateErrorResponse(
-						new ErrorResponse("Invalid Input", "Warehouse ID must be greater than 0")));
+					return BadRequest(ApiResponse<WareHouseDto>.CreateErrorResponse("Invalid Input", new ErrorResponse("Invalid Input", "Warehouse ID must be greater than 0"), 400));
 				}
 
 				if (updateDto == null)
 				{
-					return BadRequest(ApiResponse<WareHouseDto>.CreateErrorResponse(
-						new ErrorResponse("Invalid Input", "Update data cannot be null")));
+					return BadRequest(ApiResponse<WareHouseDto>.CreateErrorResponse("Invalid Input", new ErrorResponse("Invalid Input", "Update data cannot be null"), 400));
 				}
 
 				if (!ModelState.IsValid)
@@ -153,14 +149,14 @@ namespace E_Commers.Controllers
 														  .Select(e => e.ErrorMessage));
 					_logger.LogError(errors);
 
-					return BadRequest(ApiResponse<WareHouseDto>.CreateErrorResponse(new ErrorResponse("Invalid Data", errors)));
+					return BadRequest(ApiResponse<WareHouseDto>.CreateErrorResponse("Invalid Data", new ErrorResponse("Invalid Data", errors), 400));
 				}
 
 				string? userid = GetIdFromToken();
 				if (string.IsNullOrEmpty(userid))
 				{
 					_logger.LogError("Admin ID not found, canceling update operation.");
-					return Unauthorized(ApiResponse<WareHouseDto>.CreateErrorResponse(new ErrorResponse("Auth", "can't found userid in token"), 401));
+					return Unauthorized(ApiResponse<WareHouseDto>.CreateErrorResponse("Auth", new ErrorResponse("Auth", "can't found userid in token"), 401));
 				}
 
 				var response = await _wareHouseServices.UpdateWareHouseAsync(id, userid, updateDto);
@@ -169,7 +165,7 @@ namespace E_Commers.Controllers
 			catch (Exception ex)
 			{
 				_logger.LogError(ex, $"Error in {nameof(UpdateWareHouseAsync)}");
-				return Ok(ApiResponse<WareHouseDto>.CreateErrorResponse(new ErrorResponse("Error", ex.Message)));
+				return Ok(ApiResponse<WareHouseDto>.CreateErrorResponse("Error", new ErrorResponse("Error", ex.Message), 500));
 			}
 		}
 
@@ -183,15 +179,14 @@ namespace E_Commers.Controllers
 
 				if (id <= 0)
 				{
-					return BadRequest(ApiResponse<string>.CreateErrorResponse(
-						new ErrorResponse("Invalid Input", "Warehouse ID must be greater than 0")));
+					return BadRequest(ApiResponse<string>.CreateErrorResponse("Invalid Input", new ErrorResponse("Invalid Input", "Warehouse ID must be greater than 0"), 400));
 				}
 
 				string? userid = GetIdFromToken();
 				if (string.IsNullOrEmpty(userid))
 				{
 					_logger.LogError("Admin ID not found, canceling delete operation.");
-					return Unauthorized(ApiResponse<string>.CreateErrorResponse(new ErrorResponse("Auth", "can't found userid in token"), 401));
+					return Unauthorized(ApiResponse<string>.CreateErrorResponse("Auth", new ErrorResponse("Auth", "can't found userid in token"), 401));
 				}
 
 				var response = await _wareHouseServices.RemoveWareHouseAsync(id, userid);
@@ -200,7 +195,7 @@ namespace E_Commers.Controllers
 			catch (Exception ex)
 			{
 				_logger.LogError(ex, $"Error in {nameof(DeleteWareHouseAsync)}");
-				return Ok(ApiResponse<string>.CreateErrorResponse(new ErrorResponse("Error", ex.Message)));
+				return Ok(ApiResponse<string>.CreateErrorResponse("Error", new ErrorResponse("Error", ex.Message), 500));
 			}
 		}
 
@@ -214,15 +209,14 @@ namespace E_Commers.Controllers
 
 				if (id <= 0)
 				{
-					return BadRequest(ApiResponse<WareHouseDto>.CreateErrorResponse(
-						new ErrorResponse("Invalid Input", "Warehouse ID must be greater than 0")));
+					return BadRequest(ApiResponse<WareHouseDto>.CreateErrorResponse("Invalid Input", new ErrorResponse("Invalid Input", "Warehouse ID must be greater than 0"), 400));
 				}
 
 				string? userid = GetIdFromToken();
 				if (userid is null)
 				{
 					_logger.LogError("Invalid token or user not authenticated");
-					return Unauthorized(ApiResponse<WareHouseDto>.CreateErrorResponse(new ErrorResponse("Auth", "can't found userid in token"), 401));
+					return Unauthorized(ApiResponse<WareHouseDto>.CreateErrorResponse("Auth", new ErrorResponse("Auth", "can't found userid in token"), 401));
 				}
 
 				var response = await _wareHouseServices.ReturnRemovedWareHouseAsync(id, userid);
@@ -231,7 +225,7 @@ namespace E_Commers.Controllers
 			catch (Exception ex)
 			{
 				_logger.LogError(ex, $"Error in {nameof(ReturnRemovedWareHouseAsync)}");
-				return Ok(ApiResponse<WareHouseDto>.CreateErrorResponse(new ErrorResponse("Error", ex.Message)));
+				return Ok(ApiResponse<WareHouseDto>.CreateErrorResponse("Error", new ErrorResponse("Error", ex.Message), 500));
 			}
 		}
 
@@ -245,8 +239,7 @@ namespace E_Commers.Controllers
 				
 				if (id <= 0)
 				{
-					return BadRequest(ApiResponse<List<InventoryDto>>.CreateErrorResponse(
-						new ErrorResponse("Invalid Input", "Warehouse ID must be greater than 0")));
+					return BadRequest(ApiResponse<List<InventoryDto>>.CreateErrorResponse("Invalid Input", new ErrorResponse("Invalid Input", "Warehouse ID must be greater than 0"), 400));
 				}
 
 				var response = await _productInventoryService.GetWarehouseInventoryAsync(id);
@@ -255,7 +248,7 @@ namespace E_Commers.Controllers
 			catch (Exception ex)
 			{
 				_logger.LogError(ex, $"Error in {nameof(GetProductsByWareHouseId)}");
-				return Ok(ApiResponse<List<InventoryDto>>.CreateErrorResponse(new ErrorResponse("Error", ex.Message)));
+				return Ok(ApiResponse<List<InventoryDto>>.CreateErrorResponse("Error", new ErrorResponse("Error", ex.Message), 500));
 			}
 		}
 
@@ -271,21 +264,19 @@ namespace E_Commers.Controllers
 				
 				if (currentWarehouseId <= 0 || newWarehouseId <= 0)
 				{
-					return BadRequest(ApiResponse<string>.CreateErrorResponse(
-						new ErrorResponse("Invalid Input", "Warehouse IDs must be greater than 0")));
+					return BadRequest(ApiResponse<string>.CreateErrorResponse("Invalid Input", new ErrorResponse("Invalid Input", "Warehouse IDs must be greater than 0"), 400));
 				}
 
 				if (currentWarehouseId == newWarehouseId)
 				{
-					return BadRequest(ApiResponse<string>.CreateErrorResponse(
-						new ErrorResponse("Invalid Operation", "Source and destination warehouses cannot be the same")));
+					return BadRequest(ApiResponse<string>.CreateErrorResponse("Invalid Operation", new ErrorResponse("Invalid Operation", "Source and destination warehouses cannot be the same"), 400));
 				}
 
 				string? userid = GetIdFromToken();
 				if (string.IsNullOrEmpty(userid))
 				{
 					_logger.LogError("Admin ID not found, canceling transfer operation.");
-					return Unauthorized(ApiResponse<string>.CreateErrorResponse(new ErrorResponse("Auth", "can't found userid in token"), 401));
+					return Unauthorized(ApiResponse<string>.CreateErrorResponse("Auth", new ErrorResponse("Auth", "can't found userid in token"), 401));
 				}
 
 				const int transferAllProducts = 0;
@@ -295,7 +286,7 @@ namespace E_Commers.Controllers
 			catch (Exception ex)
 			{
 				_logger.LogError(ex, $"Error in {nameof(TransferAllProducts)}");
-				return Ok(ApiResponse<string>.CreateErrorResponse(new ErrorResponse("Error", ex.Message)));
+				return Ok(ApiResponse<string>.CreateErrorResponse("Error", new ErrorResponse("Error", ex.Message), 500));
 			}
 		}
 

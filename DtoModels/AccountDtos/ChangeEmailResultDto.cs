@@ -2,7 +2,7 @@
 {
 	public class ChangeEmailResultDto
 	{
-		public string OldEmail { get; set; }
+		public string Note { get; set; }
 		public string NewEmail { get; set; }
 	}
 }

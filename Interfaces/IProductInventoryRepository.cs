@@ -7,7 +7,7 @@ namespace E_Commers.Interfaces
     {
 		// Add any specific methods for ProductInventory here
 
-		public Task<Result<ProductInventory>> GetByInvetoryIdWithProductAsync(int id);
+		public Task<ProductInventory?> GetByInvetoryIdWithProductAsync(int id);
 
 	}
 } 

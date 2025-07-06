@@ -24,110 +24,138 @@ public class MainRepository<T> : IRepository<T> where T : BaseEntity
 		_entities = _context.Set<T>();
 	}
 
-	public async Task<Result<T>> CreateAsync(T model)
+	public async Task<T?> CreateAsync(T model)
 	{
 		_logger.LogInformation($"Executing {nameof(CreateAsync)} for entity {typeof(T).Name}");
 
 		if (model == null)
 		{
 			_logger.LogWarning("CreateAsync called with null model");
-			return Result<T>.Fail("Model sent is null");
+			return null;
 		}
 
 		 await _entities.AddAsync(model);
 		_logger.LogInformation($"{typeof(T).Name} added successfully (pending save)");
-		return Result<T>.Ok(model, $"{typeof(T).Name} added successfully.");
+		return model;
 	}
 
-	public  Task<Result<IQueryable<T>>> GetAllAsync(Func<IQueryable<T>, IQueryable<T>>?include = null,Expression<Func<T,bool>>? filter=null)
+
+
+	public IQueryable<T> GetAll()
 	{
-		_logger.LogInformation($"Execute {nameof(GetAllAsync)} for entity {typeof(T).Name}");
-		IQueryable<T> list = _entities.AsNoTracking();
-		_logger.LogInformation("Data retrieved from Database");
-		return Task.FromResult(Result<IQueryable<T>>.Ok(list, "Data retrieved successfully."));
+		_logger.LogInformation($"Execute {nameof(GetAll)} for entity {typeof(T).Name}");
+		return _entities.AsNoTracking();
 	}
 
-	public  async Task<Result<T>> GetByIdAsync(int id)
+	public bool Remove(T model)
 	{
-		_logger.LogInformation($"Execute {nameof(GetByIdAsync)} for entity {typeof(T).Name} with ID: {id}");
-
-
-		Result<T> result = new Result<T>();
-		
-		T? obj = await  _entities.FirstOrDefaultAsync(x=>x.Id==id);
-		if (obj != null)
-		{
-
-			return Result<T>.Ok(obj);
-
-		}
-		_logger.LogWarning($"No {typeof(T).Name} with this Id:{id}");
-		return Result<T>.Fail($"No {typeof(T).Name} with this Id:{id}") ;
-	}
-
-	public  Task<Result<bool>> RemoveAsync(T model)
-	{
-		_logger.LogInformation($"Execute {nameof(RemoveAsync)} for entity {typeof(T).Name}");
+		_logger.LogInformation($"Execute {nameof(Remove)} for entity {typeof(T).Name}");
 
 		if (model == null)
 		{
 			_logger.LogWarning("RemoveAsync called with null model");
-			return Task.FromResult(Result<bool>.Fail($"{typeof(T).Name} sent is null"));
+			return false;
 		}
 
 		
 		_entities.Remove(model);
 
 		_logger.LogInformation($"{typeof(T).Name} marked for deletion (pending save)");
-		return  Task.FromResult( Result<bool>.Ok(true, $"{typeof(T).Name} removed successfully."));
+		return true;
 	}
 
-	public  Task<Result<T>> UpdateAsync(T model)
+	public async Task<T?> GetByIdAsync(int id)
 	{
-		_logger.LogInformation($"Execute {nameof(UpdateAsync)} for entity {typeof(T).Name}");
+		_logger.LogInformation($"Executing {nameof(GetByIdAsync)} for entity {typeof(T).Name} with ID: {id}");
+		var entity = await _entities.AsNoTracking()
+			.FirstOrDefaultAsync(e => e.Id == id);
+
+		if (entity == null)
+			_logger.LogWarning($"{typeof(T).Name} with ID {id} not found or deleted");
+
+		return entity;
+	}
+
+	public bool Update(T model)
+	{
+		_logger.LogInformation($"Execute {nameof(Update)} for entity {typeof(T).Name}");
 		
 		if (model == null)
 		{
 			_logger.LogWarning($"UpdateAsync called with null {typeof(T).Name}");
-			return Task.FromResult( Result<T>.Fail($"{typeof(T).Name} sent is null"));
+			return false;
 		}
 
 		if (!_context.ChangeTracker.HasChanges())
 		{
 			_logger.LogWarning($"No changes detected for the {typeof(T).Name}");
-			return Task.FromResult(Result<T>.Fail("No modifications were made."));
+			return false;
 		}
 
 		_logger.LogInformation($"{typeof(T).Name} marked for update (pending save)");
-		return Task.FromResult(Result<T>.Ok(model, $"{typeof(T).Name} updated successfully."));
-
+		return true;
 	}
 
-	public async Task<Result<T>> GetByQuery(Expression<Func<T, bool>> predicate)
+	public async Task<T?> GetByQuery(Expression<Func<T, bool>> predicate)
 	{
 		try
 		{
-		
-
-			var entity = await _entities
-				.FirstOrDefaultAsync(predicate);
-
-			return entity != null
-				? Result<T>.Ok(entity)
-				: Result<T>.Fail($"{typeof(T).Name} not found");
+			var entity = await _entities.FirstOrDefaultAsync(predicate);
+			return entity;
 		}
 		catch (Exception ex)
 		{
-			
-			return Result<T>.Fail($"Error retrieving {typeof(T).Name}: {ex.Message}");
+			_logger.LogError($"Error retrieving {typeof(T).Name}: {ex.Message}");
+			return null;
 		}
 	}
 
-	public async Task<Result<bool>> IsExsistAsync(int id)
+	public async Task<bool> SoftDeleteAsync(int id)
 	{
-		return  await _entities.AnyAsync(e => e.Id == id&&e.DeletedAt == null) ==true? Result<bool>.Ok(true) : Result<bool>.Fail("Doesn't Exsist") ;
-	}	public async Task<Result<bool>> IsDeletedAsync(int id)
+		_logger.LogInformation($"Execute {nameof(SoftDeleteAsync)} for entity {typeof(T).Name} with ID: {id}");
+
+		var entity = await _entities.FirstOrDefaultAsync(e => e.Id == id && e.DeletedAt == null);
+		if (entity == null)
+		{
+			_logger.LogWarning($"{typeof(T).Name} with ID: {id} not found or already deleted.");
+			return false;
+		}
+
+		entity.DeletedAt = DateTime.UtcNow;
+		_entities.Update(entity);
+
+		_logger.LogInformation($"{typeof(T).Name} with ID: {id} soft deleted.");
+		return true;
+	}
+
+	public async Task<bool> IsExsistAsync(int id)
 	{
-		return  await _entities.AnyAsync(e => e.Id == id&&e.DeletedAt != null) ==true? Result<bool>.Ok(true) : Result<bool>.Fail("Doesn't Exsist") ;
+		return await _entities.AnyAsync(e => e.Id == id && e.DeletedAt == null);
+	}
+
+	public async Task<bool> IsDeletedAsync(int id)
+	{
+		return await _entities.AnyAsync(e => e.Id == id && e.DeletedAt != null);
+	}
+
+	public async Task<List<T>> GetAllDeletedAsync()
+	{
+		_logger.LogInformation($"Execute {nameof(GetAllDeletedAsync)} for entity {typeof(T).Name}");
+		return await _entities.AsNoTracking().Where(e => e.DeletedAt != null).ToListAsync();
+	}
+
+	public async Task<bool> RestoreAsync(int id)
+	{
+		_logger.LogInformation($"Execute {nameof(RestoreAsync)} for entity {typeof(T).Name} with ID: {id}");
+		var entity = await _entities.FirstOrDefaultAsync(e => e.Id == id && e.DeletedAt != null);
+		if (entity == null)
+		{
+			_logger.LogWarning($"{typeof(T).Name} with ID: {id} not found or not deleted.");
+			return false;
+		}
+		entity.DeletedAt = null;
+		_entities.Update(entity);
+		_logger.LogInformation($"{typeof(T).Name} with ID: {id} restored.");
+		return true;
 	}
 }

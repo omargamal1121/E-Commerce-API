@@ -1,0 +1,896 @@
+2025-06-25 20:35:11.773 +03:00 [INF] Executed DbCommand (10ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='Fashion_Site' AND TABLE_NAME='__EFMigrationsHistory';
+2025-06-25 20:35:11.902 +03:00 [INF] Executed DbCommand (9ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='Fashion_Site' AND TABLE_NAME='__EFMigrationsHistory';
+2025-06-25 20:35:11.942 +03:00 [INF] Executed DbCommand (6ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT `MigrationId`, `ProductVersion`
+FROM `__EFMigrationsHistory`
+ORDER BY `MigrationId`;
+2025-06-25 20:35:11.972 +03:00 [INF] Applying migration '20250625173455_updatecollectionmodel'.
+2025-06-25 20:35:12.589 +03:00 [INF] Executed DbCommand (22ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+ALTER TABLE `Collections` ADD `DisplayOrder` int NOT NULL DEFAULT 0;
+2025-06-25 20:35:12.591 +03:00 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+INSERT INTO `__EFMigrationsHistory` (`MigrationId`, `ProductVersion`)
+VALUES ('20250625173455_updatecollectionmodel', '8.0.13');
+2025-06-25 20:43:18.980 +03:00 [INF] DB tables already exist. Exit install
+2025-06-25 20:43:22.215 +03:00 [INF] Executed DbCommand (3ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='Fashion_Site' AND TABLE_NAME='__EFMigrationsHistory';
+2025-06-25 20:43:22.246 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='Fashion_Site' AND TABLE_NAME='__EFMigrationsHistory';
+2025-06-25 20:43:22.312 +03:00 [INF] Executed DbCommand (3ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT `MigrationId`, `ProductVersion`
+FROM `__EFMigrationsHistory`
+ORDER BY `MigrationId`;
+2025-06-25 20:43:22.346 +03:00 [INF] No migrations were applied. The database is already up to date.
+2025-06-25 20:43:22.411 +03:00 [INF] User profile is available. Using 'C:\Users\DELL\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2025-06-25 20:43:23.408 +03:00 [INF] Executed DbCommand (423ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-06-25 20:43:23.636 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-06-25 20:43:23.671 +03:00 [INF] Executed DbCommand (2ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`, `a`.`ProfilePicture`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-06-25 20:43:26.293 +03:00 [INF] Now listening on: https://localhost:7288
+2025-06-25 20:43:26.378 +03:00 [INF] Now listening on: http://localhost:5069
+2025-06-25 20:43:28.547 +03:00 [ERR] Index was outside the bounds of the array.
+System.IndexOutOfRangeException: Index was outside the bounds of the array.
+   at Hangfire.MySql.MySqlStorage.<>c.<ToString>b__14_1(String[] x)
+   at System.Linq.Enumerable.ArraySelectIterator`2.MoveNext()
+   at System.Linq.Enumerable.ToDictionary[TSource,TKey,TElement](IEnumerable`1 source, Func`2 keySelector, Func`2 elementSelector, IEqualityComparer`1 comparer)
+   at Hangfire.MySql.MySqlStorage.ToString()
+2025-06-25 20:43:29.015 +03:00 [INF] Request starting HTTP/1.1 POST https://localhost:7288/api/categories - multipart/form-data; boundary=--------------------------333822596299861454669843 362277
+2025-06-25 20:43:29.040 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/swagger/index.html - null null
+2025-06-25 20:43:29.368 +03:00 [INF] Starting Hangfire Server using job storage: '<Connection string can not be parsed>'
+2025-06-25 20:43:29.451 +03:00 [INF] Using the following options for SQL Server job storage:
+2025-06-25 20:43:29.453 +03:00 [INF]     Queue poll interval: 00:00:10.
+2025-06-25 20:43:29.644 +03:00 [INF] Using the following options for Hangfire Server:
+    Worker count: 20
+    Listening queues: 'default'
+    Shutdown timeout: 00:00:15
+    Schedule polling interval: 00:00:15
+2025-06-25 20:43:29.939 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-06-25 20:43:30.163 +03:00 [INF] Hosting environment: Development
+2025-06-25 20:43:30.174 +03:00 [INF] Content root path: D:\fashion\Projcet\E-Commers\E-Commers
+2025-06-25 20:43:30.268 +03:00 [INF] Server mrrobot:4676:9fd49be0 successfully announced in 203.3473 ms
+2025-06-25 20:43:30.319 +03:00 [INF] Server mrrobot:4676:9fd49be0 is starting the registered dispatchers: ServerWatchdog, ServerJobCancellationWatcher, ExpirationManager, CountersAggregator, Worker, DelayedJobScheduler, RecurringJobScheduler...
+2025-06-25 20:43:32.238 +03:00 [INF] Server mrrobot:4676:9fd49be0 all the dispatchers started
+2025-06-25 20:43:32.366 +03:00 [INF] Executing UserAuthenticationMiddleware
+2025-06-25 20:43:32.524 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/swagger/index.html - 200 null text/html;charset=utf-8 3521.6379ms
+2025-06-25 20:43:32.662 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/swagger/index.js - null null
+2025-06-25 20:43:32.662 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/_framework/aspnetcore-browser-refresh.js - null null
+2025-06-25 20:43:32.673 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/_vs/browserLink - null null
+2025-06-25 20:43:33.004 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/swagger/index.js - 200 null application/javascript;charset=utf-8 342.1762ms
+2025-06-25 20:43:33.055 +03:00 [INF] Executed DbCommand (6ms) [Parameters=[@__userId_0='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`SecurityStamp`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`Id` = @__userId_0)
+LIMIT 1
+2025-06-25 20:43:33.096 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/_framework/aspnetcore-browser-refresh.js - 200 16505 application/javascript; charset=utf-8 434.6293ms
+2025-06-25 20:43:33.271 +03:00 [INF] Executing endpoint 'E_Commers.Controllers.categoriesController.CreateAsync (E-Commerce)'
+2025-06-25 20:43:33.317 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/_vs/browserLink - 200 null text/javascript; charset=UTF-8 644.0158ms
+2025-06-25 20:43:33.558 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/swagger/v1/swagger.json - null null
+2025-06-25 20:43:33.725 +03:00 [INF] Route matched with {action = "CreateAsync", controller = "categories"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[E_Commers.DtoModels.Responses.ApiResponse`1[E_Commers.DtoModels.CategoryDtos.CategoryDto]]] CreateAsync(E_Commers.DtoModels.CategoryDtos.CreateCategotyDto) on controller E_Commers.Controllers.categoriesController (E-Commerce).
+2025-06-25 20:43:34.169 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 610.7622ms
+2025-06-25 20:43:35.115 +03:00 [INF] Executing CreateAsync in CategoryController
+2025-06-25 20:43:35.124 +03:00 [INF] Execute CreateAsync
+2025-06-25 20:43:35.128 +03:00 [INF] Executing GetByNameAsync for Name: Pants
+2025-06-25 20:43:35.234 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__Name_0='?' (Size = 20)], CommandType='"Text"', CommandTimeout='30']
+SELECT `c`.`Id`, `c`.`CreatedAt`, `c`.`DeletedAt`, `c`.`Description`, `c`.`DisplayOrder`, `c`.`ImageId`, `c`.`ModifiedAt`, `c`.`Name`
+FROM `Categories` AS `c`
+WHERE `c`.`Name` = @__Name_0
+LIMIT 2
+2025-06-25 20:43:35.242 +03:00 [WRN] No Category with this Name:Pants
+2025-06-25 20:43:40.510 +03:00 [INF] 📥 Saving 2 images to CategoryPhotos
+2025-06-25 20:43:52.762 +03:00 [INF] 📥 Saving image to CategoryPhotos
+2025-06-25 20:44:52.076 +03:00 [INF] ✅ Image saved: /CategoryPhotos/30cae697-7508-4ba3-b355-82f01df47d1b.webp
+2025-06-25 20:45:05.349 +03:00 [INF] Executing CreateAsync for entity Image
+2025-06-25 20:45:07.247 +03:00 [INF] Image added successfully (pending save)
+2025-06-25 20:45:17.657 +03:00 [INF] Execute AddAdminOpreationAsync
+2025-06-25 20:45:39.645 +03:00 [INF] Executing CreateAsync for entity AdminOperationsLog
+2025-06-25 20:45:41.723 +03:00 [INF] AdminOperationsLog added successfully (pending save)
+2025-06-25 20:46:14.364 +03:00 [INF] 📥 Saving image to CategoryPhotos
+2025-06-25 20:46:33.025 +03:00 [INF] ✅ Image saved: /CategoryPhotos/168ebe1a-da31-432f-b807-be306b860d25.jpg
+2025-06-25 20:46:40.875 +03:00 [INF] Executing CreateAsync for entity Image
+2025-06-25 20:46:41.655 +03:00 [INF] Image added successfully (pending save)
+2025-06-25 20:46:49.601 +03:00 [INF] Execute AddAdminOpreationAsync
+2025-06-25 20:47:01.619 +03:00 [INF] Executing CreateAsync for entity AdminOperationsLog
+2025-06-25 20:47:04.130 +03:00 [INF] AdminOperationsLog added successfully (pending save)
+2025-06-25 20:48:25.754 +03:00 [WRN] 
+2025-06-25 20:48:25.925 +03:00 [INF] Executing BadRequestObjectResult, writing value of type 'E_Commers.DtoModels.Responses.ApiResponse`1[[E_Commers.DtoModels.CategoryDtos.CategoryDto, E-Commerce, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2025-06-25 20:48:26.010 +03:00 [INF] Executed action E_Commers.Controllers.categoriesController.CreateAsync (E-Commerce) in 292147.3842ms
+2025-06-25 20:48:26.029 +03:00 [INF] Executed endpoint 'E_Commers.Controllers.categoriesController.CreateAsync (E-Commerce)'
+2025-06-25 20:48:26.040 +03:00 [INF] Request finished HTTP/1.1 POST https://localhost:7288/api/categories - 400 279 application/json; charset=utf-8 297051.2254ms
+2025-06-25 20:48:30.508 +03:00 [INF] 1 servers were removed due to timeout
+2025-06-25 20:49:14.279 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/swagger/index.html - null null
+2025-06-25 20:49:14.329 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/swagger/index.html - 200 null text/html;charset=utf-8 50.0965ms
+2025-06-25 20:49:14.368 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/_framework/aspnetcore-browser-refresh.js - null null
+2025-06-25 20:49:14.375 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/swagger/index.js - null null
+2025-06-25 20:49:14.376 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/_vs/browserLink - null null
+2025-06-25 20:49:14.399 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/_framework/aspnetcore-browser-refresh.js - 200 16505 application/javascript; charset=utf-8 30.9774ms
+2025-06-25 20:49:14.408 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/swagger/index.js - 200 null application/javascript;charset=utf-8 38.6885ms
+2025-06-25 20:49:14.448 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/_vs/browserLink - 200 null text/javascript; charset=UTF-8 72.8542ms
+2025-06-25 20:49:14.555 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/swagger/v1/swagger.json - null null
+2025-06-25 20:49:14.728 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 173.0998ms
+2025-06-25 20:56:35.998 +03:00 [INF] DB tables already exist. Exit install
+2025-06-25 20:56:37.591 +03:00 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='Fashion_Site' AND TABLE_NAME='__EFMigrationsHistory';
+2025-06-25 20:56:37.605 +03:00 [INF] Executed DbCommand (0ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='Fashion_Site' AND TABLE_NAME='__EFMigrationsHistory';
+2025-06-25 20:56:37.639 +03:00 [INF] Executed DbCommand (10ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT `MigrationId`, `ProductVersion`
+FROM `__EFMigrationsHistory`
+ORDER BY `MigrationId`;
+2025-06-25 20:56:37.660 +03:00 [INF] No migrations were applied. The database is already up to date.
+2025-06-25 20:56:37.690 +03:00 [INF] User profile is available. Using 'C:\Users\DELL\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2025-06-25 20:56:38.079 +03:00 [INF] Executed DbCommand (48ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-06-25 20:56:38.154 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-06-25 20:56:38.186 +03:00 [INF] Executed DbCommand (9ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`, `a`.`ProfilePicture`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-06-25 20:56:38.836 +03:00 [INF] Now listening on: https://localhost:7288
+2025-06-25 20:56:38.840 +03:00 [INF] Now listening on: http://localhost:5069
+2025-06-25 20:56:38.921 +03:00 [ERR] Index was outside the bounds of the array.
+System.IndexOutOfRangeException: Index was outside the bounds of the array.
+   at Hangfire.MySql.MySqlStorage.<>c.<ToString>b__14_1(String[] x)
+   at System.Linq.Enumerable.ArraySelectIterator`2.MoveNext()
+   at System.Linq.Enumerable.ToDictionary[TSource,TKey,TElement](IEnumerable`1 source, Func`2 keySelector, Func`2 elementSelector, IEqualityComparer`1 comparer)
+   at Hangfire.MySql.MySqlStorage.ToString()
+2025-06-25 20:56:39.545 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/swagger/index.html - null null
+2025-06-25 20:56:39.602 +03:00 [INF] Starting Hangfire Server using job storage: '<Connection string can not be parsed>'
+2025-06-25 20:56:39.613 +03:00 [INF] Using the following options for SQL Server job storage:
+2025-06-25 20:56:39.617 +03:00 [INF]     Queue poll interval: 00:00:10.
+2025-06-25 20:56:39.618 +03:00 [INF] Using the following options for Hangfire Server:
+    Worker count: 20
+    Listening queues: 'default'
+    Shutdown timeout: 00:00:15
+    Schedule polling interval: 00:00:15
+2025-06-25 20:56:39.644 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-06-25 20:56:39.647 +03:00 [INF] Hosting environment: Development
+2025-06-25 20:56:39.669 +03:00 [INF] Content root path: D:\fashion\Projcet\E-Commers\E-Commers
+2025-06-25 20:56:39.673 +03:00 [INF] Server mrrobot:13916:e987509c successfully announced in 25.4714 ms
+2025-06-25 20:56:39.688 +03:00 [INF] Server mrrobot:13916:e987509c is starting the registered dispatchers: ServerWatchdog, ServerJobCancellationWatcher, ExpirationManager, CountersAggregator, Worker, DelayedJobScheduler, RecurringJobScheduler...
+2025-06-25 20:56:39.810 +03:00 [INF] Server mrrobot:13916:e987509c all the dispatchers started
+2025-06-25 20:56:39.915 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/swagger/index.html - 200 null text/html;charset=utf-8 368.7462ms
+2025-06-25 20:56:39.993 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/swagger/index.js - null null
+2025-06-25 20:56:39.995 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/_vs/browserLink - null null
+2025-06-25 20:56:39.995 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/_framework/aspnetcore-browser-refresh.js - null null
+2025-06-25 20:56:40.096 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/swagger/index.js - 200 null application/javascript;charset=utf-8 103.8005ms
+2025-06-25 20:56:40.117 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/_framework/aspnetcore-browser-refresh.js - 200 16505 application/javascript; charset=utf-8 122.0196ms
+2025-06-25 20:56:40.161 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/_vs/browserLink - 200 null text/javascript; charset=UTF-8 165.7597ms
+2025-06-25 20:56:40.236 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/swagger/v1/swagger.json - null null
+2025-06-25 20:56:40.354 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 118.7256ms
+2025-06-25 20:56:50.409 +03:00 [INF] Request starting HTTP/1.1 POST https://localhost:7288/api/categories - multipart/form-data; boundary=--------------------------059556204722357985877001 362277
+2025-06-25 20:56:50.561 +03:00 [INF] Executing UserAuthenticationMiddleware
+2025-06-25 20:56:50.641 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__userId_0='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`SecurityStamp`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`Id` = @__userId_0)
+LIMIT 1
+2025-06-25 20:56:50.661 +03:00 [INF] Executing endpoint 'E_Commers.Controllers.categoriesController.CreateAsync (E-Commerce)'
+2025-06-25 20:56:50.695 +03:00 [INF] Route matched with {action = "CreateAsync", controller = "categories"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[E_Commers.DtoModels.Responses.ApiResponse`1[E_Commers.DtoModels.CategoryDtos.CategoryDto]]] CreateAsync(E_Commers.DtoModels.CategoryDtos.CreateCategotyDto) on controller E_Commers.Controllers.categoriesController (E-Commerce).
+2025-06-25 20:56:51.016 +03:00 [INF] Executing CreateAsync in CategoryController
+2025-06-25 20:56:51.023 +03:00 [INF] Execute CreateAsync
+2025-06-25 20:56:51.028 +03:00 [INF] Executing GetByNameAsync for Name: Pants
+2025-06-25 20:56:51.092 +03:00 [INF] Executed DbCommand (2ms) [Parameters=[@__Name_0='?' (Size = 20)], CommandType='"Text"', CommandTimeout='30']
+SELECT `c`.`Id`, `c`.`CreatedAt`, `c`.`DeletedAt`, `c`.`Description`, `c`.`DisplayOrder`, `c`.`ImageId`, `c`.`ModifiedAt`, `c`.`Name`
+FROM `Categories` AS `c`
+WHERE `c`.`Name` = @__Name_0
+LIMIT 2
+2025-06-25 20:56:51.098 +03:00 [WRN] No Category with this Name:Pants
+2025-06-25 20:56:51.130 +03:00 [INF] 📥 Saving 2 images to CategoryPhotos
+2025-06-25 20:56:51.134 +03:00 [INF] 📥 Saving image to CategoryPhotos
+2025-06-25 20:56:51.145 +03:00 [INF] Executing CreateAsync for entity Image
+2025-06-25 20:56:51.280 +03:00 [INF] Image added successfully (pending save)
+2025-06-25 20:56:51.294 +03:00 [INF] Execute AddAdminOpreationAsync
+2025-06-25 20:56:51.297 +03:00 [INF] Executing CreateAsync for entity AdminOperationsLog
+2025-06-25 20:56:51.334 +03:00 [INF] AdminOperationsLog added successfully (pending save)
+2025-06-25 20:56:51.337 +03:00 [INF] ✅ Image saved: /CategoryPhotos/5e66e885-e62c-45f2-9855-bef474c0d7b2.webp
+2025-06-25 20:56:51.341 +03:00 [INF] 📥 Saving image to CategoryPhotos
+2025-06-25 20:56:51.352 +03:00 [INF] Executing CreateAsync for entity Image
+2025-06-25 20:56:51.358 +03:00 [INF] Image added successfully (pending save)
+2025-06-25 20:56:51.359 +03:00 [INF] Execute AddAdminOpreationAsync
+2025-06-25 20:56:51.361 +03:00 [INF] Executing CreateAsync for entity AdminOperationsLog
+2025-06-25 20:56:51.363 +03:00 [INF] AdminOperationsLog added successfully (pending save)
+2025-06-25 20:56:51.368 +03:00 [INF] ✅ Image saved: /CategoryPhotos/a7b73b61-b111-4116-9fa2-4630810dee76.jpg
+2025-06-25 20:56:51.374 +03:00 [INF] Executing CreateAsync for entity Category
+2025-06-25 20:56:51.445 +03:00 [INF] Category added successfully (pending save)
+2025-06-25 20:56:51.447 +03:00 [INF] Execute AddAdminOpreationAsync
+2025-06-25 20:56:51.449 +03:00 [INF] Executing CreateAsync for entity AdminOperationsLog
+2025-06-25 20:56:51.451 +03:00 [INF] AdminOperationsLog added successfully (pending save)
+2025-06-25 20:56:51.474 +03:00 [INF] Removing cache by tag: category
+2025-06-25 20:56:51.491 +03:00 [WRN] No cache entries found for tag: category
+2025-06-25 20:56:51.551 +03:00 [INF] Executing CreatedAtActionResult, writing value of type 'E_Commers.DtoModels.Responses.ApiResponse`1[[E_Commers.DtoModels.CategoryDtos.CategoryDto, E-Commerce, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2025-06-25 20:56:51.610 +03:00 [INF] Executed action E_Commers.Controllers.categoriesController.CreateAsync (E-Commerce) in 896.7258ms
+2025-06-25 20:56:51.665 +03:00 [INF] Executed endpoint 'E_Commers.Controllers.categoriesController.CreateAsync (E-Commerce)'
+2025-06-25 20:56:51.679 +03:00 [INF] Request finished HTTP/1.1 POST https://localhost:7288/api/categories - 201 705 application/json; charset=utf-8 1269.8377ms
+2025-06-25 20:58:43.758 +03:00 [INF] DB tables already exist. Exit install
+2025-06-25 20:58:46.334 +03:00 [INF] Executed DbCommand (3ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='Fashion_Site' AND TABLE_NAME='__EFMigrationsHistory';
+2025-06-25 20:58:46.375 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='Fashion_Site' AND TABLE_NAME='__EFMigrationsHistory';
+2025-06-25 20:58:46.411 +03:00 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT `MigrationId`, `ProductVersion`
+FROM `__EFMigrationsHistory`
+ORDER BY `MigrationId`;
+2025-06-25 20:58:46.433 +03:00 [INF] No migrations were applied. The database is already up to date.
+2025-06-25 20:58:46.472 +03:00 [INF] User profile is available. Using 'C:\Users\DELL\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2025-06-25 20:58:46.944 +03:00 [INF] Executed DbCommand (45ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-06-25 20:58:47.021 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-06-25 20:58:47.055 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`, `a`.`ProfilePicture`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-06-25 20:58:47.787 +03:00 [INF] Now listening on: https://localhost:7288
+2025-06-25 20:58:47.790 +03:00 [INF] Now listening on: http://localhost:5069
+2025-06-25 20:58:47.874 +03:00 [ERR] Index was outside the bounds of the array.
+System.IndexOutOfRangeException: Index was outside the bounds of the array.
+   at Hangfire.MySql.MySqlStorage.<>c.<ToString>b__14_1(String[] x)
+   at System.Linq.Enumerable.ArraySelectIterator`2.MoveNext()
+   at System.Linq.Enumerable.ToDictionary[TSource,TKey,TElement](IEnumerable`1 source, Func`2 keySelector, Func`2 elementSelector, IEqualityComparer`1 comparer)
+   at Hangfire.MySql.MySqlStorage.ToString()
+2025-06-25 20:58:47.905 +03:00 [INF] Starting Hangfire Server using job storage: '<Connection string can not be parsed>'
+2025-06-25 20:58:47.907 +03:00 [INF] Using the following options for SQL Server job storage:
+2025-06-25 20:58:47.908 +03:00 [INF]     Queue poll interval: 00:00:10.
+2025-06-25 20:58:47.909 +03:00 [INF] Using the following options for Hangfire Server:
+    Worker count: 20
+    Listening queues: 'default'
+    Shutdown timeout: 00:00:15
+    Schedule polling interval: 00:00:15
+2025-06-25 20:58:47.927 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-06-25 20:58:47.929 +03:00 [INF] Hosting environment: Development
+2025-06-25 20:58:47.999 +03:00 [INF] Server mrrobot:18248:5fff6f50 successfully announced in 67.9902 ms
+2025-06-25 20:58:48.186 +03:00 [INF] Content root path: D:\fashion\Projcet\E-Commers\E-Commers
+2025-06-25 20:58:48.204 +03:00 [INF] Server mrrobot:18248:5fff6f50 is starting the registered dispatchers: ServerWatchdog, ServerJobCancellationWatcher, ExpirationManager, CountersAggregator, Worker, DelayedJobScheduler, RecurringJobScheduler...
+2025-06-25 20:58:48.448 +03:00 [INF] Server mrrobot:18248:5fff6f50 all the dispatchers started
+2025-06-25 20:59:02.959 +03:00 [INF] DB tables already exist. Exit install
+2025-06-25 20:59:04.620 +03:00 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='Fashion_Site' AND TABLE_NAME='__EFMigrationsHistory';
+2025-06-25 20:59:04.710 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='Fashion_Site' AND TABLE_NAME='__EFMigrationsHistory';
+2025-06-25 20:59:04.762 +03:00 [INF] Executed DbCommand (3ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT `MigrationId`, `ProductVersion`
+FROM `__EFMigrationsHistory`
+ORDER BY `MigrationId`;
+2025-06-25 20:59:04.816 +03:00 [INF] No migrations were applied. The database is already up to date.
+2025-06-25 20:59:04.857 +03:00 [INF] User profile is available. Using 'C:\Users\DELL\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2025-06-25 20:59:05.339 +03:00 [INF] Executed DbCommand (54ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-06-25 20:59:05.449 +03:00 [INF] Executed DbCommand (2ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-06-25 20:59:05.481 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`, `a`.`ProfilePicture`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-06-25 20:59:06.100 +03:00 [INF] Now listening on: https://localhost:7288
+2025-06-25 20:59:06.105 +03:00 [INF] Now listening on: http://localhost:5069
+2025-06-25 20:59:06.196 +03:00 [ERR] Index was outside the bounds of the array.
+System.IndexOutOfRangeException: Index was outside the bounds of the array.
+   at Hangfire.MySql.MySqlStorage.<>c.<ToString>b__14_1(String[] x)
+   at System.Linq.Enumerable.ArraySelectIterator`2.MoveNext()
+   at System.Linq.Enumerable.ToDictionary[TSource,TKey,TElement](IEnumerable`1 source, Func`2 keySelector, Func`2 elementSelector, IEqualityComparer`1 comparer)
+   at Hangfire.MySql.MySqlStorage.ToString()
+2025-06-25 20:59:06.321 +03:00 [INF] Starting Hangfire Server using job storage: '<Connection string can not be parsed>'
+2025-06-25 20:59:06.322 +03:00 [INF] Using the following options for SQL Server job storage:
+2025-06-25 20:59:06.324 +03:00 [INF]     Queue poll interval: 00:00:10.
+2025-06-25 20:59:06.328 +03:00 [INF] Using the following options for Hangfire Server:
+    Worker count: 20
+    Listening queues: 'default'
+    Shutdown timeout: 00:00:15
+    Schedule polling interval: 00:00:15
+2025-06-25 20:59:06.374 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-06-25 20:59:06.408 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/swagger/index.html - null null
+2025-06-25 20:59:06.412 +03:00 [INF] Server mrrobot:13972:5ea627f1 successfully announced in 20.0091 ms
+2025-06-25 20:59:06.414 +03:00 [INF] Hosting environment: Development
+2025-06-25 20:59:06.423 +03:00 [INF] Content root path: D:\fashion\Projcet\E-Commers\E-Commers
+2025-06-25 20:59:06.429 +03:00 [INF] Server mrrobot:13972:5ea627f1 is starting the registered dispatchers: ServerWatchdog, ServerJobCancellationWatcher, ExpirationManager, CountersAggregator, Worker, DelayedJobScheduler, RecurringJobScheduler...
+2025-06-25 20:59:06.657 +03:00 [INF] Server mrrobot:13972:5ea627f1 all the dispatchers started
+2025-06-25 20:59:06.764 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/swagger/index.html - 200 null text/html;charset=utf-8 356.5894ms
+2025-06-25 20:59:06.845 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/_framework/aspnetcore-browser-refresh.js - null null
+2025-06-25 20:59:06.845 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/swagger/index.js - null null
+2025-06-25 20:59:06.845 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/_vs/browserLink - null null
+2025-06-25 20:59:06.884 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/_framework/aspnetcore-browser-refresh.js - 200 16505 application/javascript; charset=utf-8 38.8394ms
+2025-06-25 20:59:06.915 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/swagger/index.js - 200 null application/javascript;charset=utf-8 69.8533ms
+2025-06-25 20:59:07.012 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/_vs/browserLink - 200 null text/javascript; charset=UTF-8 166.4703ms
+2025-06-25 20:59:07.093 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/swagger/v1/swagger.json - null null
+2025-06-25 20:59:07.229 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 136.4041ms
+2025-06-25 20:59:31.801 +03:00 [INF] Request starting HTTP/1.1 POST https://localhost:7288/api/categories - multipart/form-data; boundary=--------------------------923758368006851808780394 362277
+2025-06-25 20:59:32.001 +03:00 [INF] Executing UserAuthenticationMiddleware
+2025-06-25 20:59:32.131 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__userId_0='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`SecurityStamp`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`Id` = @__userId_0)
+LIMIT 1
+2025-06-25 20:59:32.165 +03:00 [INF] Executing endpoint 'E_Commers.Controllers.categoriesController.CreateAsync (E-Commerce)'
+2025-06-25 20:59:32.214 +03:00 [INF] Route matched with {action = "CreateAsync", controller = "categories"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[E_Commers.DtoModels.Responses.ApiResponse`1[E_Commers.DtoModels.CategoryDtos.CategoryDto]]] CreateAsync(E_Commers.DtoModels.CategoryDtos.CreateCategotyDto) on controller E_Commers.Controllers.categoriesController (E-Commerce).
+2025-06-25 20:59:32.750 +03:00 [INF] Executing CreateAsync in CategoryController
+2025-06-25 20:59:32.759 +03:00 [INF] Execute CreateAsync
+2025-06-25 20:59:32.764 +03:00 [INF] Executing GetByNameAsync for Name: Pants
+2025-06-25 20:59:32.846 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__Name_0='?' (Size = 20)], CommandType='"Text"', CommandTimeout='30']
+SELECT `c`.`Id`, `c`.`CreatedAt`, `c`.`DeletedAt`, `c`.`Description`, `c`.`DisplayOrder`, `c`.`ImageId`, `c`.`ModifiedAt`, `c`.`Name`
+FROM `Categories` AS `c`
+WHERE `c`.`Name` = @__Name_0
+LIMIT 2
+2025-06-25 20:59:32.853 +03:00 [WRN] No Category with this Name:Pants
+2025-06-25 20:59:32.864 +03:00 [INF] 📥 Saving 2 images to CategoryPhotos
+2025-06-25 20:59:32.876 +03:00 [INF] 📥 Saving image to CategoryPhotos
+2025-06-25 20:59:32.892 +03:00 [INF] Executing CreateAsync for entity Image
+2025-06-25 20:59:33.130 +03:00 [INF] Image added successfully (pending save)
+2025-06-25 20:59:33.137 +03:00 [INF] Execute AddAdminOpreationAsync
+2025-06-25 20:59:33.147 +03:00 [INF] Executing CreateAsync for entity AdminOperationsLog
+2025-06-25 20:59:33.232 +03:00 [INF] AdminOperationsLog added successfully (pending save)
+2025-06-25 20:59:33.235 +03:00 [INF] ✅ Image saved: /CategoryPhotos/da896eb9-94a9-49fb-b8bf-31e84a6875e5.webp
+2025-06-25 20:59:33.247 +03:00 [INF] 📥 Saving image to CategoryPhotos
+2025-06-25 20:59:33.395 +03:00 [INF] Executing CreateAsync for entity Image
+2025-06-25 20:59:33.400 +03:00 [INF] Image added successfully (pending save)
+2025-06-25 20:59:33.403 +03:00 [INF] Execute AddAdminOpreationAsync
+2025-06-25 20:59:33.406 +03:00 [INF] Executing CreateAsync for entity AdminOperationsLog
+2025-06-25 20:59:33.408 +03:00 [INF] AdminOperationsLog added successfully (pending save)
+2025-06-25 20:59:33.410 +03:00 [INF] ✅ Image saved: /CategoryPhotos/1c2f0ed9-465d-4c86-b248-f4e876cf725c.jpg
+2025-06-25 20:59:33.501 +03:00 [INF] Executing CreateAsync for entity Category
+2025-06-25 20:59:33.885 +03:00 [INF] Category added successfully (pending save)
+2025-06-25 20:59:33.967 +03:00 [INF] Execute AddAdminOpreationAsync
+2025-06-25 20:59:34.038 +03:00 [INF] Executing CreateAsync for entity AdminOperationsLog
+2025-06-25 20:59:34.122 +03:00 [INF] AdminOperationsLog added successfully (pending save)
+2025-06-25 20:59:34.180 +03:00 [INF] Removing cache by tag: category
+2025-06-25 20:59:34.195 +03:00 [WRN] No cache entries found for tag: category
+2025-06-25 20:59:34.412 +03:00 [INF] Executing CreatedAtActionResult, writing value of type 'E_Commers.DtoModels.Responses.ApiResponse`1[[E_Commers.DtoModels.CategoryDtos.CategoryDto, E-Commerce, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2025-06-25 20:59:34.598 +03:00 [INF] Executed action E_Commers.Controllers.categoriesController.CreateAsync (E-Commerce) in 2290.8315ms
+2025-06-25 20:59:35.596 +03:00 [INF] Executed endpoint 'E_Commers.Controllers.categoriesController.CreateAsync (E-Commerce)'
+2025-06-25 20:59:35.678 +03:00 [INF] Request finished HTTP/1.1 POST https://localhost:7288/api/categories - 201 705 application/json; charset=utf-8 3876.5879ms
+2025-06-25 21:04:07.044 +03:00 [INF] 3 servers were removed due to timeout
+2025-06-25 21:11:24.012 +03:00 [INF] DB tables already exist. Exit install
+2025-06-25 21:11:25.770 +03:00 [INF] Executed DbCommand (29ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='Fashion_Site' AND TABLE_NAME='__EFMigrationsHistory';
+2025-06-25 21:11:25.830 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='Fashion_Site' AND TABLE_NAME='__EFMigrationsHistory';
+2025-06-25 21:11:25.886 +03:00 [INF] Executed DbCommand (26ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT `MigrationId`, `ProductVersion`
+FROM `__EFMigrationsHistory`
+ORDER BY `MigrationId`;
+2025-06-25 21:11:25.910 +03:00 [INF] No migrations were applied. The database is already up to date.
+2025-06-25 21:11:25.947 +03:00 [INF] User profile is available. Using 'C:\Users\DELL\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2025-06-25 21:11:26.316 +03:00 [INF] Executed DbCommand (56ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-06-25 21:11:26.396 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-06-25 21:11:26.427 +03:00 [INF] Executed DbCommand (9ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`, `a`.`ProfilePicture`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-06-25 21:11:27.301 +03:00 [INF] Now listening on: https://localhost:7288
+2025-06-25 21:11:27.304 +03:00 [INF] Now listening on: http://localhost:5069
+2025-06-25 21:11:27.389 +03:00 [ERR] Index was outside the bounds of the array.
+System.IndexOutOfRangeException: Index was outside the bounds of the array.
+   at Hangfire.MySql.MySqlStorage.<>c.<ToString>b__14_1(String[] x)
+   at System.Linq.Enumerable.ArraySelectIterator`2.MoveNext()
+   at System.Linq.Enumerable.ToDictionary[TSource,TKey,TElement](IEnumerable`1 source, Func`2 keySelector, Func`2 elementSelector, IEqualityComparer`1 comparer)
+   at Hangfire.MySql.MySqlStorage.ToString()
+2025-06-25 21:11:27.425 +03:00 [INF] Starting Hangfire Server using job storage: '<Connection string can not be parsed>'
+2025-06-25 21:11:27.426 +03:00 [INF] Using the following options for SQL Server job storage:
+2025-06-25 21:11:27.430 +03:00 [INF]     Queue poll interval: 00:00:10.
+2025-06-25 21:11:27.432 +03:00 [INF] Using the following options for Hangfire Server:
+    Worker count: 20
+    Listening queues: 'default'
+    Shutdown timeout: 00:00:15
+    Schedule polling interval: 00:00:15
+2025-06-25 21:11:27.450 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-06-25 21:11:27.473 +03:00 [INF] Hosting environment: Development
+2025-06-25 21:11:27.477 +03:00 [INF] Content root path: D:\fashion\Projcet\E-Commers\E-Commers
+2025-06-25 21:11:27.489 +03:00 [INF] Server mrrobot:2788:6862df06 successfully announced in 28.4429 ms
+2025-06-25 21:11:27.498 +03:00 [INF] Server mrrobot:2788:6862df06 is starting the registered dispatchers: ServerWatchdog, ServerJobCancellationWatcher, ExpirationManager, CountersAggregator, Worker, DelayedJobScheduler, RecurringJobScheduler...
+2025-06-25 21:11:27.547 +03:00 [INF] 1 servers were removed due to timeout
+2025-06-25 21:11:27.672 +03:00 [INF] Server mrrobot:2788:6862df06 all the dispatchers started
+2025-06-25 21:11:28.555 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/swagger/index.html - null null
+2025-06-25 21:11:28.822 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/swagger/index.html - 200 null text/html;charset=utf-8 269.0501ms
+2025-06-25 21:11:29.216 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/_vs/browserLink - null null
+2025-06-25 21:11:29.216 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/swagger/index.js - null null
+2025-06-25 21:11:29.224 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/_framework/aspnetcore-browser-refresh.js - null null
+2025-06-25 21:11:29.232 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/swagger/index.js - 200 null application/javascript;charset=utf-8 15.3892ms
+2025-06-25 21:11:29.253 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/_framework/aspnetcore-browser-refresh.js - 200 16505 application/javascript; charset=utf-8 29.4811ms
+2025-06-25 21:11:29.293 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/_vs/browserLink - 200 null text/javascript; charset=UTF-8 76.1326ms
+2025-06-25 21:11:30.189 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/swagger/v1/swagger.json - null null
+2025-06-25 21:11:30.322 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 132.6427ms
+2025-06-25 21:11:46.912 +03:00 [INF] Request starting HTTP/1.1 POST https://localhost:7288/api/categories - multipart/form-data; boundary=--------------------------631793082104034268227448 362277
+2025-06-25 21:11:47.250 +03:00 [INF] Failed to validate the token.
+Microsoft.IdentityModel.Tokens.SecurityTokenExpiredException: IDX10223: Lifetime validation failed. The token is expired. ValidTo (UTC): '6/25/2025 5:57:12 PM', Current time (UTC): '6/25/2025 6:11:47 PM'.
+   at Microsoft.IdentityModel.Tokens.Validators.ValidateLifetime(Nullable`1 notBefore, Nullable`1 expires, SecurityToken securityToken, TokenValidationParameters validationParameters)
+   at Microsoft.IdentityModel.JsonWebTokens.JsonWebTokenHandler.ValidateTokenPayloadAsync(JsonWebToken jsonWebToken, TokenValidationParameters validationParameters, BaseConfiguration configuration)
+   at Microsoft.IdentityModel.JsonWebTokens.JsonWebTokenHandler.ValidateJWSAsync(JsonWebToken jsonWebToken, TokenValidationParameters validationParameters, BaseConfiguration configuration)
+2025-06-25 21:11:47.270 +03:00 [INF] Bearer was not authenticated. Failure message: IDX10223: Lifetime validation failed. The token is expired. ValidTo (UTC): '6/25/2025 5:57:12 PM', Current time (UTC): '6/25/2025 6:11:47 PM'.
+2025-06-25 21:11:47.294 +03:00 [INF] Executing UserAuthenticationMiddleware
+2025-06-25 21:11:47.313 +03:00 [INF] Authorization failed. These requirements were not met:
+RolesAuthorizationRequirement:User.IsInRole must be true for one of the following roles: (Admin)
+2025-06-25 21:11:47.329 +03:00 [INF] AuthenticationScheme: Bearer was challenged.
+2025-06-25 21:11:47.377 +03:00 [INF] Request finished HTTP/1.1 POST https://localhost:7288/api/categories - 401 0 null 465.0289ms
+2025-06-25 21:11:47.397 +03:00 [INF] Connection id "0HNDK2EQ3H22C", Request id "0HNDK2EQ3H22C:00000001": the application completed without reading the entire request body.
+2025-06-25 21:12:33.124 +03:00 [INF] Request starting HTTP/1.1 POST https://localhost:7288/api/Account/refresh-token - application/json 167
+2025-06-25 21:12:33.134 +03:00 [INF] Executing UserAuthenticationMiddleware
+2025-06-25 21:12:33.159 +03:00 [INF] Executing endpoint 'E_Commers.Controllers.AccountController.RefreshTokenAsync (E-Commerce)'
+2025-06-25 21:12:33.203 +03:00 [INF] Route matched with {action = "RefreshTokenAsync", controller = "Account"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[E_Commers.DtoModels.Responses.ApiResponse`1[System.String]]] RefreshTokenAsync(E_Commers.DtoModels.RefreshTokenDto) on controller E_Commers.Controllers.AccountController (E-Commerce).
+2025-06-25 21:12:33.488 +03:00 [INF] In RefreshTokenAsync Method
+2025-06-25 21:12:33.533 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__p_0='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`, `a`.`ProfilePicture`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`Id` = @__p_0)
+LIMIT 1
+2025-06-25 21:12:33.544 +03:00 [INF] In ValidateRefreshTokenAsync Method
+2025-06-25 21:12:33.558 +03:00 [INF] Valid Refreshtoken
+2025-06-25 21:12:33.562 +03:00 [INF] 🔄 RefreshToken() started for User ID: d095229b-081d-426d-bc38-a45575852f91
+2025-06-25 21:12:33.574 +03:00 [INF] Successfully removed RefreshToken for User d095229b-081d-426d-bc38-a45575852f91
+2025-06-25 21:12:33.579 +03:00 [INF] 🔐 Generating Access Token for User ID: d095229b-081d-426d-bc38-a45575852f91
+2025-06-25 21:12:33.649 +03:00 [INF] Executed DbCommand (6ms) [Parameters=[@__userId_0='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a0`.`Name`
+FROM `AspNetUserRoles` AS `a`
+INNER JOIN `AspNetRoles` AS `a0` ON `a`.`RoleId` = `a0`.`Id`
+WHERE `a`.`UserId` = @__userId_0
+2025-06-25 21:12:33.669 +03:00 [INF] ✅ Access Token generated successfully for User ID: d095229b-081d-426d-bc38-a45575852f91
+2025-06-25 21:12:33.707 +03:00 [INF] Executing OkObjectResult, writing value of type 'E_Commers.DtoModels.Responses.ApiResponse`1[[System.String, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2025-06-25 21:12:33.780 +03:00 [INF] Executed action E_Commers.Controllers.AccountController.RefreshTokenAsync (E-Commerce) in 533.7084ms
+2025-06-25 21:12:33.788 +03:00 [INF] Executed endpoint 'E_Commers.Controllers.AccountController.RefreshTokenAsync (E-Commerce)'
+2025-06-25 21:12:33.795 +03:00 [INF] Request finished HTTP/1.1 POST https://localhost:7288/api/Account/refresh-token - 200 1210 application/json; charset=utf-8 671.6635ms
+2025-06-25 21:13:04.468 +03:00 [INF] Request starting HTTP/1.1 POST https://localhost:7288/api/categories - multipart/form-data; boundary=--------------------------821632065618244635574908 362277
+2025-06-25 21:13:04.525 +03:00 [INF] Executing UserAuthenticationMiddleware
+2025-06-25 21:13:04.653 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__userId_0='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`SecurityStamp`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`Id` = @__userId_0)
+LIMIT 1
+2025-06-25 21:13:04.658 +03:00 [INF] Executing endpoint 'E_Commers.Controllers.categoriesController.CreateAsync (E-Commerce)'
+2025-06-25 21:13:04.697 +03:00 [INF] Route matched with {action = "CreateAsync", controller = "categories"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[E_Commers.DtoModels.Responses.ApiResponse`1[E_Commers.DtoModels.CategoryDtos.CategoryDto]]] CreateAsync(E_Commers.DtoModels.CategoryDtos.CreateCategotyDto) on controller E_Commers.Controllers.categoriesController (E-Commerce).
+2025-06-25 21:13:04.826 +03:00 [INF] Executing CreateAsync in CategoryController
+2025-06-25 21:13:04.837 +03:00 [INF] Execute CreateAsync
+2025-06-25 21:13:04.844 +03:00 [INF] Executing GetByNameAsync for Name: Pants
+2025-06-25 21:13:04.877 +03:00 [INF] Executed DbCommand (15ms) [Parameters=[@__Name_0='?' (Size = 20)], CommandType='"Text"', CommandTimeout='30']
+SELECT `c`.`Id`, `c`.`CreatedAt`, `c`.`DeletedAt`, `c`.`Description`, `c`.`DisplayOrder`, `c`.`ImageId`, `c`.`ModifiedAt`, `c`.`Name`
+FROM `Categories` AS `c`
+WHERE `c`.`Name` = @__Name_0
+LIMIT 2
+2025-06-25 21:13:04.890 +03:00 [WRN] No Category with this Name:Pants
+2025-06-25 21:13:04.893 +03:00 [INF] 📥 Saving 2 images to CategoryPhotos
+2025-06-25 21:13:04.903 +03:00 [INF] 📥 Saving image to CategoryPhotos
+2025-06-25 21:13:04.955 +03:00 [INF] Executing CreateAsync for entity Image
+2025-06-25 21:13:05.135 +03:00 [INF] Image added successfully (pending save)
+2025-06-25 21:13:05.395 +03:00 [INF] Executed DbCommand (35ms) [Parameters=[@p0='?' (Size = 4000), @p1='?' (DbType = Int32), @p2='?' (DbType = Int32), @p3='?' (DbType = DateTime), @p4='?' (DbType = DateTime), @p5='?' (DbType = Int64), @p6='?' (Size = 4000), @p7='?' (Size = 4000), @p8='?' (DbType = Int32), @p9='?' (DbType = Boolean), @p10='?' (DbType = DateTime), @p11='?' (DbType = Int32), @p12='?' (DbType = Int32), @p13='?' (Size = 4000), @p14='?' (DbType = DateTime), @p15='?' (Size = 4000), @p16='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+INSERT INTO `Images` (`AltText`, `CategoryId`, `CollectionId`, `CreatedAt`, `DeletedAt`, `FileSize`, `FileType`, `Folder`, `Height`, `IsMain`, `ModifiedAt`, `ProductId`, `SubCategoryId`, `Title`, `UploadDate`, `Url`, `Width`)
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9, @p10, @p11, @p12, @p13, @p14, @p15, @p16);
+SELECT `Id`
+FROM `Images`
+WHERE ROW_COUNT() = 1 AND `Id` = LAST_INSERT_ID();
+2025-06-25 21:13:05.582 +03:00 [INF] Execute AddAdminOpreationAsync
+2025-06-25 21:13:05.601 +03:00 [INF] Executing CreateAsync for entity AdminOperationsLog
+2025-06-25 21:13:05.692 +03:00 [INF] AdminOperationsLog added successfully (pending save)
+2025-06-25 21:13:05.701 +03:00 [INF] ✅ Image saved: /CategoryPhotos/410b9a9c-95b2-4f43-b38d-b7eb233291bc.webp
+2025-06-25 21:13:05.708 +03:00 [INF] 📥 Saving image to CategoryPhotos
+2025-06-25 21:13:05.792 +03:00 [INF] Executing CreateAsync for entity Image
+2025-06-25 21:13:05.808 +03:00 [INF] Image added successfully (pending save)
+2025-06-25 21:13:05.879 +03:00 [INF] Executed DbCommand (15ms) [Parameters=[@p0='?' (Size = 4000), @p1='?' (DbType = Int32), @p2='?' (DbType = Int32), @p3='?' (DbType = DateTime), @p4='?' (DbType = DateTime), @p5='?' (DbType = Int64), @p6='?' (Size = 4000), @p7='?' (Size = 4000), @p8='?' (DbType = Int32), @p9='?' (DbType = Boolean), @p10='?' (DbType = DateTime), @p11='?' (DbType = Int32), @p12='?' (DbType = Int32), @p13='?' (Size = 4000), @p14='?' (DbType = DateTime), @p15='?' (Size = 4000), @p16='?' (DbType = Int32), @p17='?' (Size = 255), @p18='?' (DbType = DateTime), @p19='?' (DbType = DateTime), @p20='?' (Size = 4000), @p21='?' (DbType = Int32), @p22='?' (DbType = DateTime), @p23='?' (DbType = Int32), @p24='?' (DbType = DateTime)], CommandType='"Text"', CommandTimeout='30']
+INSERT INTO `Images` (`AltText`, `CategoryId`, `CollectionId`, `CreatedAt`, `DeletedAt`, `FileSize`, `FileType`, `Folder`, `Height`, `IsMain`, `ModifiedAt`, `ProductId`, `SubCategoryId`, `Title`, `UploadDate`, `Url`, `Width`)
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9, @p10, @p11, @p12, @p13, @p14, @p15, @p16);
+SELECT `Id`
+FROM `Images`
+WHERE ROW_COUNT() = 1 AND `Id` = LAST_INSERT_ID();
+
+INSERT INTO `adminOperationsLogs` (`AdminId`, `CreatedAt`, `DeletedAt`, `Description`, `ItemId`, `ModifiedAt`, `OperationType`, `Timestamp`)
+VALUES (@p17, @p18, @p19, @p20, @p21, @p22, @p23, @p24);
+SELECT `Id`
+FROM `adminOperationsLogs`
+WHERE ROW_COUNT() = 1 AND `Id` = LAST_INSERT_ID();
+2025-06-25 21:13:05.976 +03:00 [INF] Execute AddAdminOpreationAsync
+2025-06-25 21:13:06.299 +03:00 [INF] Executing CreateAsync for entity AdminOperationsLog
+2025-06-25 21:13:06.319 +03:00 [INF] AdminOperationsLog added successfully (pending save)
+2025-06-25 21:13:06.408 +03:00 [INF] ✅ Image saved: /CategoryPhotos/9f54da0e-85a0-4c5c-83f8-5b27535710ae.jpg
+2025-06-25 21:13:06.458 +03:00 [INF] Executing CreateAsync for entity Category
+2025-06-25 21:13:06.688 +03:00 [INF] Category added successfully (pending save)
+2025-06-25 21:13:06.708 +03:00 [INF] Execute AddAdminOpreationAsync
+2025-06-25 21:13:06.711 +03:00 [INF] Executing CreateAsync for entity AdminOperationsLog
+2025-06-25 21:13:06.713 +03:00 [INF] AdminOperationsLog added successfully (pending save)
+2025-06-25 21:13:06.718 +03:00 [INF] Removing cache by tag: category
+2025-06-25 21:13:06.739 +03:00 [WRN] No cache entries found for tag: category
+2025-06-25 21:13:06.848 +03:00 [INF] Executing CreatedAtActionResult, writing value of type 'E_Commers.DtoModels.Responses.ApiResponse`1[[E_Commers.DtoModels.CategoryDtos.CategoryDto, E-Commerce, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2025-06-25 21:13:07.234 +03:00 [INF] Executed action E_Commers.Controllers.categoriesController.CreateAsync (E-Commerce) in 2530.5174ms
+2025-06-25 21:13:08.213 +03:00 [INF] Executed endpoint 'E_Commers.Controllers.categoriesController.CreateAsync (E-Commerce)'
+2025-06-25 21:13:08.217 +03:00 [INF] Request finished HTTP/1.1 POST https://localhost:7288/api/categories - 201 705 application/json; charset=utf-8 3748.5733ms
+2025-06-25 21:14:32.931 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/swagger/index.html - null null
+2025-06-25 21:14:32.962 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/swagger/index.html - 200 null text/html;charset=utf-8 31.4284ms
+2025-06-25 21:14:33.029 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/swagger/index.js - null null
+2025-06-25 21:14:33.031 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/_vs/browserLink - null null
+2025-06-25 21:14:33.033 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/swagger/index.js - 200 null application/javascript;charset=utf-8 4.0736ms
+2025-06-25 21:14:33.033 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/_framework/aspnetcore-browser-refresh.js - null null
+2025-06-25 21:14:33.053 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/_vs/browserLink - 200 null text/javascript; charset=UTF-8 22.0342ms
+2025-06-25 21:14:33.069 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/_framework/aspnetcore-browser-refresh.js - 200 16505 application/javascript; charset=utf-8 35.6373ms
+2025-06-25 21:14:33.519 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/swagger/v1/swagger.json - null null
+2025-06-25 21:14:33.795 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 275.772ms
+2025-06-25 21:24:59.664 +03:00 [INF] DB tables already exist. Exit install
+2025-06-25 21:25:01.073 +03:00 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='Fashion_Site' AND TABLE_NAME='__EFMigrationsHistory';
+2025-06-25 21:25:01.092 +03:00 [INF] Executed DbCommand (0ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='Fashion_Site' AND TABLE_NAME='__EFMigrationsHistory';
+2025-06-25 21:25:01.143 +03:00 [INF] Executed DbCommand (3ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT `MigrationId`, `ProductVersion`
+FROM `__EFMigrationsHistory`
+ORDER BY `MigrationId`;
+2025-06-25 21:25:01.163 +03:00 [INF] No migrations were applied. The database is already up to date.
+2025-06-25 21:25:01.191 +03:00 [INF] User profile is available. Using 'C:\Users\DELL\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2025-06-25 21:25:01.542 +03:00 [INF] Executed DbCommand (49ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-06-25 21:25:01.615 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-06-25 21:25:01.654 +03:00 [INF] Executed DbCommand (3ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`, `a`.`ProfilePicture`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-06-25 21:25:02.293 +03:00 [INF] Now listening on: https://localhost:7288
+2025-06-25 21:25:02.295 +03:00 [INF] Now listening on: http://localhost:5069
+2025-06-25 21:25:02.373 +03:00 [ERR] Index was outside the bounds of the array.
+System.IndexOutOfRangeException: Index was outside the bounds of the array.
+   at Hangfire.MySql.MySqlStorage.<>c.<ToString>b__14_1(String[] x)
+   at System.Linq.Enumerable.ArraySelectIterator`2.MoveNext()
+   at System.Linq.Enumerable.ToDictionary[TSource,TKey,TElement](IEnumerable`1 source, Func`2 keySelector, Func`2 elementSelector, IEqualityComparer`1 comparer)
+   at Hangfire.MySql.MySqlStorage.ToString()
+2025-06-25 21:25:02.410 +03:00 [INF] Starting Hangfire Server using job storage: '<Connection string can not be parsed>'
+2025-06-25 21:25:02.412 +03:00 [INF] Using the following options for SQL Server job storage:
+2025-06-25 21:25:02.413 +03:00 [INF]     Queue poll interval: 00:00:10.
+2025-06-25 21:25:02.414 +03:00 [INF] Using the following options for Hangfire Server:
+    Worker count: 20
+    Listening queues: 'default'
+    Shutdown timeout: 00:00:15
+    Schedule polling interval: 00:00:15
+2025-06-25 21:25:02.462 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-06-25 21:25:02.472 +03:00 [INF] Hosting environment: Development
+2025-06-25 21:25:02.483 +03:00 [INF] Content root path: D:\fashion\Projcet\E-Commers\E-Commers
+2025-06-25 21:25:02.491 +03:00 [INF] Server mrrobot:16600:c34a4f1e successfully announced in 14.6964 ms
+2025-06-25 21:25:02.513 +03:00 [INF] Server mrrobot:16600:c34a4f1e is starting the registered dispatchers: ServerWatchdog, ServerJobCancellationWatcher, ExpirationManager, CountersAggregator, Worker, DelayedJobScheduler, RecurringJobScheduler...
+2025-06-25 21:25:02.537 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/swagger/index.html - null null
+2025-06-25 21:25:02.738 +03:00 [INF] Server mrrobot:16600:c34a4f1e all the dispatchers started
+2025-06-25 21:25:02.834 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/swagger/index.html - 200 null text/html;charset=utf-8 297.2027ms
+2025-06-25 21:25:02.861 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/_vs/browserLink - null null
+2025-06-25 21:25:02.861 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/_framework/aspnetcore-browser-refresh.js - null null
+2025-06-25 21:25:02.861 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/swagger/index.js - null null
+2025-06-25 21:25:02.878 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/_framework/aspnetcore-browser-refresh.js - 200 16505 application/javascript; charset=utf-8 17.0465ms
+2025-06-25 21:25:02.883 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/swagger/index.js - 200 null application/javascript;charset=utf-8 21.9062ms
+2025-06-25 21:25:02.911 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/_vs/browserLink - 200 null text/javascript; charset=UTF-8 49.6862ms
+2025-06-25 21:25:03.039 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/swagger/v1/swagger.json - null null
+2025-06-25 21:25:03.130 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 91.2523ms
+2025-06-25 21:25:07.525 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/swagger/index.html - null null
+2025-06-25 21:25:07.547 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/swagger/index.html - 200 null text/html;charset=utf-8 21.7482ms
+2025-06-25 21:25:07.612 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/swagger/index.js - null null
+2025-06-25 21:25:07.616 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/swagger/index.js - 200 null application/javascript;charset=utf-8 4.8404ms
+2025-06-25 21:25:07.629 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/_vs/browserLink - null null
+2025-06-25 21:25:07.633 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/_framework/aspnetcore-browser-refresh.js - null null
+2025-06-25 21:25:07.649 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/_framework/aspnetcore-browser-refresh.js - 200 16505 application/javascript; charset=utf-8 16.0476ms
+2025-06-25 21:25:07.656 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/_vs/browserLink - 200 null text/javascript; charset=UTF-8 26.8157ms
+2025-06-25 21:25:07.896 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/swagger/v1/swagger.json - null null
+2025-06-25 21:25:08.003 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 107.6415ms
+2025-06-25 21:26:18.163 +03:00 [INF] Request starting HTTP/1.1 POST https://localhost:7288/api/categories - multipart/form-data; boundary=--------------------------693104121671493005307987 362277
+2025-06-25 21:26:18.307 +03:00 [INF] Executing UserAuthenticationMiddleware
+2025-06-25 21:26:18.386 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__userId_0='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`SecurityStamp`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`Id` = @__userId_0)
+LIMIT 1
+2025-06-25 21:26:18.416 +03:00 [INF] Executing endpoint 'E_Commers.Controllers.categoriesController.CreateAsync (E-Commerce)'
+2025-06-25 21:26:18.459 +03:00 [INF] Route matched with {action = "CreateAsync", controller = "categories"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[E_Commers.DtoModels.Responses.ApiResponse`1[E_Commers.DtoModels.CategoryDtos.CategoryDto]]] CreateAsync(E_Commers.DtoModels.CategoryDtos.CreateCategotyDto) on controller E_Commers.Controllers.categoriesController (E-Commerce).
+2025-06-25 21:26:18.786 +03:00 [INF] Executing CreateAsync in CategoryController
+2025-06-25 21:26:18.794 +03:00 [INF] Execute CreateAsync
+2025-06-25 21:26:18.797 +03:00 [INF] Executing GetByNameAsync for Name: Pants
+2025-06-25 21:26:18.852 +03:00 [INF] Executed DbCommand (2ms) [Parameters=[@__Name_0='?' (Size = 20)], CommandType='"Text"', CommandTimeout='30']
+SELECT `c`.`Id`, `c`.`CreatedAt`, `c`.`DeletedAt`, `c`.`Description`, `c`.`DisplayOrder`, `c`.`ImageId`, `c`.`ModifiedAt`, `c`.`Name`
+FROM `Categories` AS `c`
+WHERE `c`.`Name` = @__Name_0
+LIMIT 2
+2025-06-25 21:26:18.860 +03:00 [WRN] No Category with this Name:Pants
+2025-06-25 21:26:18.885 +03:00 [INF] Executing CreateAsync for entity Category
+2025-06-25 21:26:18.974 +03:00 [INF] Category added successfully (pending save)
+2025-06-25 21:26:18.978 +03:00 [INF] 📥 Saving 2 images to CategoryPhotos
+2025-06-25 21:26:18.983 +03:00 [INF] 📥 Saving image to CategoryPhotos
+2025-06-25 21:26:19.003 +03:00 [ERR] ❌ Exception in CreateAsync: The connection is already in a transaction and cannot participate in another transaction.
+2025-06-25 21:26:19.169 +03:00 [INF] Executing ObjectResult, writing value of type 'E_Commers.DtoModels.Responses.ApiResponse`1[[E_Commers.DtoModels.CategoryDtos.CategoryDto, E-Commerce, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2025-06-25 21:26:19.216 +03:00 [INF] Executed action E_Commers.Controllers.categoriesController.CreateAsync (E-Commerce) in 735.0278ms
+2025-06-25 21:26:19.219 +03:00 [INF] Executed endpoint 'E_Commers.Controllers.categoriesController.CreateAsync (E-Commerce)'
+2025-06-25 21:26:19.244 +03:00 [INF] Request finished HTTP/1.1 POST https://localhost:7288/api/categories - 500 299 application/json; charset=utf-8 1081.4229ms
+2025-06-25 21:27:36.690 +03:00 [INF] DB tables already exist. Exit install
+2025-06-25 21:27:40.169 +03:00 [INF] Executed DbCommand (4ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='Fashion_Site' AND TABLE_NAME='__EFMigrationsHistory';
+2025-06-25 21:27:40.187 +03:00 [INF] Executed DbCommand (0ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='Fashion_Site' AND TABLE_NAME='__EFMigrationsHistory';
+2025-06-25 21:27:40.240 +03:00 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT `MigrationId`, `ProductVersion`
+FROM `__EFMigrationsHistory`
+ORDER BY `MigrationId`;
+2025-06-25 21:27:40.264 +03:00 [INF] No migrations were applied. The database is already up to date.
+2025-06-25 21:27:40.347 +03:00 [INF] User profile is available. Using 'C:\Users\DELL\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2025-06-25 21:27:41.173 +03:00 [INF] Executed DbCommand (171ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-06-25 21:27:41.371 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`ConcurrencyStamp`, `a`.`Name`, `a`.`NormalizedName`
+FROM `AspNetRoles` AS `a`
+WHERE `a`.`NormalizedName` = @__normalizedName_0
+LIMIT 1
+2025-06-25 21:27:41.419 +03:00 [INF] Executed DbCommand (2ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`, `a`.`ProfilePicture`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-06-25 21:27:43.745 +03:00 [INF] Now listening on: https://localhost:7288
+2025-06-25 21:27:43.747 +03:00 [INF] Now listening on: http://localhost:5069
+2025-06-25 21:27:43.912 +03:00 [ERR] Index was outside the bounds of the array.
+System.IndexOutOfRangeException: Index was outside the bounds of the array.
+   at Hangfire.MySql.MySqlStorage.<>c.<ToString>b__14_1(String[] x)
+   at System.Linq.Enumerable.ArraySelectIterator`2.MoveNext()
+   at System.Linq.Enumerable.ToDictionary[TSource,TKey,TElement](IEnumerable`1 source, Func`2 keySelector, Func`2 elementSelector, IEqualityComparer`1 comparer)
+   at Hangfire.MySql.MySqlStorage.ToString()
+2025-06-25 21:27:43.984 +03:00 [INF] Starting Hangfire Server using job storage: '<Connection string can not be parsed>'
+2025-06-25 21:27:43.986 +03:00 [INF] Using the following options for SQL Server job storage:
+2025-06-25 21:27:43.991 +03:00 [INF]     Queue poll interval: 00:00:10.
+2025-06-25 21:27:43.993 +03:00 [INF] Using the following options for Hangfire Server:
+    Worker count: 20
+    Listening queues: 'default'
+    Shutdown timeout: 00:00:15
+    Schedule polling interval: 00:00:15
+2025-06-25 21:27:44.142 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-06-25 21:27:44.245 +03:00 [INF] Server mrrobot:17744:91325ad8 successfully announced in 68.9028 ms
+2025-06-25 21:27:44.250 +03:00 [INF] Hosting environment: Development
+2025-06-25 21:27:44.258 +03:00 [INF] Content root path: D:\fashion\Projcet\E-Commers\E-Commers
+2025-06-25 21:27:44.301 +03:00 [INF] Server mrrobot:17744:91325ad8 is starting the registered dispatchers: ServerWatchdog, ServerJobCancellationWatcher, ExpirationManager, CountersAggregator, Worker, DelayedJobScheduler, RecurringJobScheduler...
+2025-06-25 21:27:46.222 +03:00 [INF] Server mrrobot:17744:91325ad8 all the dispatchers started
+2025-06-25 21:27:46.391 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/swagger/index.html - null null
+2025-06-25 21:27:47.173 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/swagger/index.html - 200 null text/html;charset=utf-8 798.6075ms
+2025-06-25 21:27:47.972 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/swagger/index.js - null null
+2025-06-25 21:27:47.994 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/swagger/index.js - 200 null application/javascript;charset=utf-8 21.7771ms
+2025-06-25 21:27:48.049 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/_framework/aspnetcore-browser-refresh.js - null null
+2025-06-25 21:27:48.070 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/_framework/aspnetcore-browser-refresh.js - 200 16505 application/javascript; charset=utf-8 21.5511ms
+2025-06-25 21:27:48.099 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/_vs/browserLink - null null
+2025-06-25 21:27:48.181 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/_vs/browserLink - 200 null text/javascript; charset=UTF-8 81.4898ms
+2025-06-25 21:27:49.191 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/swagger/v1/swagger.json - null null
+2025-06-25 21:27:49.352 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 161.3022ms
+2025-06-25 21:28:32.307 +03:00 [INF] Request starting HTTP/1.1 POST https://localhost:7288/api/categories - multipart/form-data; boundary=--------------------------527184484892896731111119 362277
+2025-06-25 21:28:34.834 +03:00 [INF] Executing UserAuthenticationMiddleware
+2025-06-25 21:28:34.906 +03:00 [INF] Executed DbCommand (2ms) [Parameters=[@__userId_0='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`SecurityStamp`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`Id` = @__userId_0)
+LIMIT 1
+2025-06-25 21:28:34.937 +03:00 [INF] Executing endpoint 'E_Commers.Controllers.categoriesController.CreateAsync (E-Commerce)'
+2025-06-25 21:28:34.987 +03:00 [INF] Route matched with {action = "CreateAsync", controller = "categories"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[E_Commers.DtoModels.Responses.ApiResponse`1[E_Commers.DtoModels.CategoryDtos.CategoryDto]]] CreateAsync(E_Commers.DtoModels.CategoryDtos.CreateCategotyDto) on controller E_Commers.Controllers.categoriesController (E-Commerce).
+2025-06-25 21:28:35.444 +03:00 [INF] Executing CreateAsync in CategoryController
+2025-06-25 21:28:35.452 +03:00 [INF] Execute CreateAsync
+2025-06-25 21:28:35.455 +03:00 [INF] Executing GetByNameAsync for Name: Pants
+2025-06-25 21:28:35.527 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__Name_0='?' (Size = 20)], CommandType='"Text"', CommandTimeout='30']
+SELECT `c`.`Id`, `c`.`CreatedAt`, `c`.`DeletedAt`, `c`.`Description`, `c`.`DisplayOrder`, `c`.`ImageId`, `c`.`ModifiedAt`, `c`.`Name`
+FROM `Categories` AS `c`
+WHERE `c`.`Name` = @__Name_0
+LIMIT 2
+2025-06-25 21:28:35.533 +03:00 [WRN] No Category with this Name:Pants
+2025-06-25 21:28:35.563 +03:00 [INF] Executing CreateAsync for entity Category
+2025-06-25 21:28:35.666 +03:00 [INF] Category added successfully (pending save)
+2025-06-25 21:28:35.671 +03:00 [INF] 📥 Saving 2 images to CategoryPhotos
+2025-06-25 21:28:35.676 +03:00 [INF] 📥 Saving image to CategoryPhotos
+2025-06-25 21:28:36.914 +03:00 [ERR] ❌ Exception in CreateAsync: The connection is already in a transaction and cannot participate in another transaction.
+2025-06-25 21:28:37.108 +03:00 [INF] Executing ObjectResult, writing value of type 'E_Commers.DtoModels.Responses.ApiResponse`1[[E_Commers.DtoModels.CategoryDtos.CategoryDto, E-Commerce, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2025-06-25 21:28:37.144 +03:00 [INF] Executed action E_Commers.Controllers.categoriesController.CreateAsync (E-Commerce) in 2147.2295ms
+2025-06-25 21:28:37.155 +03:00 [INF] Executed endpoint 'E_Commers.Controllers.categoriesController.CreateAsync (E-Commerce)'
+2025-06-25 21:28:37.181 +03:00 [INF] Request finished HTTP/1.1 POST https://localhost:7288/api/categories - 500 299 application/json; charset=utf-8 4873.9902ms
+2025-06-25 21:28:55.533 +03:00 [INF] Request starting HTTP/1.1 POST https://localhost:7288/api/categories - multipart/form-data; boundary=--------------------------730794940294520977212357 362277
+2025-06-25 21:28:55.548 +03:00 [INF] Executing UserAuthenticationMiddleware
+2025-06-25 21:28:55.564 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__userId_0='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`SecurityStamp`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`Id` = @__userId_0)
+LIMIT 1
+2025-06-25 21:28:55.573 +03:00 [INF] Executing endpoint 'E_Commers.Controllers.categoriesController.CreateAsync (E-Commerce)'
+2025-06-25 21:28:55.575 +03:00 [INF] Route matched with {action = "CreateAsync", controller = "categories"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[E_Commers.DtoModels.Responses.ApiResponse`1[E_Commers.DtoModels.CategoryDtos.CategoryDto]]] CreateAsync(E_Commers.DtoModels.CategoryDtos.CreateCategotyDto) on controller E_Commers.Controllers.categoriesController (E-Commerce).
+2025-06-25 21:28:55.602 +03:00 [INF] Executing CreateAsync in CategoryController
+2025-06-25 21:28:57.759 +03:00 [INF] Execute CreateAsync
+2025-06-25 21:29:01.567 +03:00 [INF] Executing GetByNameAsync for Name: Pants
+2025-06-25 21:29:01.754 +03:00 [INF] Executed DbCommand (3ms) [Parameters=[@__Name_0='?' (Size = 20)], CommandType='"Text"', CommandTimeout='30']
+SELECT `c`.`Id`, `c`.`CreatedAt`, `c`.`DeletedAt`, `c`.`Description`, `c`.`DisplayOrder`, `c`.`ImageId`, `c`.`ModifiedAt`, `c`.`Name`
+FROM `Categories` AS `c`
+WHERE `c`.`Name` = @__Name_0
+LIMIT 2
+2025-06-25 21:29:05.003 +03:00 [WRN] No Category with this Name:Pants
+2025-06-25 21:29:23.355 +03:00 [INF] Executing CreateAsync for entity Category
+2025-06-25 21:29:24.391 +03:00 [INF] Category added successfully (pending save)
+2025-06-25 21:30:41.891 +03:00 [INF] 📥 Saving 2 images to CategoryPhotos
+2025-06-25 21:30:42.017 +03:00 [INF] 📥 Saving image to CategoryPhotos
+2025-06-25 21:30:42.887 +03:00 [ERR] ❌ Exception in CreateAsync: The connection is already in a transaction and cannot participate in another transaction.
+2025-06-25 21:30:43.992 +03:00 [INF] Executing ObjectResult, writing value of type 'E_Commers.DtoModels.Responses.ApiResponse`1[[E_Commers.DtoModels.CategoryDtos.CategoryDto, E-Commerce, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2025-06-25 21:30:44.064 +03:00 [INF] Executed action E_Commers.Controllers.categoriesController.CreateAsync (E-Commerce) in 108485.3691ms
+2025-06-25 21:30:45.612 +03:00 [INF] Executed endpoint 'E_Commers.Controllers.categoriesController.CreateAsync (E-Commerce)'
+2025-06-25 21:30:46.443 +03:00 [INF] Request finished HTTP/1.1 POST https://localhost:7288/api/categories - 500 299 application/json; charset=utf-8 110915.0137ms
+2025-06-25 21:30:47.492 +03:00 [INF] Request starting HTTP/1.1 POST https://localhost:7288/api/categories - multipart/form-data; boundary=--------------------------951092880614514600773868 362277
+2025-06-25 21:30:47.541 +03:00 [INF] Executing UserAuthenticationMiddleware
+2025-06-25 21:30:47.557 +03:00 [INF] Executed DbCommand (4ms) [Parameters=[@__userId_0='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`SecurityStamp`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`Id` = @__userId_0)
+LIMIT 1
+2025-06-25 21:30:47.573 +03:00 [INF] Executing endpoint 'E_Commers.Controllers.categoriesController.CreateAsync (E-Commerce)'
+2025-06-25 21:30:47.577 +03:00 [INF] Route matched with {action = "CreateAsync", controller = "categories"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[E_Commers.DtoModels.Responses.ApiResponse`1[E_Commers.DtoModels.CategoryDtos.CategoryDto]]] CreateAsync(E_Commers.DtoModels.CategoryDtos.CreateCategotyDto) on controller E_Commers.Controllers.categoriesController (E-Commerce).
+2025-06-25 21:30:47.669 +03:00 [INF] Executing CreateAsync in CategoryController
+2025-06-25 21:30:49.151 +03:00 [INF] Execute CreateAsync
+2025-06-25 21:30:49.171 +03:00 [INF] Executing GetByNameAsync for Name: Pants
+2025-06-25 21:30:49.174 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/swagger/index.html - null null
+2025-06-25 21:30:49.179 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__Name_0='?' (Size = 20)], CommandType='"Text"', CommandTimeout='30']
+SELECT `c`.`Id`, `c`.`CreatedAt`, `c`.`DeletedAt`, `c`.`Description`, `c`.`DisplayOrder`, `c`.`ImageId`, `c`.`ModifiedAt`, `c`.`Name`
+FROM `Categories` AS `c`
+WHERE `c`.`Name` = @__Name_0
+LIMIT 2
+2025-06-25 21:30:49.256 +03:00 [WRN] No Category with this Name:Pants
+2025-06-25 21:30:49.263 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/swagger/index.html - 200 null text/html;charset=utf-8 88.4659ms
+2025-06-25 21:30:49.289 +03:00 [INF] Executing CreateAsync for entity Category
+2025-06-25 21:30:49.357 +03:00 [INF] Category added successfully (pending save)
+2025-06-25 21:30:49.609 +03:00 [INF] Executed DbCommand (6ms) [Parameters=[@p0='?' (DbType = DateTime), @p1='?' (DbType = DateTime), @p2='?' (Size = 50), @p3='?' (DbType = Int32), @p4='?' (DbType = Int32), @p5='?' (DbType = DateTime), @p6='?' (Size = 20)], CommandType='"Text"', CommandTimeout='30']
+INSERT INTO `Categories` (`CreatedAt`, `DeletedAt`, `Description`, `DisplayOrder`, `ImageId`, `ModifiedAt`, `Name`)
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6);
+SELECT `Id`
+FROM `Categories`
+WHERE ROW_COUNT() = 1 AND `Id` = LAST_INSERT_ID();
+2025-06-25 21:30:49.703 +03:00 [INF] 📥 Saving 2 images to CategoryPhotos
+2025-06-25 21:30:49.704 +03:00 [INF] 📥 Saving image to CategoryPhotos
+2025-06-25 21:30:50.082 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/swagger/index.js - null null
+2025-06-25 21:30:50.232 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/_vs/browserLink - null null
+2025-06-25 21:30:50.694 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/_framework/aspnetcore-browser-refresh.js - null null
+2025-06-25 21:30:50.890 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/swagger/index.js - 200 null application/javascript;charset=utf-8 808.192ms
+2025-06-25 21:30:50.870 +03:00 [ERR] ❌ Exception in CreateAsync: The connection is already in a transaction and cannot participate in another transaction.
+2025-06-25 21:30:50.911 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/_framework/aspnetcore-browser-refresh.js - 200 16505 application/javascript; charset=utf-8 217.034ms
+2025-06-25 21:30:50.971 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/_vs/browserLink - 200 null text/javascript; charset=UTF-8 739.344ms
+2025-06-25 21:30:50.984 +03:00 [INF] Executing ObjectResult, writing value of type 'E_Commers.DtoModels.Responses.ApiResponse`1[[E_Commers.DtoModels.CategoryDtos.CategoryDto, E-Commerce, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2025-06-25 21:30:51.024 +03:00 [INF] Executed action E_Commers.Controllers.categoriesController.CreateAsync (E-Commerce) in 3394.0317ms
+2025-06-25 21:30:51.076 +03:00 [INF] Executed endpoint 'E_Commers.Controllers.categoriesController.CreateAsync (E-Commerce)'
+2025-06-25 21:30:51.093 +03:00 [INF] Request finished HTTP/1.1 POST https://localhost:7288/api/categories - 500 299 application/json; charset=utf-8 3601.7068ms
+2025-06-25 21:30:52.811 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7288/swagger/v1/swagger.json - null null
+2025-06-25 21:30:52.883 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7288/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 71.7574ms
+2025-06-25 21:31:17.969 +03:00 [INF] Request starting HTTP/1.1 POST https://localhost:7288/api/categories - multipart/form-data; boundary=--------------------------897449262532065777310400 362277
+2025-06-25 21:31:17.977 +03:00 [INF] Executing UserAuthenticationMiddleware
+2025-06-25 21:31:17.989 +03:00 [INF] Executed DbCommand (2ms) [Parameters=[@__userId_0='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`SecurityStamp`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`Id` = @__userId_0)
+LIMIT 1
+2025-06-25 21:31:17.994 +03:00 [INF] Executing endpoint 'E_Commers.Controllers.categoriesController.CreateAsync (E-Commerce)'
+2025-06-25 21:31:18.008 +03:00 [INF] Route matched with {action = "CreateAsync", controller = "categories"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[E_Commers.DtoModels.Responses.ApiResponse`1[E_Commers.DtoModels.CategoryDtos.CategoryDto]]] CreateAsync(E_Commers.DtoModels.CategoryDtos.CreateCategotyDto) on controller E_Commers.Controllers.categoriesController (E-Commerce).
+2025-06-25 21:31:18.022 +03:00 [INF] Executing CreateAsync in CategoryController
+2025-06-25 21:31:18.023 +03:00 [INF] Execute CreateAsync
+2025-06-25 21:31:18.026 +03:00 [INF] Executing GetByNameAsync for Name: Pants
+2025-06-25 21:31:18.030 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__Name_0='?' (Size = 20)], CommandType='"Text"', CommandTimeout='30']
+SELECT `c`.`Id`, `c`.`CreatedAt`, `c`.`DeletedAt`, `c`.`Description`, `c`.`DisplayOrder`, `c`.`ImageId`, `c`.`ModifiedAt`, `c`.`Name`
+FROM `Categories` AS `c`
+WHERE `c`.`Name` = @__Name_0
+LIMIT 2
+2025-06-25 21:31:18.035 +03:00 [WRN] No Category with this Name:Pants
+2025-06-25 21:31:27.156 +03:00 [INF] Executing CreateAsync for entity Category
+2025-06-25 21:31:28.945 +03:00 [INF] Category added successfully (pending save)
+2025-06-25 21:32:00.114 +03:00 [INF] Executed DbCommand (6ms) [Parameters=[@p0='?' (DbType = DateTime), @p1='?' (DbType = DateTime), @p2='?' (Size = 50), @p3='?' (DbType = Int32), @p4='?' (DbType = Int32), @p5='?' (DbType = DateTime), @p6='?' (Size = 20)], CommandType='"Text"', CommandTimeout='30']
+INSERT INTO `Categories` (`CreatedAt`, `DeletedAt`, `Description`, `DisplayOrder`, `ImageId`, `ModifiedAt`, `Name`)
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6);
+SELECT `Id`
+FROM `Categories`
+WHERE ROW_COUNT() = 1 AND `Id` = LAST_INSERT_ID();
+2025-06-25 21:32:00.123 +03:00 [INF] 📥 Saving 2 images to CategoryPhotos
+2025-06-25 21:32:00.124 +03:00 [INF] 📥 Saving image to CategoryPhotos
+2025-06-25 21:32:00.806 +03:00 [ERR] ❌ Exception in CreateAsync: The connection is already in a transaction and cannot participate in another transaction.
+2025-06-25 21:32:00.855 +03:00 [INF] Executing ObjectResult, writing value of type 'E_Commers.DtoModels.Responses.ApiResponse`1[[E_Commers.DtoModels.CategoryDtos.CategoryDto, E-Commerce, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2025-06-25 21:32:00.860 +03:00 [INF] Executed action E_Commers.Controllers.categoriesController.CreateAsync (E-Commerce) in 42849.0641ms
+2025-06-25 21:32:00.862 +03:00 [INF] Executed endpoint 'E_Commers.Controllers.categoriesController.CreateAsync (E-Commerce)'
+2025-06-25 21:32:00.866 +03:00 [INF] Request finished HTTP/1.1 POST https://localhost:7288/api/categories - 500 299 application/json; charset=utf-8 42897.1849ms
+2025-06-25 21:32:45.142 +03:00 [INF] 2 servers were removed due to timeout
+2025-06-25 21:33:40.673 +03:00 [INF] Request starting HTTP/1.1 POST https://localhost:7288/api/categories - multipart/form-data; boundary=--------------------------276857278499139415116907 362277
+2025-06-25 21:33:40.733 +03:00 [INF] Failed to validate the token.
+Microsoft.IdentityModel.Tokens.SecurityTokenExpiredException: IDX10223: Lifetime validation failed. The token is expired. ValidTo (UTC): '6/25/2025 6:27:33 PM', Current time (UTC): '6/25/2025 6:33:40 PM'.
+   at Microsoft.IdentityModel.Tokens.Validators.ValidateLifetime(Nullable`1 notBefore, Nullable`1 expires, SecurityToken securityToken, TokenValidationParameters validationParameters)
+   at Microsoft.IdentityModel.JsonWebTokens.JsonWebTokenHandler.ValidateTokenPayloadAsync(JsonWebToken jsonWebToken, TokenValidationParameters validationParameters, BaseConfiguration configuration)
+   at Microsoft.IdentityModel.JsonWebTokens.JsonWebTokenHandler.ValidateJWSAsync(JsonWebToken jsonWebToken, TokenValidationParameters validationParameters, BaseConfiguration configuration)
+2025-06-25 21:33:40.743 +03:00 [INF] Bearer was not authenticated. Failure message: IDX10223: Lifetime validation failed. The token is expired. ValidTo (UTC): '6/25/2025 6:27:33 PM', Current time (UTC): '6/25/2025 6:33:40 PM'.
+2025-06-25 21:33:40.745 +03:00 [INF] Executing UserAuthenticationMiddleware
+2025-06-25 21:33:40.748 +03:00 [INF] Authorization failed. These requirements were not met:
+RolesAuthorizationRequirement:User.IsInRole must be true for one of the following roles: (Admin)
+2025-06-25 21:33:40.763 +03:00 [INF] AuthenticationScheme: Bearer was challenged.
+2025-06-25 21:33:40.766 +03:00 [INF] Request finished HTTP/1.1 POST https://localhost:7288/api/categories - 401 0 null 93.2535ms
+2025-06-25 21:33:40.780 +03:00 [INF] Connection id "0HNDK2NT3RMIF", Request id "0HNDK2NT3RMIF:00000005": the application completed without reading the entire request body.
+2025-06-25 21:33:45.183 +03:00 [INF] Request starting HTTP/1.1 POST https://localhost:7288/api/Account/Login - application/json 75
+2025-06-25 21:33:45.192 +03:00 [INF] Executing UserAuthenticationMiddleware
+2025-06-25 21:33:45.197 +03:00 [INF] Executing endpoint 'E_Commers.Controllers.AccountController.LoginAsync (E-Commerce)'
+2025-06-25 21:33:45.207 +03:00 [INF] Route matched with {action = "LoginAsync", controller = "Account"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[E_Commers.DtoModels.Responses.ApiResponse`1[E_Commers.DtoModels.TokenDtos.TokensDto]]] LoginAsync(E_Commers.DtoModels.AccountDtos.LoginDTo) on controller E_Commers.Controllers.AccountController (E-Commerce).
+2025-06-25 21:33:45.305 +03:00 [INF] In LoginAsync Method 
+2025-06-25 21:33:45.331 +03:00 [INF] Executed DbCommand (2ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`AccessFailedCount`, `a`.`ConcurrencyStamp`, `a`.`Discriminator`, `a`.`Email`, `a`.`EmailConfirmed`, `a`.`LockoutEnabled`, `a`.`LockoutEnd`, `a`.`NormalizedEmail`, `a`.`NormalizedUserName`, `a`.`PasswordHash`, `a`.`PhoneNumber`, `a`.`PhoneNumberConfirmed`, `a`.`SecurityStamp`, `a`.`TwoFactorEnabled`, `a`.`UserName`, `a`.`Age`, `a`.`CreateAt`, `a`.`DeletedAt`, `a`.`ImageId`, `a`.`LastVisit`, `a`.`Name`, `a`.`ProfilePicture`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`NormalizedEmail` = @__normalizedEmail_0)
+LIMIT 2
+2025-06-25 21:33:45.521 +03:00 [INF] 🔐 Generating Access Token for User ID: d095229b-081d-426d-bc38-a45575852f91
+2025-06-25 21:33:45.594 +03:00 [INF] Executed DbCommand (4ms) [Parameters=[@__userId_0='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a0`.`Name`
+FROM `AspNetUserRoles` AS `a`
+INNER JOIN `AspNetRoles` AS `a0` ON `a`.`RoleId` = `a0`.`Id`
+WHERE `a`.`UserId` = @__userId_0
+2025-06-25 21:33:45.622 +03:00 [INF] ✅ Access Token generated successfully for User ID: d095229b-081d-426d-bc38-a45575852f91
+2025-06-25 21:33:45.626 +03:00 [INF] 🔑 Generating Refresh Token for User ID: d095229b-081d-426d-bc38-a45575852f91
+2025-06-25 21:33:45.646 +03:00 [INF] RefreshToken Generated
+2025-06-25 21:33:45.658 +03:00 [INF] Executing OkObjectResult, writing value of type 'E_Commers.DtoModels.Responses.ApiResponse`1[[E_Commers.DtoModels.TokenDtos.TokensDto, E-Commerce, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2025-06-25 21:33:45.666 +03:00 [INF] Executed action E_Commers.Controllers.AccountController.LoginAsync (E-Commerce) in 455.8357ms
+2025-06-25 21:33:45.672 +03:00 [INF] Executed endpoint 'E_Commers.Controllers.AccountController.LoginAsync (E-Commerce)'
+2025-06-25 21:33:45.675 +03:00 [INF] Request finished HTTP/1.1 POST https://localhost:7288/api/Account/Login - 200 1378 application/json; charset=utf-8 492.5152ms
+2025-06-25 21:34:06.110 +03:00 [INF] Request starting HTTP/1.1 POST https://localhost:7288/api/categories - multipart/form-data; boundary=--------------------------093216655421694003233537 362277
+2025-06-25 21:34:06.120 +03:00 [INF] Executing UserAuthenticationMiddleware
+2025-06-25 21:34:06.126 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__userId_0='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`Id`, `a`.`SecurityStamp`
+FROM `AspNetUsers` AS `a`
+WHERE (`a`.`Discriminator` = 'Customer') AND (`a`.`Id` = @__userId_0)
+LIMIT 1
+2025-06-25 21:34:06.130 +03:00 [INF] Executing endpoint 'E_Commers.Controllers.categoriesController.CreateAsync (E-Commerce)'
+2025-06-25 21:34:06.132 +03:00 [INF] Route matched with {action = "CreateAsync", controller = "categories"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[E_Commers.DtoModels.Responses.ApiResponse`1[E_Commers.DtoModels.CategoryDtos.CategoryDto]]] CreateAsync(E_Commers.DtoModels.CategoryDtos.CreateCategotyDto) on controller E_Commers.Controllers.categoriesController (E-Commerce).
+2025-06-25 21:34:06.146 +03:00 [INF] Executing CreateAsync in CategoryController
+2025-06-25 21:34:06.148 +03:00 [INF] Execute CreateAsync
+2025-06-25 21:34:06.149 +03:00 [INF] Executing GetByNameAsync for Name: Pants
+2025-06-25 21:34:06.156 +03:00 [INF] Executed DbCommand (2ms) [Parameters=[@__Name_0='?' (Size = 20)], CommandType='"Text"', CommandTimeout='30']
+SELECT `c`.`Id`, `c`.`CreatedAt`, `c`.`DeletedAt`, `c`.`Description`, `c`.`DisplayOrder`, `c`.`ImageId`, `c`.`ModifiedAt`, `c`.`Name`
+FROM `Categories` AS `c`
+WHERE `c`.`Name` = @__Name_0
+LIMIT 2
+2025-06-25 21:34:06.160 +03:00 [WRN] No Category with this Name:Pants
+2025-06-25 21:34:06.164 +03:00 [INF] Executing CreateAsync for entity Category
+2025-06-25 21:34:06.167 +03:00 [INF] Category added successfully (pending save)
+2025-06-25 21:34:14.724 +03:00 [INF] Executed DbCommand (7ms) [Parameters=[@p0='?' (DbType = DateTime), @p1='?' (DbType = DateTime), @p2='?' (Size = 50), @p3='?' (DbType = Int32), @p4='?' (DbType = Int32), @p5='?' (DbType = DateTime), @p6='?' (Size = 20)], CommandType='"Text"', CommandTimeout='30']
+INSERT INTO `Categories` (`CreatedAt`, `DeletedAt`, `Description`, `DisplayOrder`, `ImageId`, `ModifiedAt`, `Name`)
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6);
+SELECT `Id`
+FROM `Categories`
+WHERE ROW_COUNT() = 1 AND `Id` = LAST_INSERT_ID();
+2025-06-25 21:34:48.996 +03:00 [INF] 📥 Saving 2 images to CategoryPhotos
+2025-06-25 21:34:48.999 +03:00 [INF] 📥 Saving image to CategoryPhotos
+2025-06-25 21:34:49.683 +03:00 [ERR] ❌ Exception in CreateAsync: The connection is already in a transaction and cannot participate in another transaction.
+2025-06-25 21:34:49.715 +03:00 [INF] Executing ObjectResult, writing value of type 'E_Commers.DtoModels.Responses.ApiResponse`1[[E_Commers.DtoModels.CategoryDtos.CategoryDto, E-Commerce, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2025-06-25 21:34:49.718 +03:00 [INF] Executed action E_Commers.Controllers.categoriesController.CreateAsync (E-Commerce) in 43581.0599ms
+2025-06-25 21:34:49.721 +03:00 [INF] Executed endpoint 'E_Commers.Controllers.categoriesController.CreateAsync (E-Commerce)'
+2025-06-25 21:34:49.724 +03:00 [INF] Request finished HTTP/1.1 POST https://localhost:7288/api/categories - 500 299 application/json; charset=utf-8 43614.1644ms

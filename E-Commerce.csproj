@@ -44,6 +44,7 @@
 	</ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Services\Image\" />
     <Folder Include="wwwroot\CustomerPhotos\" />
     <Folder Include="wwwroot\CategoryPhotos\" />
     <Folder Include="wwwroot\ProductPhotos\" />

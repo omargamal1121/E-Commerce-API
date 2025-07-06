@@ -13,6 +13,8 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using System.ComponentModel.DataAnnotations;
 using E_Commers.Services.EmailServices;
 using Microsoft.AspNetCore.RateLimiting;
+using E_Commers.Services.AccountServices.Shared;
+using E_Commers.Services;
 
 namespace E_Commers.Controllers
 {
@@ -25,15 +27,18 @@ namespace E_Commers.Controllers
 	{
 		private readonly ILogger<AccountController> _logger;
 		private readonly IAccountServices _accountServices;
+	
 		private readonly IAccountLinkBuilder _linkBuilder;
 		private readonly IErrorNotificationService _errorNotificationService;
 
 		public AccountController(
+	
 			IAccountLinkBuilder linkBuilder, 
 			IAccountServices accountServices,
 			ILogger<AccountController> logger,
 			IErrorNotificationService errorNotificationService)
 		{
+			
 			_linkBuilder = linkBuilder ?? throw new ArgumentNullException(nameof(linkBuilder));
 			_accountServices = accountServices ?? throw new ArgumentNullException(nameof(accountServices));
 			_logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -58,21 +63,18 @@ namespace E_Commers.Controllers
 				{
 					var errors = GetModelErrors();
 					_logger.LogWarning($"ModelState errors: {string.Join(", ", errors)}");
-					return BadRequest(ApiResponse<string>.CreateErrorResponse(new ErrorResponse("Invalid Data", errors)));
+					return BadRequest(ApiResponse<string>.CreateErrorResponse("Invalid Data", new ErrorResponse("Invalid Data", errors), 400));
 				}
 
 				_logger.LogInformation($"In {nameof(LoginAsync)} Method ");
-				var response = await _accountServices.LoginAsync(login.Email, login.Password);
-				response.ResponseBody.Links = _linkBuilder.GenerateLinks();
-				response.ResponseBody.Links = _linkBuilder.MakeRelSelf(response.ResponseBody.Links, "login");
-				return HandleResponse(response, nameof(LoginAsync));
+				var result = await _accountServices.LoginAsync(login.Email, login.Password);
+				return HandleResult<TokensDto>(result, nameof(LoginAsync));
 			}
 			catch (Exception ex)
 			{
 				_logger.LogError(ex, $"Error in {nameof(LoginAsync)}");
 				await _errorNotificationService.SendErrorNotificationAsync(ex.Message, ex.StackTrace);
-				return StatusCode(500, ApiResponse<TokensDto>.CreateErrorResponse(
-					new ErrorResponse("Server Error", "An unexpected error occurred during login.")));
+				return StatusCode(500, ApiResponse<TokensDto>.CreateErrorResponse("Server Error", new ErrorResponse("Server Error", "An unexpected error occurred during login."), 500));
 			}
 		}
 
@@ -95,18 +97,17 @@ namespace E_Commers.Controllers
 				{
 					var errors = GetModelErrors();
 					_logger.LogWarning($"ModelState errors: {string.Join(", ", errors)}");
-					return BadRequest(ApiResponse<RegisterResponse>.CreateErrorResponse(new ErrorResponse($"Invalid Data", errors), 400));
+					return BadRequest(ApiResponse<RegisterResponse>.CreateErrorResponse("Invalid Data", new ErrorResponse($"Invalid Data", errors), 400));
 				}
 
-				var response = await _accountServices.RegisterAsync(usermodel);
-				return HandleResponse(response, actionName: nameof(RegisterAsync), "register");
+				var result = await _accountServices.RegisterAsync(usermodel);
+				return HandleResult<RegisterResponse>(result, actionName: nameof(RegisterAsync));
 			}
 			catch (Exception ex)
 			{
 				_logger.LogError(ex, $"Error in {nameof(RegisterAsync)}");
 				await _errorNotificationService.SendErrorNotificationAsync(ex.Message, ex.StackTrace);
-				return StatusCode(500, ApiResponse<RegisterResponse>.CreateErrorResponse(
-					new ErrorResponse("Server Error", "An unexpected error occurred during registration.")));
+				return StatusCode(500, ApiResponse<RegisterResponse>.CreateErrorResponse("Server Error", new ErrorResponse("Server Error", "An unexpected error occurred during registration."), 500));
 			}
 		}
 
@@ -128,20 +129,17 @@ namespace E_Commers.Controllers
 				{
 					var errors = GetModelErrors();
 					_logger.LogWarning($"ModelState errors: {string.Join(", ", errors)}");
-					return BadRequest(ApiResponse<string>.CreateErrorResponse(new ErrorResponse("Invalid Data", errors)));
+					return BadRequest(ApiResponse<string>.CreateErrorResponse("Invalid Data", new ErrorResponse("Invalid Data", errors), 400));
 				}
 
-				var response = await _accountServices.RefreshTokenAsync(refreshTokenDto.UserId.ToString(), refreshTokenDto.RefreshToken);
-				response.ResponseBody.Links = _linkBuilder.GenerateLinks();
-				response.ResponseBody.Links = _linkBuilder.MakeRelSelf(response.ResponseBody.Links, "refresh-token");
-				return HandleResponse(response, targetrel: "refresh-token");
+				var result = await _accountServices.RefreshTokenAsync(refreshTokenDto.UserId.ToString(), refreshTokenDto.RefreshToken);
+				return HandleResult<string>(result, nameof(RefreshTokenAsync));
 			}
 			catch (Exception ex)
 			{
 				_logger.LogError(ex, $"Error in {nameof(RefreshTokenAsync)}");
 				await _errorNotificationService.SendErrorNotificationAsync(ex.Message, ex.StackTrace);
-				return StatusCode(500, ApiResponse<string>.CreateErrorResponse(
-					new ErrorResponse("Server Error", "An unexpected error occurred during token refresh.")));
+				return StatusCode(500, ApiResponse<string>.CreateErrorResponse("Server Error", new ErrorResponse("Server Error", "An unexpected error occurred during token refresh."), 500));
 			}
 		}
 
@@ -164,25 +162,24 @@ namespace E_Commers.Controllers
 				{
 					var errors = GetModelErrors();
 					_logger.LogWarning($"ModelState errors: {string.Join(", ", errors)}");
-					return BadRequest(ApiResponse<string>.CreateErrorResponse(new ErrorResponse("Invalid Data", errors)));
+					return BadRequest(ApiResponse<string>.CreateErrorResponse("Invalid Data", new ErrorResponse("Invalid Data", errors), 400));
 				}
 
 				string? userid = GetIdFromToken();
 				if (userid.IsNullOrEmpty())
 				{
 					_logger.LogError("Can't find userid in token");
-					return Unauthorized(ApiResponse<string>.CreateErrorResponse(new ErrorResponse("Authorization", "Can't find userid in token")));
+					return Unauthorized(ApiResponse<string>.CreateErrorResponse("Authorization", new ErrorResponse("Authorization", "Can't find userid in token"), 401));
 				}
 
-				var response = await _accountServices.ChangePasswordAsync(userid, model.CurrentPass, model.NewPass);
-				return HandleResponse(response, targetrel: "change-password");
+				var result = await _accountServices.ChangePasswordAsync(userid, model.CurrentPass, model.NewPass);
+				return HandleResult<string>(result, nameof(ChangePasswordAsync));
 			}
 			catch (Exception ex)
 			{
 				_logger.LogError(ex, $"Error in {nameof(ChangePasswordAsync)}");
 				await _errorNotificationService.SendErrorNotificationAsync(ex.Message, ex.StackTrace);
-				return StatusCode(500, ApiResponse<string>.CreateErrorResponse(
-					new ErrorResponse("Server Error", "An unexpected error occurred during password change.")));
+				return StatusCode(500, ApiResponse<string>.CreateErrorResponse("Server Error", new ErrorResponse("Server Error", "An unexpected error occurred during password change."), 500));
 			}
 		}
 
@@ -197,7 +194,7 @@ namespace E_Commers.Controllers
 		[ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status401Unauthorized)]
 		[ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status409Conflict)]
 		[ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status500InternalServerError)]
-		public async Task<ActionResult<ApiResponse<ChangeEmailResultDto>>> ChangeEmailAsync([FromBody] ChangeEmailDto newemail)
+		private async Task<ActionResult<ApiResponse<ChangeEmailResultDto>>> ChangeEmailAsync([FromBody] ChangeEmailDto newemail)
 		{
 			try
 			{
@@ -205,26 +202,19 @@ namespace E_Commers.Controllers
 				{
 					var errors = GetModelErrors();
 					_logger.LogWarning($"ModelState errors: {string.Join(", ", errors)}");
-					return BadRequest(ApiResponse<string>.CreateErrorResponse(new ErrorResponse("Invalid Data", $"errors:{string.Join(", ", errors)}")));
+					return BadRequest(ApiResponse<string>.CreateErrorResponse("Invalid Data", new ErrorResponse("Invalid Data", $"errors:{string.Join(", ", errors)}"), 400));
 				}
-
+				string userid=HttpContext
+					.Items["UserId"]?.ToString();
 				_logger.LogInformation($"In {nameof(ChangeEmailAsync)} Method");
-				string? email = GetEmailFromToken();
-				if (email.IsNullOrEmpty())
-				{
-					_logger.LogError("Can't find email in token");
-					return Unauthorized(ApiResponse<string>.CreateErrorResponse(new ErrorResponse("Authorization", "Can't find email in token")));
-				}
-
-				var response = await _accountServices.ChangeEmailAsync(newemail.Email, email);
-				return HandleResponse(response, targetrel: "change-email");
+				var result = await _accountServices.ChangeEmailAsync(newemail.Email,userid);
+				return HandleResult<ChangeEmailResultDto>(result, nameof(ChangeEmailAsync)) ;
 			}
 			catch (Exception ex)
 			{
 				_logger.LogError(ex, $"Error in {nameof(ChangeEmailAsync)}");
 				await _errorNotificationService.SendErrorNotificationAsync(ex.Message, ex.StackTrace);
-				return StatusCode(500, ApiResponse<ChangeEmailResultDto>.CreateErrorResponse(
-					new ErrorResponse("Server Error", "An unexpected error occurred during email change.")));
+				return StatusCode(500, ApiResponse<ChangeEmailResultDto>.CreateErrorResponse("Server Error", new ErrorResponse("Server Error", "An unexpected error occurred during email change."), 500));
 			}
 		}
 
@@ -247,18 +237,17 @@ namespace E_Commers.Controllers
 				if (userid.IsNullOrEmpty())
 				{
 					_logger.LogError("Can't find userid in token");
-					return Unauthorized(ApiResponse<string>.CreateErrorResponse(new ErrorResponse("Authorization", "Can't find userid in token")));
+					return Unauthorized(ApiResponse<string>.CreateErrorResponse("Authorization", new ErrorResponse("Authorization", "Can't find userid in token"), 401));
 				}
 
-				var response = await _accountServices.LogoutAsync(userid);
-				return HandleResponse(response, targetrel: "logout");
+				var result = await _accountServices.LogoutAsync(userid);
+				return HandleResult<string>(result, nameof(LogoutAsync));
 			}
 			catch (Exception ex)
 			{
 				_logger.LogError(ex, $"Error in {nameof(LogoutAsync)}");
 				await _errorNotificationService.SendErrorNotificationAsync(ex.Message, ex.StackTrace);
-				return StatusCode(500, ApiResponse<string>.CreateErrorResponse(
-					new ErrorResponse("Server Error", "An unexpected error occurred during logout.")));
+				return StatusCode(500, ApiResponse<string>.CreateErrorResponse("Server Error", new ErrorResponse("Server Error", "An unexpected error occurred during logout."), 500));
 			}
 		}
 
@@ -280,19 +269,16 @@ namespace E_Commers.Controllers
 				if (userid.IsNullOrEmpty())
 				{
 					_logger.LogError("Can't Get Userid from token");
-					return Unauthorized(ApiResponse<string>.CreateErrorResponse(new ErrorResponse("Authorization", "Can't found userid in token")));
+					return Unauthorized(ApiResponse<string>.CreateErrorResponse("Authorization", new ErrorResponse("Authorization", "Can't found userid in token"), 401));
 				}
-
-				var response = await _accountServices.DeleteAsync(userid);
-				response.ResponseBody.Links = _linkBuilder.MakeRelSelf(_linkBuilder.GenerateLinks(), "Delete");
-				return HandleResponse(response, "delete", userid);
+				var result = await _accountServices.DeleteAsync(userid);
+				return HandleResult<string>(result, nameof(DeleteAsync));
 			}
 			catch (Exception ex)
 			{
 				_logger.LogError(ex, $"Error in {nameof(DeleteAsync)}");
 				await _errorNotificationService.SendErrorNotificationAsync(ex.Message, ex.StackTrace);
-				return StatusCode(500, ApiResponse<string>.CreateErrorResponse(
-					new ErrorResponse("Server Error", "An unexpected error occurred during account deletion.")));
+				return StatusCode(500, ApiResponse<string>.CreateErrorResponse("Server Error", new ErrorResponse("Server Error", "An unexpected error occurred during account deletion."), 500));
 			}
 		}
 
@@ -314,7 +300,7 @@ namespace E_Commers.Controllers
 				{
 					var errors = GetModelErrors();
 					_logger.LogWarning($"ModelState errors: {string.Join(", ", errors)}");
-					return BadRequest(ApiResponse<string>.CreateErrorResponse(new ErrorResponse("Invalid Data", $"errors:{string.Join(", ", errors)}")));
+					return BadRequest(ApiResponse<string>.CreateErrorResponse("Invalid Data", new ErrorResponse("Invalid Data", $"errors:{string.Join(", ", errors)}"), 400));
 				}
 
 				_logger.LogInformation($"Executing {nameof(UploadPhotoAsync)}");
@@ -322,18 +308,17 @@ namespace E_Commers.Controllers
 				if (id.IsNullOrEmpty())
 				{
 					_logger.LogError("Can't find userid in token");
-					return Unauthorized(ApiResponse<string>.CreateErrorResponse(new ErrorResponse("Authorization", "Can't find userid in token")));
+					return Unauthorized(ApiResponse<string>.CreateErrorResponse("Authorization", new ErrorResponse("Authorization", "Can't find userid in token"), 401));
 				}
 
-				var response = await _accountServices.UploadPhotoAsync(image.image, id);
-				return HandleResponse(response, targetrel: "upload-photo");
+				var result = await _accountServices.UploadPhotoAsync(image.image, id);
+				return HandleResult<UploadPhotoResponseDto>(result, nameof(UploadPhotoAsync));
 			}
 			catch (Exception ex)
 			{
 				_logger.LogError(ex, $"Error in {nameof(UploadPhotoAsync)}");
 				await _errorNotificationService.SendErrorNotificationAsync(ex.Message, ex.StackTrace);
-				return StatusCode(500, ApiResponse<UploadPhotoResponseDto>.CreateErrorResponse(
-					new ErrorResponse("Server Error", "An unexpected error occurred during photo upload.")));
+				return StatusCode(500, ApiResponse<UploadPhotoResponseDto>.CreateErrorResponse("Server Error", new ErrorResponse("Server Error", "An unexpected error occurred during photo upload."), 500));
 			}
 		}
 
@@ -346,6 +331,7 @@ namespace E_Commers.Controllers
 		[ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status400BadRequest)]
 		[ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status404NotFound)]
 		[ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status500InternalServerError)]
+		[Authorize]
 		public async Task<ActionResult<ApiResponse<string>>> ConfirmEmailAsync([FromBody] ConfirmEmailDto model)
 		{
 			try
@@ -355,19 +341,18 @@ namespace E_Commers.Controllers
 				{
 					var errors = GetModelErrors();
 					_logger.LogWarning($"ModelState errors: {string.Join(", ", errors)}");
-					return BadRequest(ApiResponse<string>.CreateErrorResponse(
-						new ErrorResponse("Invalid Data", $"errors:{string.Join(", ", errors)}")));
+					return BadRequest(ApiResponse<string>.CreateErrorResponse("Invalid Data", new ErrorResponse("Invalid Data", $"errors:{string.Join(", ", errors)}"), 400));
 				}
+				
 
-				var response = await _accountServices.ConfirmEmailAsync(model.UserId, model.Token);
-				return HandleResponse(response, nameof(ConfirmEmailAsync), "confirm-email");
+				var result = await _accountServices.ConfirmEmailAsync(HttpContext.Items["UserId"].ToString(), model.Token);
+				return HandleResult<string>(result, nameof(ConfirmEmailAsync));
 			}
 			catch (Exception ex)
 			{
 				_logger.LogError(ex, $"Error in {nameof(ConfirmEmailAsync)}");
 				await _errorNotificationService.SendErrorNotificationAsync(ex.Message, ex.StackTrace);
-				return StatusCode(500, ApiResponse<string>.CreateErrorResponse(
-					new ErrorResponse("Server Error", "An unexpected error occurred during email confirmation.")));
+				return StatusCode(500, ApiResponse<string>.CreateErrorResponse("Server Error", new ErrorResponse("Server Error", "An unexpected error occurred during email confirmation."), 500));
 			}
 		}
 
@@ -389,19 +374,17 @@ namespace E_Commers.Controllers
 				{
 					var errors = GetModelErrors();
 					_logger.LogWarning($"ModelState errors: {string.Join(", ", errors)}");
-					return BadRequest(ApiResponse<string>.CreateErrorResponse(
-						new ErrorResponse("Invalid Data", $"errors:{string.Join(", ", errors)}")));
+					return BadRequest(ApiResponse<string>.CreateErrorResponse("Invalid Data", new ErrorResponse("Invalid Data", $"errors:{string.Join(", ", errors)}"), 400));
 				}
 
-				var response = await _accountServices.ResendConfirmationEmailAsync(model.Email);
-				return HandleResponse(response, nameof(ResendConfirmationEmailAsync), "resend-confirmation-email");
+				var result = await _accountServices.ResendConfirmationEmailAsync(model.Email);
+				return HandleResult<string>(result, nameof(ResendConfirmationEmailAsync));
 			}
 			catch (Exception ex)
 			{
 				_logger.LogError(ex, $"Error in {nameof(ResendConfirmationEmailAsync)}");
 				await _errorNotificationService.SendErrorNotificationAsync(ex.Message, ex.StackTrace);
-				return StatusCode(500, ApiResponse<string>.CreateErrorResponse(
-					new ErrorResponse("Server Error", "An unexpected error occurred while resending confirmation email.")));
+				return StatusCode(500, ApiResponse<string>.CreateErrorResponse("Server Error", new ErrorResponse("Server Error", "An unexpected error occurred while resending confirmation email."), 500));
 			}
 		}
 
@@ -419,17 +402,16 @@ namespace E_Commers.Controllers
 				if (!ModelState.IsValid)
 				{
 					var errors = GetModelErrors();
-					return BadRequest(ApiResponse<string>.CreateErrorResponse(new ErrorResponse("Invalid Data", errors)));
+					return BadRequest(ApiResponse<string>.CreateErrorResponse("Invalid Data", new ErrorResponse("Invalid Data", errors), 400));
 				}
-				var response = await _accountServices.RequestPasswordResetAsync(dto.Email);
-				return HandleResponse(response, nameof(RequestPasswordReset));
+				var result = await _accountServices.RequestPasswordResetAsync(dto.Email);
+				return HandleResult<string>(result, nameof(RequestPasswordReset));
 			}
 			catch (Exception ex)
 			{
 				_logger.LogError(ex, $"Error in {nameof(RequestPasswordReset)}");
 				await _errorNotificationService.SendErrorNotificationAsync(ex.Message, ex.StackTrace);
-				return StatusCode(500, ApiResponse<string>.CreateErrorResponse(
-					new ErrorResponse("Server Error", "An unexpected error occurred while requesting password reset.")));
+				return StatusCode(500, ApiResponse<string>.CreateErrorResponse("Server Error", new ErrorResponse("Server Error", "An unexpected error occurred while requesting password reset."), 500));
 			}
 		}
 
@@ -447,17 +429,16 @@ namespace E_Commers.Controllers
 				if (!ModelState.IsValid)
 				{
 					var errors = GetModelErrors();
-					return BadRequest(ApiResponse<string>.CreateErrorResponse(new ErrorResponse("Invalid Data", errors)));
+					return BadRequest(ApiResponse<string>.CreateErrorResponse("Invalid Data", new ErrorResponse("Invalid Data", errors), 400));
 				}
-				var response = await _accountServices.ResetPasswordAsync(dto.Email, dto.Token, dto.NewPassword);
-				return HandleResponse(response, nameof(ResetPassword));
+				var result = await _accountServices.ResetPasswordAsync(dto.Email, dto.Token, dto.NewPassword);
+				return HandleResult<string>(result, nameof(ResetPassword));
 			}
 			catch (Exception ex)
 			{
 				_logger.LogError(ex, $"Error in {nameof(ResetPassword)}");
 				await _errorNotificationService.SendErrorNotificationAsync(ex.Message, ex.StackTrace);
-				return StatusCode(500, ApiResponse<string>.CreateErrorResponse(
-					new ErrorResponse("Server Error", "An unexpected error occurred while resetting password.")));
+				return StatusCode(500, ApiResponse<string>.CreateErrorResponse("Server Error", new ErrorResponse("Server Error", "An unexpected error occurred while resetting password."), 500));
 			}
 		}
 
@@ -471,18 +452,33 @@ namespace E_Commers.Controllers
 			return HttpContext.User.FindFirstValue(ClaimTypes.Email);
 		}
 
-		private ActionResult<ApiResponse<T>> HandleResponse<T>(ApiResponse<T> response, string? actionName = null, string? targetrel = null) where T : class
+		private ActionResult<ApiResponse<T>> HandleResult<T>(Result<T> result, string? actionName = null, int? id = null) where T : class
 		{
-			response.ResponseBody.Links = _linkBuilder.MakeRelSelf(_linkBuilder.GenerateLinks(), actionName);
-			return response.Statuscode switch
+			var links = _linkBuilder.MakeRelSelf(_linkBuilder.GenerateLinks(id), actionName);
+			ApiResponse<T> apiResponse;
+			if (result.Success)
 			{
-				200 => Ok(response),
-				201 => CreatedAtAction(actionName, response),
-				400 => BadRequest(response),
-				401 => Unauthorized(response),
-				404 => NotFound(response),
-				409 => Conflict(response),
-				_ => StatusCode(response.Statuscode, response)
+				apiResponse = ApiResponse<T>.CreateSuccessResponse(result.Message, result.Data, result.StatusCode, warnings: result.Warnings, links: links);
+			}
+			else
+			{
+				ErrorResponse errorResponse = (result.Warnings != null && result.Warnings.Count > 0)
+					? new ErrorResponse("Error", result.Warnings)
+					: new ErrorResponse("Error", result.Message);
+				apiResponse = ApiResponse<T>.CreateErrorResponse("Error", errorResponse, result.StatusCode, links);
+			}
+			if (apiResponse.ResponseBody != null && _linkBuilder != null && id.HasValue && actionName != null)
+			{
+				apiResponse.ResponseBody.Links = links;
+			}
+			return result.StatusCode switch
+			{
+				200 => Ok(apiResponse),
+				201 => Created(string.Empty, apiResponse),
+				400 => BadRequest(apiResponse),
+				401 => Unauthorized(apiResponse),
+				409 => Conflict(apiResponse),
+				_ => StatusCode(result.StatusCode, apiResponse),
 			};
 		}
 

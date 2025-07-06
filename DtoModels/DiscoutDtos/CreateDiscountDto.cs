@@ -4,17 +4,22 @@ namespace E_Commers.DtoModels.DiscoutDtos
 {
 	public class CreateDiscountDto
 	{
-		[Required(ErrorMessage = "Name is required.")]
-		[StringLength(20, MinimumLength = 5, ErrorMessage = "Name must be between 5 and 20 characters.")]
-		public string Name { get; set; } = string.Empty;
+		[Required(ErrorMessage = "Discount name is required")]
+		[StringLength(100, ErrorMessage = "Discount name cannot exceed 100 characters")]
+		public string Name { get; set; }
 
-		[Required(ErrorMessage = "Description is required.")]
-		[StringLength(50, MinimumLength = 10, ErrorMessage = "Description must be between 10 and 50 characters.")]
-		public string Description { get; set; } = string.Empty;
-
-		[Required(ErrorMessage = "Discount Percent Required")]
-		[Range(0, 1, ErrorMessage = "Must be between 0 and 1")]
+		[Required(ErrorMessage = "Discount percentage is required")]
+		[Range(1, 100, ErrorMessage = "Discount percentage must be between 1 and 100")]
 		public decimal DiscountPercent { get; set; }
-		public bool IsActive { get; set; } = false;
+
+		public bool? IsActive { get; set; } = true;
+
+		[Required(ErrorMessage = "Start date is required")]
+		public DateTime StartDate { get; set; }
+
+		[Required(ErrorMessage = "End date is required")]
+		public DateTime EndDate { get; set; }
+
+		public string? Description { get; set; }
 	}
 }

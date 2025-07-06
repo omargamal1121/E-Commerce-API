@@ -8,7 +8,7 @@ namespace E_Commers.Models
 		public int Id { get; set; }
 
 		[JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-		public DateTime? CreatedAt { get; set; } = DateTime.Now;
+		public DateTime? CreatedAt { get; set; } = DateTime.UtcNow;
 		[JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
 
 		[CustomValidation(typeof(BaseEntity), nameof(ValidateModifiedAt))]
