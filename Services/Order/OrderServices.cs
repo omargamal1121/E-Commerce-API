@@ -7,6 +7,7 @@ using E_Commers.Interfaces;
 using E_Commers.Models;
 using E_Commers.Services.AdminOpreationServices;
 using E_Commers.Services.Cache;
+using E_Commers.Services.EmailServices;
 using E_Commers.UOW;
 using Hangfire;
 using Microsoft.EntityFrameworkCore;
@@ -159,141 +160,140 @@ namespace E_Commers.Services.Order
             }
         }
 
-        public async Task<Result<OrderDto>> CreateOrderFromCartAsync(string userId, CreateOrderDto orderDto)
-        {
-            _logger.LogInformation($"Creating order from cart for user: {userId}");
+		public async Task<Result<OrderDto>> CreateOrderFromCartAsync(string userId, CreateOrderDto orderDto)
+		{
+			_logger.LogInformation($"Creating order from cart for user: {userId}");
 
-            using var transaction = await _unitOfWork.BeginTransactionAsync();
-            try
-            {
-                // Get customer cart
-                var cartResult = await _cartServices.GetCartAsync(userId);
-                if (!cartResult.Success)
-                {
-                    await transaction.RollbackAsync();
-                    return Result<OrderDto>.Fail("Failed to retrieve cart", 400);
-                }
+			using var transaction = await _unitOfWork.BeginTransactionAsync();
+			try
+			{
+				// Get customer cart
+				var cartResult = await _cartServices.GetCartAsync(userId);
+				if (!cartResult.Success)
+				{
+					await transaction.RollbackAsync();
+					return Result<OrderDto>.Fail("Failed to retrieve cart", 400);
+				}
 
-                var cart = cartResult.Data;
-                if (cart.IsEmpty)
-                {
-                    await transaction.RollbackAsync();
-                    return Result<OrderDto>.Fail("Cart is empty", 400);
-                }
+				var cart = cartResult.Data;
+				if (cart.IsEmpty)
+				{
+					await transaction.RollbackAsync();
+					return Result<OrderDto>.Fail("Cart is empty", 400);
+				}
 
-                // Validate payment method and provider
-                var paymentMethod = await _unitOfWork.Repository<PaymentMethod>().GetByIdAsync(orderDto.PaymentMethodId);
-                if (paymentMethod == null)
-                {
-                    await transaction.RollbackAsync();
-                    return Result<OrderDto>.Fail("Invalid payment method", 400);
-                }
+				// Validate payment method and provider
+				var paymentMethod = await _unitOfWork.Repository<PaymentMethod>().GetByIdAsync(orderDto.PaymentMethodId);
+				if (paymentMethod == null)
+				{
+					await transaction.RollbackAsync();
+					return Result<OrderDto>.Fail("Invalid payment method", 400);
+				}
 
-                var paymentProvider = await _unitOfWork.Repository<PaymentProvider>().GetByIdAsync(orderDto.PaymentProviderId);
-                if (paymentProvider == null)
-                {
-                    await transaction.RollbackAsync();
-                    return Result<OrderDto>.Fail("Invalid payment provider", 400);
-                }
+				var paymentProvider = await _unitOfWork.Repository<PaymentProvider>().GetByIdAsync(orderDto.PaymentProviderId);
+				if (paymentProvider == null)
+				{
+					await transaction.RollbackAsync();
+					return Result<OrderDto>.Fail("Invalid payment provider", 400);
+				}
 
-                if (!paymentProvider.IsActive)
-                {
-                    await transaction.RollbackAsync();
-                    return Result<OrderDto>.Fail("Payment provider is not active", 400);
-                }
+				if (!paymentProvider.IsActive)
+				{
+					await transaction.RollbackAsync();
+					return Result<OrderDto>.Fail("Payment provider is not active", 400);
+				}
 
-                // Generate order number
-                var orderNumber = await _orderRepository.GenerateOrderNumberAsync();
+				// Generate order number
+				var orderNumber = await _orderRepository.GenerateOrderNumberAsync();
 
-                // Create order
-                var order = new Order
-                {
-                    CustomerId = userId,
-                    OrderNumber = orderNumber,
-                    Status = OrderStatus.Pending,
-                    Subtotal = cart.TotalPrice,
-                    TaxAmount = orderDto.TaxAmount,
-                    ShippingCost = orderDto.ShippingCost,
-                    DiscountAmount = orderDto.DiscountAmount,
-                    Total = cart.TotalPrice + orderDto.TaxAmount + orderDto.ShippingCost - orderDto.DiscountAmount,
-                    Notes = orderDto.Notes,
-                    CreatedAt = DateTime.UtcNow
-                };
+				var order = new E_Commers.Models.Order
+				{
+					CustomerId = userId,
+					OrderNumber = orderNumber,
+					Status = OrderStatus.Pending,
+					Subtotal = cart.TotalPrice,
+					TaxAmount = orderDto.TaxAmount,
+					ShippingCost = orderDto.ShippingCost,
+					DiscountAmount = orderDto.DiscountAmount,
+					Total = cart.TotalPrice + orderDto.TaxAmount + orderDto.ShippingCost - orderDto.DiscountAmount,
+					Notes = orderDto.Notes,
+					CreatedAt = DateTime.UtcNow
+				};
 
-                var createdOrder = await _orderRepository.CreateAsync(order);
-                if (createdOrder == null)
-                {
-                    await transaction.RollbackAsync();
-                    return Result<OrderDto>.Fail("Failed to create order", 500);
-                }
+				var createdOrder = await _orderRepository.CreateAsync(order);
+				if (createdOrder == null)
+				{
+					await transaction.RollbackAsync();
+					return Result<OrderDto>.Fail("Failed to create order", 500);
+				}
 
-                // Create order items from cart items
-                foreach (var cartItem in cart.Items)
-                {
-                    var orderItem = new OrderItem
-                    {
-                        OrderId = createdOrder.Id,
-                        ProductId = cartItem.ProductId,
-                        ProductVariantId = cartItem.Product?.Variants?.FirstOrDefault()?.Id,
-                        Quantity = cartItem.Quantity,
-                        UnitPrice = cartItem.UnitPrice,
-                        TotalPrice = cartItem.TotalPrice,
-                        OrderedAt = DateTime.UtcNow
-                    };
+				// Create order items from cart items
+				foreach (var cartItem in cart.Items)
+				{
+					var orderItem = new OrderItem
+					{
+						OrderId = createdOrder.Id,
+						ProductId = cartItem.ProductId,
+						ProductVariantId = cartItem.Product?.Variants?.FirstOrDefault()?.Id,
+						Quantity = cartItem.Quantity,
+						UnitPrice = cartItem.UnitPrice,
+						TotalPrice = cartItem.TotalPrice,
+						OrderedAt = DateTime.UtcNow
+					};
 
-                    await _unitOfWork.Repository<OrderItem>().CreateAsync(orderItem);
-                }
+					await _unitOfWork.Repository<OrderItem>().CreateAsync(orderItem);
+				}
 
-                // Create payment record
-                var payment = new Payment
-                {
-                    CustomerId = userId,
-                    PaymentMethodId = orderDto.PaymentMethodId,
-                    PaymentProviderId = orderDto.PaymentProviderId,
-                    Amount = createdOrder.Total,
-                    PaymentDate = DateTime.UtcNow,
-                    OrderId = createdOrder.Id,
-                    Status = "Pending"
-                };
+				// Create payment record
+				var payment = new Payment
+				{
+					CustomerId = userId,
+					PaymentMethodId = orderDto.PaymentMethodId,
+					PaymentProviderId = orderDto.PaymentProviderId,
+					Amount = createdOrder.Total,
+					PaymentDate = DateTime.UtcNow,
+					OrderId = createdOrder.Id,
+					Status = "Pending"
+				};
 
-                await _unitOfWork.Repository<Payment>().CreateAsync(payment);
+				await _unitOfWork.Repository<Payment>().CreateAsync(payment);
 
-                // Clear cart
-                await _cartServices.ClearCartAsync(userId);
+				// Clear cart
+				await _cartServices.ClearCartAsync(userId);
 
-                // Log admin operation
-                var adminLog = await _adminOperationServices.AddAdminOpreationAsync(
-                    $"Created order {orderNumber} from cart",
-                    Opreations.AddOpreation,
-                    userId,
-                    createdOrder.Id
-                );
+				// Log admin operation
+				var adminLog = await _adminOperationServices.AddAdminOpreationAsync(
+					$"Created order {orderNumber} from cart",
+					Opreations.AddOpreation,
+					userId,
+					createdOrder.Id
+				);
 
-                if (!adminLog.Success)
-                {
-                    _logger.LogWarning($"Failed to log admin operation: {adminLog.Message}");
-                }
+				if (!adminLog.Success)
+				{
+					_logger.LogWarning($"Failed to log admin operation: {adminLog.Message}");
+				}
 
-                await _unitOfWork.CommitAsync();
-                await transaction.CommitAsync();
+				await _unitOfWork.CommitAsync();
+				await transaction.CommitAsync();
 
-                // Clear cache
-                await _cacheManager.RemoveByTagAsync(CACHE_TAG_ORDER);
+				// Clear cache
+				await _cacheManager.RemoveByTagAsync(CACHE_TAG_ORDER);
 
-                // Get complete order with all details
-                var completeOrder = await _orderRepository.GetOrderByIdAsync(createdOrder.Id);
-                var orderDto = _mapper.Map<OrderDto>(completeOrder);
+				// Get complete order with all details
+				var completeOrder = await _orderRepository.GetOrderByIdAsync(createdOrder.Id);
+				var mappedOrderDto = _mapper.Map<OrderDto>(completeOrder); // Renamed variable to avoid conflict
 
-                return Result<OrderDto>.Ok(orderDto, "Order created successfully", 201);
-            }
-            catch (Exception ex)
-            {
-                await transaction.RollbackAsync();
-                _logger.LogError($"Error creating order for user {userId}: {ex.Message}");
-                NotifyAdminOfError($"Error creating order for user {userId}: {ex.Message}", ex.StackTrace);
-                return Result<OrderDto>.Fail("An error occurred while creating order", 500);
-            }
-        }
+				return Result<OrderDto>.Ok(mappedOrderDto, "Order created successfully", 201);
+			}
+			catch (Exception ex)
+			{
+				await transaction.RollbackAsync();
+				_logger.LogError($"Error creating order for user {userId}: {ex.Message}");
+				NotifyAdminOfError($"Error creating order for user {userId}: {ex.Message}", ex.StackTrace);
+				return Result<OrderDto>.Fail("An error occurred while creating order", 500);
+			}
+		}
 
         public async Task<Result<OrderDto>> UpdateOrderStatusAsync(int orderId, UpdateOrderStatusDto statusDto, string userRole)
         {
@@ -456,17 +456,17 @@ namespace E_Commers.Services.Order
             }
         }
 
-        public async Task<Result<int>> GetOrderCountByCustomerAsync(string userId)
+        public async Task<Result<int?>> GetOrderCountByCustomerAsync(string userId)
         {
             try
             {
                 var count = await _orderRepository.GetOrderCountByCustomerAsync(userId);
-                return Result<int>.Ok(count, "Order count retrieved", 200);
+                return Result<int?>.Ok(count, "Order count retrieved", 200);
             }
             catch (Exception ex)
             {
                 _logger.LogError($"Error getting order count for user {userId}: {ex.Message}");
-                return Result<int>.Fail("An error occurred while getting order count", 500);
+                return Result<int?>.Fail("An error occurred while getting order count", 500);
             }
         }
 
@@ -523,22 +523,22 @@ namespace E_Commers.Services.Order
             }
         }
 
-        public async Task<Result<int>> GetTotalOrderCountAsync(OrderStatus? status, string userRole)
+        public async Task<Result<int?>> GetTotalOrderCountAsync(OrderStatus? status, string userRole)
         {
             if (userRole != "Admin")
             {
-                return Result<int>.Fail("Unauthorized access", 403);
+                return Result<int?>.Fail("Unauthorized access", 403);
             }
 
             try
             {
                 var count = await _orderRepository.GetTotalOrderCountAsync(status);
-                return Result<int>.Ok(count, "Total order count retrieved", 200);
+                return Result<int?>.Ok(count, "Total order count retrieved", 200);
             }
             catch (Exception ex)
             {
                 _logger.LogError($"Error getting total order count: {ex.Message}");
-                return Result<int>.Fail("An error occurred while getting total order count", 500);
+                return Result<int?>.Fail("An error occurred while getting total order count", 500);
             }
         }
     }

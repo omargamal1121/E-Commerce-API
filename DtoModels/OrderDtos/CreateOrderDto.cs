@@ -1,3 +1,4 @@
+using E_Commers.Enums;
 using System.ComponentModel.DataAnnotations;
 
 namespace E_Commers.DtoModels.OrderDtos

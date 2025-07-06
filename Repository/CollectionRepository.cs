@@ -83,10 +83,6 @@ namespace E_Commers.Repository
                 .Include(c => c.ProductCollections.Where(pc => pc.Product.DeletedAt == null))
                 .ThenInclude(pc => pc.Product);
 
-            if (isActive.HasValue)
-            {
-                query = query.Where(c => c.IsActive == isActive.Value);
-            }
 
             return await query
                 .OrderBy(c => c.DisplayOrder)

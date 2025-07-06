@@ -7,8 +7,10 @@ using E_Commers.Interfaces;
 using E_Commers.Models;
 using E_Commers.Services.AdminOpreationServices;
 using E_Commers.Services.Cache;
+using E_Commers.Services.EmailServices;
 using E_Commers.UOW;
 using Hangfire;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -17,7 +19,9 @@ namespace E_Commers.Services.Cart
     public class CartServices : ICartServices
     {
         private readonly ILogger<CartServices> _logger;
-        private readonly IMapper _mapper;
+        private readonly IErrorNotificationService _errorNotificationService;
+        private readonly UserManager<Customer>_userManager;
+		private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
         private readonly ICartRepository _cartRepository;
         private readonly IAdminOpreationServices _adminOperationServices;
@@ -25,14 +29,18 @@ namespace E_Commers.Services.Cart
         private const string CACHE_TAG_CART = "cart";
 
         public CartServices(
-            ILogger<CartServices> logger,
+            UserManager<Customer> userManager,
+            IErrorNotificationService errorNotificationService,
+			ILogger<CartServices> logger,
             IMapper mapper,
             IUnitOfWork unitOfWork,
             ICartRepository cartRepository,
             IAdminOpreationServices adminOperationServices,
             ICacheManager cacheManager)
-        {
-            _logger = logger;
+        { 
+            _userManager = userManager;
+            _errorNotificationService = errorNotificationService;
+			_logger = logger;
             _mapper = mapper;
             _unitOfWork = unitOfWork;
             _cartRepository = cartRepository;
@@ -410,17 +418,17 @@ namespace E_Commers.Services.Cart
             }
         }
 
-        public async Task<Result<int>> GetCartItemCountAsync(string userId)
+        public async Task<Result<int?>> GetCartItemCountAsync(string userId)
         {
             try
             {
                 var count = await _cartRepository.GetCartItemCountAsync(userId);
-                return Result<int>.Ok(count, "Cart item count retrieved", 200);
+                return Result<int?>.Ok(count, "Cart item count retrieved", 200);
             }
             catch (Exception ex)
             {
                 _logger.LogError($"Error getting cart item count for user {userId}: {ex.Message}");
-                return Result<int>.Fail("An error occurred while getting cart item count", 500);
+                return Result<int?>.Fail("An error occurred while getting cart item count", 500);
             }
         }
 
@@ -453,18 +461,18 @@ namespace E_Commers.Services.Cart
             }
         }
 
-        private async Task<Cart?> CreateNewCartAsync(string userId)
+        private async Task<E_Commers.Models.Cart?> CreateNewCartAsync(string userId)
         {
             try
             {
-                var customer = await _unitOfWork.Repository<Customer>().GetByQuery(c => c.Id == userId);
+                var customer = await _userManager.FindByIdAsync (userId);
                 if (customer == null)
                 {
                     _logger.LogWarning($"Customer not found for user: {userId}");
                     return null;
                 }
 
-                var cart = new Cart
+                var cart = new Models.Cart
                 {
                     UserId = userId,
                     CustomerId = userId,

@@ -10,6 +10,7 @@ using E_Commers.DtoModels.OrderDtos;
 using E_Commers.DtoModels.ProductDtos;
 using E_Commers.DtoModels.WareHouseDtos;
 using E_Commers.Models;
+using E_Commers.DtoModels.CustomerAddressDtos;
 
 namespace E_Commers.Mappings
 {
@@ -103,7 +104,7 @@ namespace E_Commers.Mappings
 				.ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
 				.ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
 				.ForMember(dest => dest.Quantity, opt => opt.MapFrom(src => src.Quantity))
-				.ForMember(dest => dest.SubCategoryId, opt => opt.MapFrom(src => src.CategoryId));
+				.ForMember(dest => dest.SubCategoryId, opt => opt.MapFrom(src => src.Subcategoryid));
 
 			CreateMap<UpdateProductDto, Product>()
 				.ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
@@ -219,7 +220,7 @@ namespace E_Commers.Mappings
 						{
 							Id = main.Id,
 							Url = main.Url,
-							IsMain = main.IsMain
+						
 						};
 					}
 					else
@@ -233,14 +234,14 @@ namespace E_Commers.Mappings
 						{
 							Id = i.Id,
 							Url = i.Url,
-							IsMain = i.IsMain
+						
 						})
 						.ToList();
 				});
 
 			CreateMap<CreateCollectionDto, Collection>()
 				.ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name.Trim()))
-				.ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description?.Trim()))
+				.ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
 				.ForMember(dest => dest.DisplayOrder, opt => opt.MapFrom(src => src.DisplayOrder))
 				.ForMember(dest => dest.IsActive, opt => opt.MapFrom(src => src.IsActive))
 				.ForMember(dest => dest.Id, opt => opt.Ignore())
@@ -252,7 +253,7 @@ namespace E_Commers.Mappings
 
 			CreateMap<UpdateCollectionDto, Collection>()
 				.ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name.Trim()))
-				.ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description?.Trim()))
+				.ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
 				.ForMember(dest => dest.DisplayOrder, opt => opt.MapFrom(src => src.DisplayOrder))
 				.ForMember(dest => dest.IsActive, opt => opt.MapFrom(src => src.IsActive))
 				.ForMember(dest => dest.Id, opt => opt.Ignore())
@@ -280,7 +281,7 @@ namespace E_Commers.Mappings
 						{
 							Id = main.Id,
 							Url = main.Url,
-							IsMain = main.IsMain
+						
 						};
 					}
 					else
@@ -315,11 +316,11 @@ namespace E_Commers.Mappings
 				.ForMember(dest => dest.State, opt => opt.MapFrom(src => src.State.Trim()))
 				.ForMember(dest => dest.City, opt => opt.MapFrom(src => src.City.Trim()))
 				.ForMember(dest => dest.StreetAddress, opt => opt.MapFrom(src => src.StreetAddress.Trim()))
-				.ForMember(dest => dest.ApartmentSuite, opt => opt.MapFrom(src => src.ApartmentSuite?.Trim()))
+				.ForMember(dest => dest.ApartmentSuite, opt => opt.MapFrom(src => src.ApartmentSuite))
 				.ForMember(dest => dest.PostalCode, opt => opt.MapFrom(src => src.PostalCode.Trim()))
 				.ForMember(dest => dest.AddressType, opt => opt.MapFrom(src => src.AddressType.Trim()))
 				.ForMember(dest => dest.IsDefault, opt => opt.MapFrom(src => src.IsDefault))
-				.ForMember(dest => dest.AdditionalNotes, opt => opt.MapFrom(src => src.AdditionalNotes?.Trim()))
+				.ForMember(dest => dest.AdditionalNotes, opt => opt.MapFrom(src => src.AdditionalNotes))
 				.ForMember(dest => dest.CustomerId, opt => opt.Ignore())
 				.ForMember(dest => dest.Customer, opt => opt.Ignore())
 				.ForMember(dest => dest.Id, opt => opt.Ignore())

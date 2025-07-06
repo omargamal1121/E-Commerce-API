@@ -1,5 +1,6 @@
 using AutoMapper;
 using E_Commers.DtoModels.CategoryDtos;
+using E_Commers.DtoModels.CollectionDtos;
 using E_Commers.DtoModels.DiscoutDtos;
 using E_Commers.DtoModels.ImagesDtos;
 using E_Commers.DtoModels.ProductDtos;
@@ -380,7 +381,7 @@ namespace E_Commers.Services.Product
 		{
 			try
 			{
-				var isfound = await _categoryServices.IsExsistAsync(categoryId);
+				var isfound = await _subCategoryServices.IsExsistAsync(categoryId);
 				if (!isfound.Success)
 					return Result<List<ProductDto>>.Fail($"No Category with this id:{categoryId}", 404);
 

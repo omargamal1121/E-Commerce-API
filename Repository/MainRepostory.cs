@@ -16,7 +16,7 @@ public class MainRepository<T> : IRepository<T> where T : BaseEntity
 	private readonly DbSet<T> _entities;
 	private readonly ILogger<MainRepository<T>> _logger;
 
-	public MainRepository( AppDbContext context, ILogger<MainRepository<T>> logger)
+	public MainRepository(AppDbContext context, ILogger<MainRepository<T>> logger)
 	{
 		
 		_context = context ?? throw new ArgumentNullException(nameof(context));

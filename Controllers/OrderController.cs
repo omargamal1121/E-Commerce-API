@@ -1,7 +1,9 @@
 using E_Commers.DtoModels.OrderDtos;
 using E_Commers.DtoModels.Responses;
 using E_Commers.Enums;
+using E_Commers.ErrorHnadling;
 using E_Commers.Interfaces;
+using E_Commers.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -32,6 +34,39 @@ namespace E_Commers.Controllers
             return User.FindFirst(ClaimTypes.Role)?.Value ?? "Customer";
         }
 
+        private List<string> GetModelErrors()
+        {
+            return ModelState.Values
+                .SelectMany(v => v.Errors)
+                .Select(e => e.ErrorMessage)
+                .ToList();
+        }
+
+        private ActionResult<ApiResponse<T>> HandleResult<T>(Result<T> result, string? actionName = null, int? id = null)
+        {
+            var apiResponse = result.Success
+                ? ApiResponse<T>.CreateSuccessResponse(result.Message, result.Data, result.StatusCode, warnings: result.Warnings)
+                : ApiResponse<T>.CreateErrorResponse(result.Message, new ErrorResponse("Error", result.Message), result.StatusCode, warnings: result.Warnings);
+
+            switch (result.StatusCode)
+            {
+                case 200:
+                    return Ok(apiResponse);
+                case 201:
+                    return actionName != null && id.HasValue ? CreatedAtAction(actionName, new { id }, apiResponse) : StatusCode(201, apiResponse);
+                case 400:
+                    return BadRequest(apiResponse);
+                case 401:
+                    return Unauthorized(apiResponse);
+                case 404:
+                    return NotFound(apiResponse);
+                case 409:
+                    return Conflict(apiResponse);
+                default:
+                    return StatusCode(result.StatusCode, apiResponse);
+            }
+        }
+
         /// <summary>
         /// Get order by ID
         /// </summary>
@@ -40,36 +75,15 @@ namespace E_Commers.Controllers
         {
             try
             {
+                _logger.LogInformation($"Executing GetOrderById for ID: {orderId}");
                 var userId = GetUserId();
                 var result = await _orderServices.GetOrderByIdAsync(orderId, userId);
-
-                if (!result.Success)
-                {
-                    return StatusCode(result.StatusCode, new ApiResponse<OrderDto>
-                    {
-                        Success = false,
-                        Message = result.Message,
-                        StatusCode = result.StatusCode
-                    });
-                }
-
-                return Ok(new ApiResponse<OrderDto>
-                {
-                    Success = true,
-                    Message = result.Message,
-                    Data = result.Data,
-                    StatusCode = 200
-                });
+                return HandleResult(result, nameof(GetOrderById), orderId);
             }
             catch (Exception ex)
             {
                 _logger.LogError($"Error in GetOrderById: {ex.Message}");
-                return StatusCode(500, new ApiResponse<OrderDto>
-                {
-                    Success = false,
-                    Message = "An error occurred while retrieving the order",
-                    StatusCode = 500
-                });
+                return StatusCode(500, ApiResponse<OrderDto>.CreateErrorResponse("Server Error", new ErrorResponse("Server Error", "An error occurred while retrieving the order"), 500));
             }
         }
 
@@ -81,36 +95,15 @@ namespace E_Commers.Controllers
         {
             try
             {
+                _logger.LogInformation($"Executing GetOrderByNumber for number: {orderNumber}");
                 var userId = GetUserId();
                 var result = await _orderServices.GetOrderByNumberAsync(orderNumber, userId);
-
-                if (!result.Success)
-                {
-                    return StatusCode(result.StatusCode, new ApiResponse<OrderDto>
-                    {
-                        Success = false,
-                        Message = result.Message,
-                        StatusCode = result.StatusCode
-                    });
-                }
-
-                return Ok(new ApiResponse<OrderDto>
-                {
-                    Success = true,
-                    Message = result.Message,
-                    Data = result.Data,
-                    StatusCode = 200
-                });
+                return HandleResult(result, nameof(GetOrderByNumber));
             }
             catch (Exception ex)
             {
                 _logger.LogError($"Error in GetOrderByNumber: {ex.Message}");
-                return StatusCode(500, new ApiResponse<OrderDto>
-                {
-                    Success = false,
-                    Message = "An error occurred while retrieving the order",
-                    StatusCode = 500
-                });
+                return StatusCode(500, ApiResponse<OrderDto>.CreateErrorResponse("Server Error", new ErrorResponse("Server Error", "An error occurred while retrieving the order"), 500));
             }
         }
 
@@ -124,36 +117,15 @@ namespace E_Commers.Controllers
         {
             try
             {
+                _logger.LogInformation($"Executing GetCustomerOrders with pagination: page {page}, size {pageSize}");
                 var userId = GetUserId();
                 var result = await _orderServices.GetCustomerOrdersAsync(userId, page, pageSize);
-
-                if (!result.Success)
-                {
-                    return StatusCode(result.StatusCode, new ApiResponse<List<OrderDto>>
-                    {
-                        Success = false,
-                        Message = result.Message,
-                        StatusCode = result.StatusCode
-                    });
-                }
-
-                return Ok(new ApiResponse<List<OrderDto>>
-                {
-                    Success = true,
-                    Message = result.Message,
-                    Data = result.Data,
-                    StatusCode = 200
-                });
+                return HandleResult(result, nameof(GetCustomerOrders));
             }
             catch (Exception ex)
             {
                 _logger.LogError($"Error in GetCustomerOrders: {ex.Message}");
-                return StatusCode(500, new ApiResponse<List<OrderDto>>
-                {
-                    Success = false,
-                    Message = "An error occurred while retrieving customer orders",
-                    StatusCode = 500
-                });
+                return StatusCode(500, ApiResponse<List<OrderDto>>.CreateErrorResponse("Server Error", new ErrorResponse("Server Error", "An error occurred while retrieving customer orders"), 500));
             }
         }
 
@@ -167,49 +139,25 @@ namespace E_Commers.Controllers
             {
                 if (!ModelState.IsValid)
                 {
-                    return BadRequest(new ApiResponse<OrderDto>
-                    {
-                        Success = false,
-                        Message = "Invalid input data",
-                        StatusCode = 400
-                    });
+                    var errors = GetModelErrors();
+                    _logger.LogWarning($"ModelState errors: {string.Join(", ", errors)}");
+                    return BadRequest(ApiResponse<OrderDto>.CreateErrorResponse("Invalid Data", new ErrorResponse("Invalid Data", errors), 400));
                 }
 
+                _logger.LogInformation("Executing CreateOrderFromCart");
                 var userId = GetUserId();
                 var result = await _orderServices.CreateOrderFromCartAsync(userId, orderDto);
-
-                if (!result.Success)
-                {
-                    return StatusCode(result.StatusCode, new ApiResponse<OrderDto>
-                    {
-                        Success = false,
-                        Message = result.Message,
-                        StatusCode = result.StatusCode
-                    });
-                }
-
-                return StatusCode(201, new ApiResponse<OrderDto>
-                {
-                    Success = true,
-                    Message = result.Message,
-                    Data = result.Data,
-                    StatusCode = 201
-                });
+                return HandleResult(result, nameof(CreateOrderFromCart));
             }
             catch (Exception ex)
             {
                 _logger.LogError($"Error in CreateOrderFromCart: {ex.Message}");
-                return StatusCode(500, new ApiResponse<OrderDto>
-                {
-                    Success = false,
-                    Message = "An error occurred while creating the order",
-                    StatusCode = 500
-                });
+                return StatusCode(500, ApiResponse<OrderDto>.CreateErrorResponse("Server Error", new ErrorResponse("Server Error", "An error occurred while creating the order"), 500));
             }
         }
 
         /// <summary>
-        /// Cancel order
+        /// Cancel an order
         /// </summary>
         [HttpPost("{orderId}/cancel")]
         public async Task<ActionResult<ApiResponse<string>>> CancelOrder(int orderId, [FromBody] CancelOrderDto cancelDto)
@@ -218,125 +166,60 @@ namespace E_Commers.Controllers
             {
                 if (!ModelState.IsValid)
                 {
-                    return BadRequest(new ApiResponse<string>
-                    {
-                        Success = false,
-                        Message = "Invalid input data",
-                        StatusCode = 400
-                    });
+                    var errors = GetModelErrors();
+                    _logger.LogWarning($"ModelState errors: {string.Join(", ", errors)}");
+                    return BadRequest(ApiResponse<string>.CreateErrorResponse("Invalid Data", new ErrorResponse("Invalid Data", errors), 400));
                 }
 
+                _logger.LogInformation($"Executing CancelOrder for ID: {orderId}");
                 var userId = GetUserId();
                 var result = await _orderServices.CancelOrderAsync(orderId, cancelDto, userId);
-
-                if (!result.Success)
-                {
-                    return StatusCode(result.StatusCode, new ApiResponse<string>
-                    {
-                        Success = false,
-                        Message = result.Message,
-                        StatusCode = result.StatusCode
-                    });
-                }
-
-                return Ok(new ApiResponse<string>
-                {
-                    Success = true,
-                    Message = result.Message,
-                    StatusCode = 200
-                });
+                return HandleResult(result, nameof(CancelOrder), orderId);
             }
             catch (Exception ex)
             {
                 _logger.LogError($"Error in CancelOrder: {ex.Message}");
-                return StatusCode(500, new ApiResponse<string>
-                {
-                    Success = false,
-                    Message = "An error occurred while cancelling the order",
-                    StatusCode = 500
-                });
+                return StatusCode(500, ApiResponse<string>.CreateErrorResponse("Server Error", new ErrorResponse("Server Error", "An error occurred while canceling the order"), 500));
             }
         }
 
         /// <summary>
-        /// Get order count for customer
+        /// Get customer order count
         /// </summary>
         [HttpGet("customer/count")]
-        public async Task<ActionResult<ApiResponse<int>>> GetOrderCount()
+        public async Task<ActionResult<ApiResponse<int?>>> GetOrderCount()
         {
             try
             {
+                _logger.LogInformation("Executing GetOrderCount");
                 var userId = GetUserId();
                 var result = await _orderServices.GetOrderCountByCustomerAsync(userId);
-
-                if (!result.Success)
-                {
-                    return StatusCode(result.StatusCode, new ApiResponse<int>
-                    {
-                        Success = false,
-                        Message = result.Message,
-                        StatusCode = result.StatusCode
-                    });
-                }
-
-                return Ok(new ApiResponse<int>
-                {
-                    Success = true,
-                    Message = result.Message,
-                    Data = result.Data,
-                    StatusCode = 200
-                });
+                return HandleResult(result, nameof(GetOrderCount));
             }
             catch (Exception ex)
             {
                 _logger.LogError($"Error in GetOrderCount: {ex.Message}");
-                return StatusCode(500, new ApiResponse<int>
-                {
-                    Success = false,
-                    Message = "An error occurred while getting order count",
-                    StatusCode = 500
-                });
+                return StatusCode(500, ApiResponse<int?>.CreateErrorResponse("Server Error", new ErrorResponse("Server Error", "An error occurred while getting order count"), 500));
             }
         }
 
         /// <summary>
-        /// Get total revenue for customer
+        /// Get customer total revenue
         /// </summary>
         [HttpGet("customer/revenue")]
         public async Task<ActionResult<ApiResponse<decimal>>> GetCustomerRevenue()
         {
             try
             {
+                _logger.LogInformation("Executing GetCustomerRevenue");
                 var userId = GetUserId();
                 var result = await _orderServices.GetTotalRevenueByCustomerAsync(userId);
-
-                if (!result.Success)
-                {
-                    return StatusCode(result.StatusCode, new ApiResponse<decimal>
-                    {
-                        Success = false,
-                        Message = result.Message,
-                        StatusCode = result.StatusCode
-                    });
-                }
-
-                return Ok(new ApiResponse<decimal>
-                {
-                    Success = true,
-                    Message = result.Message,
-                    Data = result.Data,
-                    StatusCode = 200
-                });
+                return HandleResult(result, nameof(GetCustomerRevenue));
             }
             catch (Exception ex)
             {
                 _logger.LogError($"Error in GetCustomerRevenue: {ex.Message}");
-                return StatusCode(500, new ApiResponse<decimal>
-                {
-                    Success = false,
-                    Message = "An error occurred while getting customer revenue",
-                    StatusCode = 500
-                });
+                return StatusCode(500, ApiResponse<decimal>.CreateErrorResponse("Server Error", new ErrorResponse("Server Error", "An error occurred while getting customer revenue"), 500));
             }
         }
 
@@ -353,36 +236,15 @@ namespace E_Commers.Controllers
         {
             try
             {
+                _logger.LogInformation($"Executing GetOrdersByStatus for status: {status}, page: {page}, size: {pageSize}");
                 var userRole = GetUserRole();
                 var result = await _orderServices.GetOrdersByStatusAsync(status, userRole, page, pageSize);
-
-                if (!result.Success)
-                {
-                    return StatusCode(result.StatusCode, new ApiResponse<List<OrderDto>>
-                    {
-                        Success = false,
-                        Message = result.Message,
-                        StatusCode = result.StatusCode
-                    });
-                }
-
-                return Ok(new ApiResponse<List<OrderDto>>
-                {
-                    Success = true,
-                    Message = result.Message,
-                    Data = result.Data,
-                    StatusCode = 200
-                });
+                return HandleResult(result, nameof(GetOrdersByStatus));
             }
             catch (Exception ex)
             {
                 _logger.LogError($"Error in GetOrdersByStatus: {ex.Message}");
-                return StatusCode(500, new ApiResponse<List<OrderDto>>
-                {
-                    Success = false,
-                    Message = "An error occurred while retrieving orders",
-                    StatusCode = 500
-                });
+                return StatusCode(500, ApiResponse<List<OrderDto>>.CreateErrorResponse("Server Error", new ErrorResponse("Server Error", "An error occurred while retrieving orders by status"), 500));
             }
         }
 
@@ -399,49 +261,25 @@ namespace E_Commers.Controllers
             {
                 if (!ModelState.IsValid)
                 {
-                    return BadRequest(new ApiResponse<OrderDto>
-                    {
-                        Success = false,
-                        Message = "Invalid input data",
-                        StatusCode = 400
-                    });
+                    var errors = GetModelErrors();
+                    _logger.LogWarning($"ModelState errors: {string.Join(", ", errors)}");
+                    return BadRequest(ApiResponse<OrderDto>.CreateErrorResponse("Invalid Data", new ErrorResponse("Invalid Data", errors), 400));
                 }
 
+                _logger.LogInformation($"Executing UpdateOrderStatus for ID: {orderId}, status: {statusDto.Status}");
                 var userRole = GetUserRole();
                 var result = await _orderServices.UpdateOrderStatusAsync(orderId, statusDto, userRole);
-
-                if (!result.Success)
-                {
-                    return StatusCode(result.StatusCode, new ApiResponse<OrderDto>
-                    {
-                        Success = false,
-                        Message = result.Message,
-                        StatusCode = result.StatusCode
-                    });
-                }
-
-                return Ok(new ApiResponse<OrderDto>
-                {
-                    Success = true,
-                    Message = result.Message,
-                    Data = result.Data,
-                    StatusCode = 200
-                });
+                return HandleResult(result, nameof(UpdateOrderStatus), orderId);
             }
             catch (Exception ex)
             {
                 _logger.LogError($"Error in UpdateOrderStatus: {ex.Message}");
-                return StatusCode(500, new ApiResponse<OrderDto>
-                {
-                    Success = false,
-                    Message = "An error occurred while updating order status",
-                    StatusCode = 500
-                });
+                return StatusCode(500, ApiResponse<OrderDto>.CreateErrorResponse("Server Error", new ErrorResponse("Server Error", "An error occurred while updating order status"), 500));
             }
         }
 
         /// <summary>
-        /// Ship order (Admin only)
+        /// Ship an order (Admin only)
         /// </summary>
         [HttpPost("{orderId}/ship")]
         [Authorize(Roles = "Admin")]
@@ -449,40 +287,20 @@ namespace E_Commers.Controllers
         {
             try
             {
+                _logger.LogInformation($"Executing ShipOrder for ID: {orderId}");
                 var userRole = GetUserRole();
                 var result = await _orderServices.ShipOrderAsync(orderId, userRole);
-
-                if (!result.Success)
-                {
-                    return StatusCode(result.StatusCode, new ApiResponse<string>
-                    {
-                        Success = false,
-                        Message = result.Message,
-                        StatusCode = result.StatusCode
-                    });
-                }
-
-                return Ok(new ApiResponse<string>
-                {
-                    Success = true,
-                    Message = result.Message,
-                    StatusCode = 200
-                });
+                return HandleResult(result, nameof(ShipOrder), orderId);
             }
             catch (Exception ex)
             {
                 _logger.LogError($"Error in ShipOrder: {ex.Message}");
-                return StatusCode(500, new ApiResponse<string>
-                {
-                    Success = false,
-                    Message = "An error occurred while shipping the order",
-                    StatusCode = 500
-                });
+                return StatusCode(500, ApiResponse<string>.CreateErrorResponse("Server Error", new ErrorResponse("Server Error", "An error occurred while shipping the order"), 500));
             }
         }
 
         /// <summary>
-        /// Deliver order (Admin only)
+        /// Deliver an order (Admin only)
         /// </summary>
         [HttpPost("{orderId}/deliver")]
         [Authorize(Roles = "Admin")]
@@ -490,40 +308,20 @@ namespace E_Commers.Controllers
         {
             try
             {
+                _logger.LogInformation($"Executing DeliverOrder for ID: {orderId}");
                 var userRole = GetUserRole();
                 var result = await _orderServices.DeliverOrderAsync(orderId, userRole);
-
-                if (!result.Success)
-                {
-                    return StatusCode(result.StatusCode, new ApiResponse<string>
-                    {
-                        Success = false,
-                        Message = result.Message,
-                        StatusCode = result.StatusCode
-                    });
-                }
-
-                return Ok(new ApiResponse<string>
-                {
-                    Success = true,
-                    Message = result.Message,
-                    StatusCode = 200
-                });
+                return HandleResult(result, nameof(DeliverOrder), orderId);
             }
             catch (Exception ex)
             {
                 _logger.LogError($"Error in DeliverOrder: {ex.Message}");
-                return StatusCode(500, new ApiResponse<string>
-                {
-                    Success = false,
-                    Message = "An error occurred while delivering the order",
-                    StatusCode = 500
-                });
+                return StatusCode(500, ApiResponse<string>.CreateErrorResponse("Server Error", new ErrorResponse("Server Error", "An error occurred while delivering the order"), 500));
             }
         }
 
         /// <summary>
-        /// Get total revenue by date range (Admin only)
+        /// Get revenue by date range (Admin only)
         /// </summary>
         [HttpGet("revenue")]
         [Authorize(Roles = "Admin")]
@@ -533,36 +331,15 @@ namespace E_Commers.Controllers
         {
             try
             {
+                _logger.LogInformation($"Executing GetRevenueByDateRange from {startDate} to {endDate}");
                 var userRole = GetUserRole();
                 var result = await _orderServices.GetTotalRevenueByDateRangeAsync(startDate, endDate, userRole);
-
-                if (!result.Success)
-                {
-                    return StatusCode(result.StatusCode, new ApiResponse<decimal>
-                    {
-                        Success = false,
-                        Message = result.Message,
-                        StatusCode = result.StatusCode
-                    });
-                }
-
-                return Ok(new ApiResponse<decimal>
-                {
-                    Success = true,
-                    Message = result.Message,
-                    Data = result.Data,
-                    StatusCode = 200
-                });
+                return HandleResult(result, nameof(GetRevenueByDateRange));
             }
             catch (Exception ex)
             {
                 _logger.LogError($"Error in GetRevenueByDateRange: {ex.Message}");
-                return StatusCode(500, new ApiResponse<decimal>
-                {
-                    Success = false,
-                    Message = "An error occurred while getting revenue",
-                    StatusCode = 500
-                });
+                return StatusCode(500, ApiResponse<decimal>.CreateErrorResponse("Server Error", new ErrorResponse("Server Error", "An error occurred while getting revenue by date range"), 500));
             }
         }
 
@@ -578,36 +355,15 @@ namespace E_Commers.Controllers
         {
             try
             {
+                _logger.LogInformation($"Executing GetOrdersWithPagination: page {page}, size {pageSize}, status: {status}");
                 var userRole = GetUserRole();
                 var result = await _orderServices.GetOrdersWithPaginationAsync(page, pageSize, status, userRole);
-
-                if (!result.Success)
-                {
-                    return StatusCode(result.StatusCode, new ApiResponse<List<OrderDto>>
-                    {
-                        Success = false,
-                        Message = result.Message,
-                        StatusCode = result.StatusCode
-                    });
-                }
-
-                return Ok(new ApiResponse<List<OrderDto>>
-                {
-                    Success = true,
-                    Message = result.Message,
-                    Data = result.Data,
-                    StatusCode = 200
-                });
+                return HandleResult(result, nameof(GetOrdersWithPagination));
             }
             catch (Exception ex)
             {
                 _logger.LogError($"Error in GetOrdersWithPagination: {ex.Message}");
-                return StatusCode(500, new ApiResponse<List<OrderDto>>
-                {
-                    Success = false,
-                    Message = "An error occurred while retrieving orders",
-                    StatusCode = 500
-                });
+                return StatusCode(500, ApiResponse<List<OrderDto>>.CreateErrorResponse("Server Error", new ErrorResponse("Server Error", "An error occurred while retrieving orders with pagination"), 500));
             }
         }
 
@@ -616,41 +372,20 @@ namespace E_Commers.Controllers
         /// </summary>
         [HttpGet("admin/count")]
         [Authorize(Roles = "Admin")]
-        public async Task<ActionResult<ApiResponse<int>>> GetTotalOrderCount(
+        public async Task<ActionResult<ApiResponse<int?>>> GetTotalOrderCount(
             [FromQuery] OrderStatus? status = null)
         {
             try
             {
+                _logger.LogInformation($"Executing GetTotalOrderCount, status: {status}");
                 var userRole = GetUserRole();
                 var result = await _orderServices.GetTotalOrderCountAsync(status, userRole);
-
-                if (!result.Success)
-                {
-                    return StatusCode(result.StatusCode, new ApiResponse<int>
-                    {
-                        Success = false,
-                        Message = result.Message,
-                        StatusCode = result.StatusCode
-                    });
-                }
-
-                return Ok(new ApiResponse<int>
-                {
-                    Success = true,
-                    Message = result.Message,
-                    Data = result.Data,
-                    StatusCode = 200
-                });
+                return HandleResult(result, nameof(GetTotalOrderCount));
             }
             catch (Exception ex)
             {
                 _logger.LogError($"Error in GetTotalOrderCount: {ex.Message}");
-                return StatusCode(500, new ApiResponse<int>
-                {
-                    Success = false,
-                    Message = "An error occurred while getting order count",
-                    StatusCode = 500
-                });
+                return StatusCode(500, ApiResponse<int?>.CreateErrorResponse("Server Error", new ErrorResponse("Server Error", "An error occurred while getting total order count"), 500));
             }
         }
     }

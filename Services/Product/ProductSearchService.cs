@@ -1,4 +1,5 @@
 using E_Commers.DtoModels.CategoryDtos;
+using E_Commers.DtoModels.CollectionDtos;
 using E_Commers.DtoModels.DiscoutDtos;
 using E_Commers.DtoModels.ImagesDtos;
 using E_Commers.DtoModels.ProductDtos;

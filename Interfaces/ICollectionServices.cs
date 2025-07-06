@@ -1,5 +1,6 @@
 using E_Commers.DtoModels.CollectionDtos;
 using E_Commers.DtoModels.Responses;
+using E_Commers.Services;
 
 namespace E_Commers.Interfaces
 {
@@ -10,7 +11,7 @@ namespace E_Commers.Interfaces
         Task<Result<List<CollectionDto>>> GetActiveCollectionsAsync();
         Task<Result<List<CollectionDto>>> GetCollectionsByDisplayOrderAsync();
         Task<Result<List<CollectionDto>>> GetCollectionsWithPaginationAsync(int page, int pageSize, bool? isActive = null);
-        Task<Result<int>> GetTotalCollectionCountAsync(bool? isActive = null);
+        Task<Result<int?>> GetTotalCollectionCountAsync(bool? isActive = null);
         Task<Result<CollectionDto>> CreateCollectionAsync(CreateCollectionDto collectionDto, string userRole);
         Task<Result<CollectionDto>> UpdateCollectionAsync(int collectionId, UpdateCollectionDto collectionDto, string userRole);
         Task<Result<string>> DeleteCollectionAsync(int collectionId, string userRole);

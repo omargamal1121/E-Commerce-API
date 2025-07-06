@@ -257,11 +257,6 @@ namespace E_Commers.Repository
                 .Include(o => o.Payment)
                 .ThenInclude(p => p.PaymentMethod);
 
-            if (status.HasValue)
-            {
-                query = query.Where(o => o.Status == status.Value);
-            }
-
             return await query
                 .OrderByDescending(o => o.CreatedAt)
                 .Skip((page - 1) * pageSize)

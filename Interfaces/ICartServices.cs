@@ -1,5 +1,6 @@
 using E_Commers.DtoModels.CartDtos;
 using E_Commers.DtoModels.Responses;
+using E_Commers.Services;
 
 namespace E_Commers.Interfaces
 {
@@ -10,7 +11,7 @@ namespace E_Commers.Interfaces
         Task<Result<CartDto>> UpdateCartItemAsync(string userId, int productId, UpdateCartItemDto itemDto, int? productVariantId = null);
         Task<Result<CartDto>> RemoveItemFromCartAsync(string userId, RemoveCartItemDto itemDto);
         Task<Result<string>> ClearCartAsync(string userId);
-        Task<Result<int>> GetCartItemCountAsync(string userId);
+        Task<Result<int?>> GetCartItemCountAsync(string userId);
         Task<Result<decimal>> GetCartTotalPriceAsync(string userId);
         Task<Result<bool>> IsCartEmptyAsync(string userId);
     }

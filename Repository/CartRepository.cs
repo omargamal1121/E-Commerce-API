@@ -22,7 +22,7 @@ namespace E_Commers.Repository
         {
             _logger.LogInformation($"Getting cart for user: {userId}");
             
-            return await _context.Carts
+            return await _context.Cart
                 .Where(c => c.UserId == userId && c.DeletedAt == null)
                 .Include(c => c.Customer)
                 .Include(c => c.Items.Where(i => i.DeletedAt == null))
@@ -148,13 +148,13 @@ namespace E_Commers.Repository
 
         public async Task<bool> CartExistsAsync(string userId)
         {
-            return await _context.Carts
+            return await _context.Cart
                 .AnyAsync(c => c.UserId == userId && c.DeletedAt == null);
         }
 
         public async Task<int> GetCartItemCountAsync(string userId)
         {
-            return await _context.Carts
+            return await _context.Cart
                 .Where(c => c.UserId == userId && c.DeletedAt == null)
                 .SelectMany(c => c.Items.Where(i => i.DeletedAt == null))
                 .SumAsync(i => i.Quantity);

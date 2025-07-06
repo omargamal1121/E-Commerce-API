@@ -1,5 +1,6 @@
 using E_Commers.DtoModels.CustomerAddressDtos;
 using E_Commers.DtoModels.Responses;
+using E_Commers.Services;
 
 namespace E_Commers.Interfaces
 {
@@ -14,7 +15,7 @@ namespace E_Commers.Interfaces
 		Task<Result<string>> SetDefaultAddressAsync(int addressId, string userId);
 		Task<Result<List<CustomerAddressDto>>> GetAddressesByTypeAsync(string addressType, string userId);
 		Task<Result<List<CustomerAddressDto>>> SearchAddressesAsync(string searchTerm, string userId);
-		Task<Result<int>> GetAddressCountAsync(string userId);
+		Task<Result<int?>> GetAddressCountAsync(string userId);
 		Task<Result<CustomerAddressDto>> GetAddressWithCustomerAsync(int addressId, string userRole);
 	}
 } 

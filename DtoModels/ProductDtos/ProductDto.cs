@@ -8,6 +8,7 @@ using E_Commers.DtoModels.ImagesDtos;
 using E_Commers.DtoModels.Responses;
 using E_Commers.DtoModels.ProductDtos;
 using E_Commers.Enums;
+using E_Commers.DtoModels.CollectionDtos;
 
 namespace E_Commers.DtoModels.ProductDtos
 {
@@ -51,14 +52,7 @@ namespace E_Commers.DtoModels.ProductDtos
 		public int ProductId { get; set; }
 	}
 
-	public class CollectionDto : BaseDto
-	{
-		public string Name { get; set; } = string.Empty;
-		public string Description { get; set; } = string.Empty;
-		public int DisplayOrder { get; set; }
-		public bool IsActive { get; set; }
-	}
-
+	
 	public class ReviewDto : BaseDto
 	{
 		public int Rating { get; set; }

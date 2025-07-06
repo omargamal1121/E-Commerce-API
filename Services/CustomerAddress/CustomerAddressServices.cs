@@ -165,7 +165,7 @@ namespace E_Commers.Services.CustomerAddress
 					addressDto.IsDefault = true;
 				}
 
-				var address = _mapper.Map<CustomerAddress>(addressDto);
+				var address = _mapper.Map<E_Commers.Models.CustomerAddress>(addressDto);
 				address.CustomerId = userId;
 				address.CreatedAt = DateTime.UtcNow;
 
@@ -447,20 +447,20 @@ namespace E_Commers.Services.CustomerAddress
 			}
 		}
 
-		public async Task<Result<int>> GetAddressCountAsync(string userId)
+		public async Task<Result<int?>> GetAddressCountAsync(string userId)
 		{
 			_logger.LogInformation($"Getting address count for user: {userId}");
 
 			try
 			{
 				var count = await _addressRepository.GetAddressCountByCustomerAsync(userId);
-				return Result<int>.Ok(count, $"User has {count} addresses", 200);
+				return Result<int?>.Ok(count, $"User has {count} addresses", 200);
 			}
 			catch (Exception ex)
 			{
 				_logger.LogError($"Error getting address count for user {userId}: {ex.Message}");
 				NotifyAdminOfError($"Error getting address count for user {userId}: {ex.Message}", ex.StackTrace);
-				return Result<int>.Fail("An error occurred while getting address count", 500);
+				return Result<int?>.Fail("An error occurred while getting address count", 500);
 			}
 		}
 

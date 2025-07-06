@@ -3,18 +3,17 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace E_Commers.Models
 {
-	public class Payment
+	public class Payment:BaseEntity
 	{
-		[Key]
-		public int Id { get; set; }
+	
 
 		[ForeignKey("Customer")]
 		public string CustomerId { get; set; } = string.Empty;
-		public required Customer Customer { get; set; }
+		public  Customer Customer { get; set; }
 
 		[ForeignKey("PaymentMethod")]
 		public int PaymentMethodId { get; set; }
-		public required PaymentMethod PaymentMethod { get; set; }
+		public  PaymentMethod PaymentMethod { get; set; }
 
 		[ForeignKey("PaymentProvider")]
 		public int PaymentProviderId { get; set; }
@@ -28,7 +27,7 @@ namespace E_Commers.Models
 
 		[ForeignKey("Order")]
 		public int OrderId { get; set; }
-		public required Order Order { get; set; }
+		public  Order Order { get; set; }
 
 		[Required(ErrorMessage = "Payment Status is required.")]
 		[StringLength(20, MinimumLength = 3, ErrorMessage = "Status must be between 3 and 20 characters.")]

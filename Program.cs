@@ -46,6 +46,12 @@ using System.Text;
 using System.Threading.RateLimiting;
 using Microsoft.AspNetCore.Routing;
 using E_Commers.Services.Discount;
+using E_Commers.Services.AccountServices.Registration;
+using E_Commers.Services.AccountServices.Password;
+using E_Commers.Services.AccountServices.Profile;
+using E_Commers.Services.AccountServices.AccountManagement;
+using E_Commers.Services.AccountServices.Authentication;
+
 namespace E_Commers
 {
     public class Program

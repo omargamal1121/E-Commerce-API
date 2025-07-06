@@ -8,7 +8,7 @@ namespace E_Commers.Models
 	{
 		[ForeignKey("Customer")]
 		public string CustomerId { get; set; } = string.Empty;
-		public required Customer Customer { get; set; }
+		public  Customer Customer { get; set; }
 
 		[Required]
 		[StringLength(50, MinimumLength = 3, ErrorMessage = "Order number must be between 3 and 50 characters")]
@@ -40,8 +40,8 @@ namespace E_Commers.Models
 		public DateTime? DeliveredAt { get; set; }
 		public DateTime? CancelledAt { get; set; }
 
-		public List<OrderItem> Items { get; set; } = new List<OrderItem>();
-		public required Payment Payment { get; set; }
+		public IEnumerable<OrderItem> Items { get; set; } = new List<OrderItem>();
+		public  Payment Payment { get; set; }
 		public ICollection<ReturnRequest> ReturnRequests { get; set; } = new List<ReturnRequest>();
 
 		// Calculated properties

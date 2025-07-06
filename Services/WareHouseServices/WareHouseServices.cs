@@ -83,177 +83,109 @@ namespace E_Commers.Services.WareHouseServices
 			var cached_data= await _cacheManager.GetAsync<List<WareHouseDto>>(cach_key);
 			if(cached_data != null)
 			{
-				_logger.LogInformation("From Cache");
+				_logger.LogInformation("From Cach");
 				return Result<List<WareHouseDto>>.Ok(cached_data, "Get WareHouse", 200);
 			}
-			
-			try
+			var warehousereult= _unitOfWork.WareHouse.GetAll();
+			if(warehousereult == null)
 			{
-				var warehouses = await _unitOfWork.WareHouse.GetAll()
-					.Where(w => w.DeletedAt == null)
-					.Include(w => w.ProductInventories.Where(pi => pi.DeletedAt == null))
-					.ThenInclude(pi => pi.Product)
-					.ToListAsync();
-				
-				if (warehouses == null)
-				{
-					_logger.LogError("Error fetching warehouses");
-					return Result<List<WareHouseDto>>.Fail("Try Again later", 500);
-				}
-				
-				var warehousesdto = warehouses.Select(w => _mapper.Map<WareHouseDto>(w)).ToList();
-				if (warehousesdto == null)
-				{
-					_logger.LogError("Can't Mapping");
-					return Result<List<WareHouseDto>>.Fail("Try Again later", 500);
-				}
-				
-				await _cacheManager.SetAsync(cach_key, warehousesdto, tags: new string[] { CACH_TAGE });
-				return Result<List<WareHouseDto>>.Ok(warehousesdto, "Get WareHouse", 200);
+				_logger.LogError("Error fetching warehouses");
+				return Result<List<WareHouseDto>>.Fail("Try Again later", 500);
 			}
-			catch (Exception ex)
+			var warehousesdto= await warehousereult.Where(w=>w.DeletedAt==null).Select(w=>_mapper.Map<WareHouseDto>(w)).ToListAsync();
+			if (warehousesdto is null)
 			{
-				_logger.LogError($"Error in {nameof(GetAllWareHousesAsync)}: {ex.Message}");
-				return Result<List<WareHouseDto>>.Fail("An error occurred while fetching warehouses", 500);
+				_logger.LogError("Can't Mapping");
+				return Result<List<WareHouseDto>>.Fail("Try Again later", 500);
 			}
+			await _cacheManager.SetAsync(cach_key,warehousesdto,tags:new string[] { CACH_TAGE });
+			return Result<List<WareHouseDto>>.Ok(warehousesdto, "Get WareHouse", 200);
 		}
 
 		public async Task<Result<WareHouseDto>> GetWareHouseByIdAsync(int id)
 		{
 			_logger.LogInformation($"Execute:{nameof(GetWareHouseByIdAsync)} with  id:{id}");
-			
-			try
+			var warehouse= await _unitOfWork.WareHouse.GetByIdAsync(id);
+			if (warehouse == null)
 			{
-				var warehouse = await _unitOfWork.WareHouse.GetAll()
-					.Where(w => w.Id == id && w.DeletedAt == null)
-					.Include(w => w.ProductInventories.Where(pi => pi.DeletedAt == null))
-					.ThenInclude(pi => pi.Product)
-					.SingleOrDefaultAsync();
-					
-				if (warehouse == null)
-				{
-					_logger.LogWarning($"Can't found warehouse with this id {id}");
-					return Result<WareHouseDto>.Fail($"Can't found warehouse with this id {id}", 404);
-				}
-				
-				string key = $"WareHouse with id:{id}";
-				var warehousedto = _mapper.Map<WareHouseDto>(warehouse);
-				if(warehousedto is null)
-				{
-					_logger.LogError("Can't mapping");
-					return Result<WareHouseDto>.Fail("Try Again later", 500);
-				}
-				
-				await _cacheManager.SetAsync(key, warehousedto, tags: new string[] { CACH_TAGE });
-				_logger.LogInformation("WareHouse found");
-				return Result<WareHouseDto>.Ok(warehousedto, "Warehouse Found", 200);
+				_logger.LogWarning($"Can't found warehouse with this id {id}");
+				return Result<WareHouseDto>.Fail($"Can't found warehouse with this id {id}", 404);
 			}
-			catch (Exception ex)
+			string key = $"WareHouse with id:{id}";
+			var warehousedto = _mapper.Map<WareHouseDto>(warehouse);
+			if(warehousedto is null)
 			{
-				_logger.LogError($"Error in {nameof(GetWareHouseByIdAsync)}: {ex.Message}");
-				return Result<WareHouseDto>.Fail("An error occurred while fetching warehouse", 500);
+				_logger.LogError("Can't mapping");
+				return Result<WareHouseDto>.Fail("Try Again later", 500);
 			}
+			await _cacheManager.SetAsync(key, warehousedto,tags: new string []{CACH_TAGE});
+			_logger.LogInformation("WareHouse found");
+			return Result<WareHouseDto>.Ok(warehousedto, "Warehouse Found", 200);
 		}
 
 		public async Task<Result<string>> RemoveWareHouseAsync(int id, string userid)
 		{
 			_logger.LogInformation($"Execute:{nameof(RemoveWareHouseAsync)}");
 			using var transaction = await _unitOfWork.BeginTransactionAsync();
-			
-			try
+			var warehouse = await _unitOfWork.WareHouse.GetByIdAsync(id);
+			if (warehouse == null)
 			{
-				var warehouse = await _unitOfWork.WareHouse.GetAll()
-					.Where(w => w.Id == id && w.DeletedAt == null)
-					.Include(w => w.ProductInventories.Where(pi => pi.DeletedAt == null))
-					.AsTracking()
-					.SingleOrDefaultAsync();
-					
-				if (warehouse == null)
-				{
-					_logger.LogError($"Can't found warehouse with this id {id}");
-					await transaction.RollbackAsync();
-					return Result<string>.Fail($"Can't found warehouse with this id {id}", 404);
-				}
-				
-				// Check if warehouse has any products
-				if (warehouse.ProductInventories.Count > 0)
-				{
-					_logger.LogError("Can't delete warehouse that contains products");
-					await transaction.RollbackAsync();
-					return Result<string>.Fail("Cannot delete warehouse that contains products", 400);
-				}
-				
-				warehouse.DeletedAt = DateTime.UtcNow;
-				warehouse.ModifiedAt = DateTime.UtcNow;
-				var isRemoved = _unitOfWork.WareHouse.Update(warehouse);
-				if (!isRemoved)
-				{
-					_logger.LogError("Failed to update warehouse");
-					await transaction.RollbackAsync();
-					return Result<string>.Fail("Failed to update warehouse", 500);
-				}
-				
-				await _cacheManager.RemoveByTagAsync(CACH_TAGE);
-				await _unitOfWork.CommitAsync();
-				
-				var isAdded = await _adminOpreationServices.AddAdminOpreationAsync("soft delete to warehouse ", Opreations.DeleteOpreation, userid, id);
-				if (isAdded == null)
-				{
-					_logger.LogError("Failed to log admin operation");
-					await transaction.RollbackAsync();
-					return Result<string>.Fail("Failed to log operation", 500);
-				}
-				
-				_logger.LogInformation($"Admin Operation added with id:{isAdded.Data.Id}");
-				await _unitOfWork.CommitAsync();
-				await transaction.CommitAsync();
-				return Result<string>.Ok("Warehouse removed", "Warehouse removed successfully", 200);
-			}
-			catch (Exception ex)
-			{
-				_logger.LogError($"Error in {nameof(RemoveWareHouseAsync)}: {ex.Message}");
+				_logger.LogError($"Can't found warehouse with this id {id}");
 				await transaction.RollbackAsync();
-				return Result<string>.Fail("An error occurred while removing warehouse", 500);
+				return Result<string>.Fail($"Can't found warehouse with this id {id}", 404);
 			}
+			// Check if warehouse has any products
+			if (warehouse.ProductInventories.Count > 0)
+			{
+				_logger.LogError("Can't delete warehouse that contains products");
+				await transaction.RollbackAsync();
+				return Result<string>.Fail("Cannot delete warehouse that contains products", 400);
+			}
+			warehouse.DeletedAt = DateTime.UtcNow;
+			var isRemoved = _unitOfWork.WareHouse.Update(warehouse);
+			if (!isRemoved)
+			{
+				_logger.LogError("Failed to update warehouse");
+				await transaction.RollbackAsync();
+				return Result<string>.Fail("Failed to update warehouse", 500);
+			}
+			await _cacheManager.RemoveByTagAsync(CACH_TAGE);
+			await _unitOfWork.CommitAsync();
+			var isAdded = await _adminOpreationServices.AddAdminOpreationAsync("soft delete to warehouse ", Opreations.DeleteOpreation, userid, id);
+			if (isAdded == null)
+			{
+				_logger.LogError("Failed to log admin operation");
+				await transaction.RollbackAsync();
+				return Result<string>.Fail("Failed to log operation", 500);
+			}
+			_logger.LogInformation($"Admin Operation added with id:{isAdded.Data.Id}");
+			await _unitOfWork.CommitAsync();
+			await transaction.CommitAsync();
+			return Result<string>.Ok("Warehouse removed", "Warehouse removed successfully", 200);
 		}
 
 		public async Task<Result<string>> TransferProductsAsync(int from_warehouse_id, int to_warehouse_id, string userid, int Inventoryid)
 		{
 			_logger.LogInformation($"Execute:{nameof(TransferProductsAsync)}");
 			using var transaction = await _unitOfWork.BeginTransactionAsync();
-			
-			try
+			var sourceWarehouse = await _unitOfWork.WareHouse.GetByIdAsync(from_warehouse_id);
+			if (sourceWarehouse == null)
 			{
-				var sourceWarehouse = await _unitOfWork.WareHouse.GetAll()
-					.Where(w => w.Id == from_warehouse_id && w.DeletedAt == null)
-					.Include(w => w.ProductInventories.Where(pi => pi.DeletedAt == null))
-					.AsTracking()
-					.SingleOrDefaultAsync();
-					
-				if (sourceWarehouse == null)
-				{
-					_logger.LogWarning($"Source warehouse not found with id: {from_warehouse_id}");
-					return Result<string>.Fail($"Warehouse with id {from_warehouse_id} not found", 404);
-				}
-				
-				var targetWarehouse = await _unitOfWork.WareHouse.GetAll()
-					.Where(w => w.Id == to_warehouse_id && w.DeletedAt == null)
-					.Include(w => w.ProductInventories.Where(pi => pi.DeletedAt == null))
-					.AsTracking()
-					.SingleOrDefaultAsync();
-					
-				if (targetWarehouse == null)
-				{
-					_logger.LogWarning($"Target warehouse not found with id: {to_warehouse_id}");
-					return Result<string>.Fail($"Warehouse with id {to_warehouse_id} not found", 404);
-				}
-				
-				var sourceInventory = sourceWarehouse.ProductInventories.FirstOrDefault(pi => pi.Id == Inventoryid);
-				if (sourceInventory == null)
-				{
-					_logger.LogWarning($"Inventory {Inventoryid} not found in source warehouse {from_warehouse_id}");
-					return Result<string>.Fail($"Inventory {Inventoryid} not found in source warehouse", 404);
-				}
+				_logger.LogWarning($"Source warehouse not found with id: {from_warehouse_id}");
+				return Result<string>.Fail($"Warehouse with id {from_warehouse_id} not found", 404);
+			}
+			var targetWarehouse = await _unitOfWork.WareHouse.GetByIdAsync(to_warehouse_id);
+			if (targetWarehouse == null)
+			{
+				_logger.LogWarning($"Target warehouse not found with id: {to_warehouse_id}");
+				return Result<string>.Fail($"Warehouse with id {to_warehouse_id} not found", 404);
+			}
+			var sourceInventory = sourceWarehouse.ProductInventories.FirstOrDefault(pi => pi.Id == Inventoryid);
+			if (sourceInventory == null)
+			{
+				_logger.LogWarning($"Inventory {Inventoryid} not found in source warehouse {from_warehouse_id}");
+				return Result<string>.Fail($"Inventory {Inventoryid} not found in source warehouse", 404);
+			}
 			try
 			{
 				var existingInventory = targetWarehouse.ProductInventories.FirstOrDefault(pi => pi.ProductId == sourceInventory.ProductId);
@@ -324,20 +256,14 @@ namespace E_Commers.Services.WareHouseServices
 		{
 			_logger.LogInformation($"Execute:{nameof(UpdateWareHouseAsync)}");
 			using var transaction = await _unitOfWork.BeginTransactionAsync();
-			
+			var existingWarehouse = await _unitOfWork.WareHouse.GetByIdAsync(id);
+			if (existingWarehouse == null)
+			{
+				_logger.LogWarning($"Warehouse not found with id: {id}");
+				return Result<WareHouseDto>.Fail($"Warehouse with id {id} not found", 404);
+			}
 			try
 			{
-				var existingWarehouse = await _unitOfWork.WareHouse.GetAll()
-					.Where(w => w.Id == id && w.DeletedAt == null)
-					.AsTracking()
-					.SingleOrDefaultAsync();
-					
-				if (existingWarehouse == null)
-				{
-					_logger.LogWarning($"Warehouse not found with id: {id}");
-					return Result<WareHouseDto>.Fail($"Warehouse with id {id} not found", 404);
-				}
-				
 				if (!string.IsNullOrEmpty(wareHouse.Name))
 				{
 					if (existingWarehouse.Name.Equals(wareHouse.Name, StringComparison.OrdinalIgnoreCase))
@@ -353,48 +279,22 @@ namespace E_Commers.Services.WareHouseServices
 					}
 					existingWarehouse.Name = wareHouse.Name;
 				}
-				
 				if (!string.IsNullOrEmpty(wareHouse.Address))
 				{
 					existingWarehouse.Address = wareHouse.Address;
 				}
-				
 				if (!string.IsNullOrEmpty(wareHouse.Phone))
 				{
 					existingWarehouse.Phone = wareHouse.Phone;
 				}
-				
-				if (!string.IsNullOrEmpty(wareHouse.Email))
-				{
-					existingWarehouse.Email = wareHouse.Email;
-				}
-				
-				if (!string.IsNullOrEmpty(wareHouse.Description))
-				{
-					existingWarehouse.Description = wareHouse.Description;
-				}
-				
-				if (!string.IsNullOrEmpty(wareHouse.ManagerName))
-				{
-					existingWarehouse.ManagerName = wareHouse.ManagerName;
-				}
-				
-				if (!string.IsNullOrEmpty(wareHouse.ManagerPhone))
-				{
-					existingWarehouse.ManagerPhone = wareHouse.ManagerPhone;
-				}
-				
-				existingWarehouse.IsActive = wareHouse.IsActive;
 				existingWarehouse.ModifiedAt = DateTime.UtcNow;
-				
-				var updateResult = _unitOfWork.WareHouse.Update(existingWarehouse);
+				var updateResult =	_unitOfWork.WareHouse.Update(existingWarehouse);
 				if (!updateResult)
 				{
 					_logger.LogError("Failed to update warehouse");
 					await transaction.RollbackAsync();
 					return Result<WareHouseDto>.Fail("Failed to update warehouse", 500);
 				}
-				
 				var adminLog = await _adminOpreationServices.AddAdminOpreationAsync(
 					$"Updated warehouse {id}",
 					Opreations.UpdateOpreation,
@@ -407,18 +307,15 @@ namespace E_Commers.Services.WareHouseServices
 					await transaction.RollbackAsync();
 					return Result<WareHouseDto>.Fail("Failed to log operation", 500);
 				}
-				
 				await _cacheManager.RemoveByTagAsync(CACH_TAGE);
 				await _unitOfWork.CommitAsync();
 				await transaction.CommitAsync();
-				
 				var updatedWarehouseDto = _mapper.Map<WareHouseDto>(existingWarehouse);
 				if (updatedWarehouseDto == null)
 				{
 					_logger.LogError("Failed to map updated warehouse to DTO");
 					return Result<WareHouseDto>.Fail("Failed to map warehouse data", 500);
 				}
-				
 				return Result<WareHouseDto>.Ok(updatedWarehouseDto, "Warehouse updated successfully", 200);
 			}
 			catch (Exception ex)
@@ -438,70 +335,49 @@ namespace E_Commers.Services.WareHouseServices
 		public async Task<Result<WareHouseDto>> ReturnRemovedWareHouseAsync(int id, string userid)
 		{
 			_logger.LogInformation($"Execute:{nameof(ReturnRemovedWareHouseAsync)}");
-			
+			var isdeleted= await _unitOfWork.WareHouse.IsDeletedAsync(id);
+			if (!isdeleted) 
+			{
+				_logger.LogWarning($"No WareHouse Deleted with this id:{id}");
+				return Result<WareHouseDto>.Fail($"No WareHouse Deleted with this id:{id}", 404);
+			}
+			var deletdwarehouse=await _unitOfWork.WareHouse.GetByIdAsync(id);
+			if(deletdwarehouse == null)
+			{
+				return Result<WareHouseDto>.Fail($"No WareHouse Deleted with this id:{id}", 404);
+			}
+			using var transaction= await _unitOfWork.BeginTransactionAsync();
 			try
 			{
-				var isdeleted = await _unitOfWork.WareHouse.IsDeletedAsync(id);
-				if (!isdeleted) 
+				deletdwarehouse.DeletedAt = null;
+				var isupdated = _unitOfWork.WareHouse.Update(deletdwarehouse);
+				if (!isupdated)
 				{
-					_logger.LogWarning($"No WareHouse Deleted with this id:{id}");
-					return Result<WareHouseDto>.Fail($"No WareHouse Deleted with this id:{id}", 404);
-				}
-				
-				var deletedwarehouse = await _unitOfWork.WareHouse.GetAll()
-					.Where(w => w.Id == id && w.DeletedAt != null)
-					.AsTracking()
-					.SingleOrDefaultAsync();
-					
-				if(deletedwarehouse == null)
-				{
-					return Result<WareHouseDto>.Fail($"No WareHouse Deleted with this id:{id}", 404);
-				}
-				
-				using var transaction = await _unitOfWork.BeginTransactionAsync();
-				try
-				{
-					deletedwarehouse.DeletedAt = null;
-					deletedwarehouse.ModifiedAt = DateTime.UtcNow;
-					var isupdated = _unitOfWork.WareHouse.Update(deletedwarehouse);
-					if (!isupdated)
-					{
-						_logger.LogError("Failed to update warehouse");
-						await transaction.RollbackAsync();
-						return Result<WareHouseDto>.Fail("Try Again Later", 500);
-					}
-					
-					var isadded = await _adminOpreationServices.AddAdminOpreationAsync("Return WareHouse From Deleted", Opreations.UndoDeleteOpreation, userid, id);
-					if(isadded == null)
-					{
-						_logger.LogError("Failed to log admin operation");
-						await transaction.RollbackAsync();
-						return Result<WareHouseDto>.Fail("Try Again Later", 500);
-					}
-					
-					await _cacheManager.RemoveByTagAsync(CACH_TAGE);
-					await _unitOfWork.CommitAsync();
-					await transaction.CommitAsync();
-					
-					var warehousedto = _mapper.Map<WareHouseDto>(deletedwarehouse);
-					if(warehousedto == null)
-					{
-						return Result<WareHouseDto>.Fail("Try Again Later", 500);
-					}
-					
-					return Result<WareHouseDto>.Ok(warehousedto, "Warehouse restored successfully", 200);
-				}
-				catch (Exception ex)
-				{
-					_logger.LogError($"Error in {nameof(ReturnRemovedWareHouseAsync)}: {ex.Message}");
+					_logger.LogError("Failed to update warehouse");
 					await transaction.RollbackAsync();
 					return Result<WareHouseDto>.Fail("Try Again Later", 500);
 				}
+				var isadded = await _adminOpreationServices.AddAdminOpreationAsync("Return WareHouse From Deleted", Opreations.UndoDeleteOpreation, userid, id);
+				if(isadded == null)
+				{
+					_logger.LogError("Failed to log admin operation");
+					await transaction.RollbackAsync();
+					return Result<WareHouseDto>.Fail("Try Again Later", 500);
+				}
+				await _unitOfWork.CommitAsync();
+				await transaction.CommitAsync();
+				var warehousedto = _mapper.Map<WareHouseDto>(deletdwarehouse);
+				if(warehousedto==null)
+				{
+					return Result<WareHouseDto>.Fail("Try Again Later", 500);
+				}
+				return Result<WareHouseDto>.Ok(warehousedto, "Done", 200);
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError($"Error in {nameof(ReturnRemovedWareHouseAsync)}: {ex.Message}");
-				return Result<WareHouseDto>.Fail("An error occurred while restoring warehouse", 500);
+				_logger.LogError(ex.Message);
+				await transaction.RollbackAsync();
+				return Result<WareHouseDto>.Fail("Try Again Later", 500);
 			}
 		}
 
